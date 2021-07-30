@@ -2,8 +2,8 @@
 var makeSynthDef = {
 	|name, numChannels|
 	SynthDef.new(name, {
-		| out, buf, amp = 1.0, ampBus = -1, pitchRatio = 0, window = 0.2, hpf = 0, rate = 1, panSpeed = 0, atk = -1, sus = -1, rel = -1, lpf = 0, revTime = 0, delayTime = 0, lfoSpeed = 0, duration, loop = 0, loopAtk = -1, loopSus = -1, loopRel = -1 |
-		var envelope, sound, ampBusEnvelope, loopEnvelope, left, right, middle;
+		| out, buf, amp = 1.0, ampBus = -1, pitchRatio = 0, window = 0.2, hpf = 0, rate = 1, panSpeed = 0, atk = -1, sus = -1, rel = -1, lpf = 0, revTime = 0, delayTime = 0, lfoSpeed = 0, duration, loop = 0, loopAtk = -1, loopSus = -1, loopRel = -1, loopEnvOutBus = nil, envOutBus = nil, panOutBus = nil, pulseBus = nil |
+		var envelope, sound, ampBusEnvelope, loopEnvelope, panEnvelope, left, right, middle;
 
 		// Load buffer
 		sound = PlayBuf.ar(2, buf, rate, loop: loop);
@@ -44,11 +44,18 @@ var makeSynthDef = {
 		 * Left and right are a 4-speaker pan of each stereo channel, offset by 0.25
 		 * We play either middle or both left and right.
 		 */
+		panEnvelope = LFSaw.kr(panSpeed);
 		middle = [sound[0] * 0.25, sound[0] * 0.25, sound[1] * 0.25, sound[1] * 0.25];
-		left = PanAz.ar(4, left, LFSaw.kr(panSpeed), orientation: -0.25);
-		right = PanAz.ar(4, right, LFSaw.kr(panSpeed), orientation: 0.25);
+		left = PanAz.ar(4, left, panEnvelope, orientation: -0.25);
+		right = PanAz.ar(4, right, panEnvelope, orientation: 0.25);
 
 		Out.ar(out, Select.ar(panSpeed > 0, [middle, left + right]));
+
+		// Write to OSC buses.
+		Out.kr(panOutBus, panEnvelope);
+		Out.kr(loopEnvOutBus, loopEnvelope);
+		Out.kr(envOutBus, envelope);
+		Out.kr(pulseBus, EnvGen.kr(Env([1, 1, 0], [(2/16) / (TempoClock.default.tempo), 0])));
 	}).add;
 };
 
@@ -63,4 +70,20 @@ SynthDef.new(\control, {
 	|path|
 	PathName(path).entries.collect { |fn| Buffer.read(s, fn.fullPath); };
 };
+
+~getPollBufferAndSendAsOscRoutine = {
+	| oscServer, bus, oscMessage, multiply = 1, add = 0 |
+	Routine({
+		loop {
+			bus.get({
+				| value |
+				value = value * multiply + add;
+				oscServer.sendMsg(oscMessage, value);
+			});
+			(1/60).wait;
+		}
+	});
+};
+
+~touchDesigner = NetAddr.new("localhost", 10000);
 )

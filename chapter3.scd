@@ -8,9 +8,13 @@ var kickDelay = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapit
 var snareTom = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/snareTom.aif");
 var tom1 = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/tom1.aif");
 
+var kickPulseBus = Bus.control(s, 1);
+var snareTomPulseBus = Bus.control(s, 1);
+
 
 ~playChapter3 = {
 	var patterns = List.new;
+	var routines = List.new;
 
 	patterns.add(Pbind(
 		\dur, Pseq([Rest(47/4), 17/4], repeats: inf),
@@ -45,6 +49,7 @@ var tom1 = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 -
 		\instrument, \play,
 		\buf, kick,
 		\duration, kick.duration,
+		\pulseBus, kickPulseBus
 	));
 
 	patterns.add(Pbind(
@@ -59,6 +64,7 @@ var tom1 = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 -
 		\instrument, \play,
 		\buf, snareTom,
 		\duration, snareTom.duration,
+		\pulseBus, snareTomPulseBus
 	));
 
 	patterns.add(Pbind(
@@ -68,6 +74,15 @@ var tom1 = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 -
 		\duration, tom1.duration,
 	));
 
-	patterns;
+	patterns.add(Pbind(
+		\dur, Pseq[10, 20, 30, 40],
+		\type, \oscEvent,
+		\message, Pseq["/chooseclip4yo", "/chooseclip5yo", "chooselife"]
+	));
+
+	routines.add(~getPollBufferAndSendAsOscRoutine.value(~touchDesigner, kickPulseBus, "/kick"));
+	routines.add(~getPollBufferAndSendAsOscRoutine.value(~touchDesigner, snareTomPulseBus, "/snare"));
+
+	[patterns, routines];
 };
 )

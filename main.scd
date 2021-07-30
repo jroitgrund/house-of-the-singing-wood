@@ -20,23 +20,22 @@ TempoClock.default.tempo = 91.43/60;
 "./chapter3.scd".load;
 // "./chapter4.scd".load;*/
 
-play = {
-	| playFunc |
-	var playInfo, patterns, duration;
-	playInfo = playFunc.value;
-	duration = playInfo[0];
-	patterns = playInfo[1];
-	duration.wait;
-	patterns.do { | pattern | pattern.stop; };
-};
-
 Routine({
+	var chapter1, chapter2, chapter3, chapter4, routines;
 	1.wait;
+
+	// var chapter1 = ~playChapter1.value;
+	// var chapter2 = ~playChapter2.value;
+	chapter3 = ~playChapter3.value;
+	// var chapter4 = ~playChapter4.value;
+
+	routines = chapter3[1].collect { | routine | routine.play; };
+	routines.postln;
 
 	Pseq([
 		//Ppar(~playChapter1.value)
 		//Ppar(~playChapter2.value)
-		Ppar(~playChapter3.value)
+		Ppar(chapter3[0])
 		//Ppar(~playChapter4.value)
 	], repeats: 1).play;
 }).play;

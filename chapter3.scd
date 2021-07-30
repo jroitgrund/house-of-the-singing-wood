@@ -35,6 +35,11 @@ var snareTomPulseBus = Bus.control(s, 1);
 		\instrument, \play,
 		\buf, cricket2,
 		\duration, cricket2.duration,
+		\type, \oscEvent,
+		\oscServer, ~touchDesigner,
+		\eventName, "/cricket",
+		\eventValue, 1,
+		\playSynth, true
 	));
 
 	patterns.add(Pbind(
@@ -73,15 +78,13 @@ var snareTomPulseBus = Bus.control(s, 1);
 		\buf, tom1,
 		\duration, tom1.duration,
 	));
-
+	
 	patterns.add(Pbind(
-		\dur, Pseq[10, 20, 30, 40],
 		\type, \oscEvent,
-		\message, Pseq["/chooseclip4yo", "/chooseclip5yo", "chooselife"]
+		\eventName, "/cool",
+		\eventValue, Prand([1, 234, 14, 1324, 132], repeats: inf),
+		\oscServer, ~touchDesigner,
 	));
-
-	routines.add(~getPollBufferAndSendAsOscRoutine.value(~touchDesigner, kickPulseBus, "/kick"));
-	routines.add(~getPollBufferAndSendAsOscRoutine.value(~touchDesigner, snareTomPulseBus, "/snare"));
 
 	[patterns, routines];
 };

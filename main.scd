@@ -30,7 +30,6 @@ Routine({
 	// var chapter4 = ~playChapter4.value;
 
 	routines = chapter3[1].collect { | routine | routine.play; };
-	routines.postln;
 
 	Pseq([
 		//Ppar(~playChapter1.value)

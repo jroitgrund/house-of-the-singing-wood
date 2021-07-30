@@ -86,4 +86,20 @@ SynthDef.new(\control, {
 };
 
 ~touchDesigner = NetAddr.new("localhost", 10000);
+
+Event.addEventType(\oscEvent, {
+	var noteEvent;
+	~oscServer.sendMsg(~eventName, ~eventValue);
+	if (
+		~playSynth != nil && ~playSynth == true,
+		{
+		noteEvent = currentEnvironment.copy;
+		noteEvent.use { 
+			~type = \note;
+		};
+		noteEvent.play;
+		},
+		{}
+	);
+});
 )

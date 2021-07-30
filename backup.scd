@@ -1,8 +1,6 @@
 ~kick = Buffer.readChannel(s,"C:/Users/jonathan/Desktop/scc/Sons pour Supercollider 2/_DOME SOUNDS/_Dome-Sounds/kick/0004-FRAGMENTS_01_KICK_04.wav" );
-~kick.numChannels.postln;
 
 ~caveTom = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/Sons pour Supercollider 2/_DOME SOUNDS/_Samples-Transfer-Chapter/2-Crépuscule/_OneShot/TomCave.aif");
-~caveTom.numChannels.postln;
 
 ~murmures = ~readContentsAsBuffers("/Users/lewismurray/Desktop/DomeSupercollider/Chapitre3 - Rituel/MurmuresOneShot";
 ~clochettes = ~readContentsAsBuffers("/Users/lewismurray/Desktop/DomeSupercollider/Chapitre3 - Rituel/ClochetteOneShot/ClochetteReverb");

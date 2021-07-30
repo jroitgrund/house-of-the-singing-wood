@@ -1,66 +1,73 @@
 (
-var birds1Amp = Bus.control(s, 1);
-var cloche1Amp = Bus.control(s, 1);
-var waterAmp = Bus.control(s, 1);
+var coil = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/coil.aif");
+var cricket1 = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/cricket1.aif");
+var cricket2 = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/cricket2.aif");
+var hhdelay = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/hhdelay.aif");
+var kick = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/kick.aif");
+var kickDelay = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/kickDelay.aif");
+var snareTom = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/snareTom.aif");
+var tom1 = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/tom1.aif");
 
-var birds1 = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/Sons pour Supercollider 2/Chapitre1 - Biosphere/Birds1.aif");
-var cloche1 = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/Sons pour Supercollider 2/Chapitre1 - Biosphere/Cloche_1.aif");
-var water = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/Sons pour Supercollider 2/Chapitre1 - Biosphere/Water.aif");
 
-var totalDuration = 30;
-
-
-~playChapter1 = {
+~playChapter3 = {
 	var patterns = List.new;
 
-    Synth.new(\control, [
-		\controlBus, birds1Amp,
-		\silence, 0,
-		\attack, 0,
-		\sustainTime, 20,
-		\release, 0
-	]);
-
-    Synth.new(\control, [
-		\controlBus, cloche1Amp,
-		\silence, 10,
-		\attack, 0,
-		\sustainTime, 20,
-		\release, 0
-	]);
-
-    Synth.new(\control, [
-		\controlBus, waterAmp,
-		\silence, 20,
-		\attack, 0,
-		\sustainTime, 10,
-		\release, 0
-	]);
+	patterns.add(Pbind(
+		\dur, Pseq([Rest(47/4), 17/4], repeats: inf),
+		\instrument, \play,
+		\buf, coil,
+		\duration, coil.duration,
+	));
 
 	patterns.add(Pbind(
-		\dur, birds1.duration,
+		\dur, Pseq([Rest(8), 8], repeats: inf),
 		\instrument, \play,
-		\buf, birds1,
-		\duration, birds1.duration,
-		\ampBus, birds1Amp
-	).play);
+		\buf, cricket1,
+		\duration, cricket1.duration,
+	));
 
 	patterns.add(Pbind(
-		\dur, cloche1.duration,
+		\dur, Pseq([Pseq([1/4], repeats: 57), Rest(1/4), Pseq([1/4], repeats: 6)], repeats: inf),
 		\instrument, \play,
-		\buf, cloche1,
-		\duration, cloche1.duration,
-		\ampBus, cloche1Amp
-	).play);
+		\buf, cricket2,
+		\duration, cricket2.duration,
+	));
 
 	patterns.add(Pbind(
-		\dur, water.duration,
+		\dur, Pseq([Rest(14), 22], repeats: inf),
 		\instrument, \play,
-		\buf, water,
-		\duration, water.duration,
-		\ampBus, waterAmp
-	).play);
+		\buf, hhdelay,
+		\duration, hhdelay.duration,
+	));
 
-	[totalDuration, patterns];
+	patterns.add(Pbind(
+		\dur, Pseq([2/4, 6/4, 2, 2, 2, 2/4, 6/4, 2, 2/4, 6/4, 2], repeats: inf),
+		\instrument, \play,
+		\buf, kick,
+		\duration, kick.duration,
+	));
+
+	patterns.add(Pbind(
+		\dur, Pseq([Rest(10), 6], repeats: inf),
+		\instrument, \play,
+		\buf, kickDelay,
+		\duration, kickDelay.duration,
+	));
+
+	patterns.add(Pbind(
+		\dur, Pseq([Rest(2), 5, 2/4, 2, 2/4, 14/4, 1/4, 1/4, 2], repeats: inf),
+		\instrument, \play,
+		\buf, snareTom,
+		\duration, snareTom.duration,
+	));
+
+	patterns.add(Pbind(
+		\dur, Pseq([Rest(26/4), 38/4], repeats: inf),
+		\instrument, \play,
+		\buf, tom1,
+		\duration, tom1.duration,
+	));
+
+	patterns;
 };
 )

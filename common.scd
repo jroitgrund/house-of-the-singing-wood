@@ -2,11 +2,11 @@
 var makeSynthDef = {
 	|name, numChannels|
 	SynthDef.new(name, {
-		|out, buf, amp = 1.0, ampBus = -1, pitchRatio = 0, window = 0.2, hpf = 0, rate = 1, panSpeed = 0, atk = -1, sus = -1, rel = -1, lpf = 0, revTime = 0, delayTime = 0, lfoSpeed = 0, duration|
-		var envelope, sound, ampBusEnvelope, left, right, middle;
+		| out, buf, amp = 1.0, ampBus = -1, pitchRatio = 0, window = 0.2, hpf = 0, rate = 1, panSpeed = 0, atk = -1, sus = -1, rel = -1, lpf = 0, revTime = 0, delayTime = 0, lfoSpeed = 0, duration, loop = 0, loopAtk = -1, loopSus = -1, loopRel = -1 |
+		var envelope, sound, ampBusEnvelope, loopEnvelope, left, right, middle;
 
 		// Load buffer
-		sound = PlayBuf.ar(2, buf, rate);
+		sound = PlayBuf.ar(2, buf, rate, loop: loop);
 
 		// Apply pitch shift if set
 		sound = Select.ar(pitchRatio > 0, [sound, PitchShift.ar(sound, windowSize: window, pitchRatio: pitchRatio)]);
@@ -26,11 +26,13 @@ var makeSynthDef = {
 		// Get envelope if set.
 		envelope = Select.kr(atk >= 0, [EnvGen.kr(Env([1, 1], [duration]), doneAction: 2), EnvGen.kr(Env([0, 1, 1, 0, 0], [atk, sus, rel, duration]), doneAction: 2)]);
 
+		loopEnvelope = Select.kr(loopAtk >=0, [1, EnvGen.kr(Env([0, 0, 1, 1, 0, 0], [0, loopAtk, loopSus, loopRel, 0], loopNode: 0, releaseNode: 4))]);
+
 		// Get global envelope from control amp if set.
 		ampBusEnvelope = Select.kr(ampBus >= 0, [1, In.kr(ampBus)]);
 
 		// Apply envelopes.
-		sound = sound * envelope * ampBusEnvelope;
+		sound = sound * envelope * ampBusEnvelope * loopEnvelope;
 
 		// Split into two channels.
 		left = sound[0];

@@ -2,11 +2,11 @@
 var makeSynthDef = {
 	|name, numChannels|
 	SynthDef.new(name, {
-		| out, buf, amp = 1.0, ampBus = -1, pitchRatio = 0, window = 0.2, hpf = 0, rate = 1, panBus = -1, atk = -1, sus = -1, rel = -1, lpfBus = -1, revTime = 0, delayTime = 0, lfoSpeed = 0, duration, loop = 0, loopAtk = -1, loopSus = -1, loopRel = -1, loopEnvOutBus = nil, envOutBus = nil |
+		| out, buf, amp = 1.0, ampBus = -1, pitchRatio = 0, window = 0.2, hpf = 0, rate = 1, panBus = -1, atk = -1, sus = -1, rel = -1, lpfBus = -1, revTime = 0, delayTime = 0, lfoSpeed = 0, loop = 0, loopAtk = -1, loopSus = -1, loopRel = -1, loopEnvOutBus = nil, envOutBus = nil |
 		var envelope, sound, ampBusEnvelope, loopEnvelope, pan, left, right, middle;
 
 		// Load buffer
-		sound = PlayBuf.ar(2, buf, rate, loop: loop);
+		sound = PlayBuf.ar(2, buf, rate, loop: loop, doneAction: 2);
 
 		// Apply pitch shift if set
 		sound = Select.ar(pitchRatio > 0, [sound, PitchShift.ar(sound, windowSize: window, pitchRatio: pitchRatio)]);
@@ -24,7 +24,7 @@ var makeSynthDef = {
 		sound =  Select.ar(delayTime > 0, [sound, AllpassC.ar(sound, 2, delayTime)]);
 
 		// Get envelope if set.
-		envelope = Select.kr(atk >= 0, [EnvGen.kr(Env([1, 1], [duration]), doneAction: 2), EnvGen.kr(Env([0, 1, 1, 0, 0], [atk, sus, rel, duration]), doneAction: 2)]);
+		envelope = Select.kr(atk >= 0, [1, EnvGen.kr(Env([0, 1, 1, 0], [atk, sus, rel]), doneAction: 2)]);
 
 		loopEnvelope = Select.kr(loopAtk >=0, [1, EnvGen.kr(Env([0, 0, 1, 1, 0, 0], [0, loopAtk, loopSus, loopRel, 0], loopNode: 0, releaseNode: 4))]);
 
@@ -59,14 +59,14 @@ var makeSynthDef = {
 
 makeSynthDef.value(\play, 2);
 
-SynthDef.new(\control, {
-	|controlBus, silence, attack, sustainTime, release|
-	Out.kr(controlBus, EnvGen.kr(Env([0, 0, 1, 1, 0], [silence, attack, sustainTime, release]), doneAction: 2))
+SynthDef.new(\ampControl, {
+	|controlBus, atk, sus, rel|
+	Out.kr(controlBus, EnvGen.kr(Env([0, 1, 1, 0], [atk, sus, rel]), doneAction: 2))
 }).add;
 
 SynthDef.new(\panControl, {
-	| controlBus, freq |
-	Out.kr(controlBus, LFSaw.kr(freq));
+	| controlBus, freq, iphase |
+	Out.kr(controlBus, LFSaw.kr(freq, iphase));
 }).add;
 
 SynthDef.new(\lpfControl, {

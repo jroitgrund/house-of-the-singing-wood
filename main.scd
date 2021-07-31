@@ -8,6 +8,7 @@ s.reboot;
 (
 s.options.device = "ASIO : Realtek ASIO";
 s.options.memSize = 1000000;
+s.options.numOutputBusChannels = 2;
 s.reboot;
 );
 
@@ -30,3 +31,4 @@ Routine({
 	], repeats: 1).play;
 }).play;
 )
+

@@ -325,9 +325,9 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 			\buf, Pxrand(clochettes, repeats: inf),
 			\hardPan, Prand([0, 0.5, 1, 1.5], inf),
 			\lpfBus, clochettesLowPassBus,
-			\amp, 0.5,
+			\amp, 1,
 			\gateRelease, 3,
-			\delayTime, Pif(rarement, Prand([TempoClock.default.tempo / 10, TempoClock.default.tempo / 9], inf), 0)
+			\delayTime, Pif(rarement, Prand([TempoClock.default.tempo / 9, TempoClock.default.tempo / 10], inf), 0)
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -553,15 +553,38 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 
 ~snareTom = {
 	| duration |
-	Pbind(
-		\dur, Pseq([Rest(2), 5, 2/4, 2, 2/4, 14/4, 1/4, 1/4, 2], repeats: inf),
-		\legato, 1,
-		\instrument, Pif(Ptime() < duration, \play),
-		\buf, snareTom,
-		\gateRelease, 3,
-		\amp, Pfunc( { | ev | 0.05 + (ev[\dur] / 20) } ),
-		\hardPan, Prand([0, 0.5, 1, 1.5], inf)
-	);
+	Ppar([
+		Pbind(
+			\dur, Pseq([Rest(2), 5, 2/4, 2, 2/4, 14/4, 1/4, 1/4, 2], repeats: inf),
+			\legato, 1,
+			\instrument, Pif(Ptime() < duration, \play),
+			\buf, snareTom,
+			\gateRelease, 3,
+			\amp, Pfunc( { | ev | 0.05 + (ev[\dur] / 20) } ),
+			\hardPan, Prand([0, 0.5, 1, 1.5], inf),
+			\lpfBus, snareTomLowPassBus,
+			\lpfRq, 0.5,
+			\ampBus, snareTomAmpBus,
+		),
+		Pbind(
+			\dur, Pseq([duration]),
+			\legato, 1,
+			\instrument, \lpfControl,
+			\freq, TempoClock.default.tempo / 8,
+			\min, 2500,
+			\max, 4000,
+			\controlBus, snareTomLowPassBus,
+		),
+		Pbind(
+			\dur, Pseq([duration]),
+			\legato, 1,
+			\instrument, \ampControl,
+			\atk, 16,
+			\sus, (duration - 16) / TempoClock.default.tempo,
+			\rel, 0,
+			\controlBus, snareTomAmpBus
+		),
+	]);
 };
 
 ~tom1 = {

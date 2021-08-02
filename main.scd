@@ -15,8 +15,8 @@ s.reboot;
 (
 var runLoop;
 var firstPhaseDuration = 0;
-var secondPhaseDuration = 128;
-var thirdPhaseDuration = 64;
+var secondPhaseDuration = 0;
+var thirdPhaseDuration = 0;
 var fourthPhaseDuration = 64;
 var fifthPhaseDuration = 64;
 var total = firstPhaseDuration + secondPhaseDuration + thirdPhaseDuration + fourthPhaseDuration + fifthPhaseDuration;
@@ -89,6 +89,10 @@ Routine({
 	// ~snareTom.value(64).play;
 	// ~drumRack.value(64).play;
 	// ~hiboux.value(32).play;
+	// ~clochettes.value(64, rarement: true).play;
+	//~bassVoiceShaman.value(32, withFifth: false).play;
+	//(32/TempoClock.default.tempo).wait;
+	//~kick.value(32).play;
 	// ~clochettes.value(64, rarement: true).play;
 }).play;
 )

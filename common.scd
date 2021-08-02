@@ -2,7 +2,7 @@
 var makeSynthDef = {
 	|name, numChannels|
 	SynthDef.new(name, {
-		| out, buf, amp = 1.0, ampBus = -1, pitchRatio = 0, window = 0.2, hpf = 0, rate = 1, hardPan = -1, panBus = -1, atk = -1, sus = -1, rel = 1000000, lpfBus = -1, lpf = 20000, revTime = 0, delayTime = 0, lfoSpeed = 0, loop = 0, loopAtk = -1, loopSus = -1, loopRel = -1, gate = 1, gateRelease = 0, loopEnvOutBus = nil, envOutBus = nil |
+		| out, buf, amp = 1.0, ampBus = -1, pitchRatio = 0, window = 0.2, hpf = 0, rate = 1, hardPan = -1, panBus = -1, atk = -1, sus = -1, rel = 1000000, lpfBus = -1, lpf = 20000, revTime = 0, delayTime = 0, lfoSpeed = 0, loop = 0, loopAtk = -1, loopSus = -1, loopRel = -1, gate = 1, gateRelease = 0, lpfRq = 1, loopEnvOutBus = nil, envOutBus = nil |
 		var envelope, sound, ampBusEnvelope, loopEnvelope, pan, left, right, middle, linen, delay;
 
 		linen = Linen.kr(gate, releaseTime: gateRelease, doneAction: 2);
@@ -20,11 +20,11 @@ var makeSynthDef = {
 		 * TODO-LEWIS: I don't get what this is doing, looks like a low pass with the values being set by a sin osc going from 0 to 1.
 		 * This means it will filter all sounds above 1khz, or all sounds above 0khz. That doesn't sound right.
 		 */
-		sound = Select.ar(lpfBus >= 0, [sound, LPF.ar(sound, In.kr(lpfBus))]);
+		sound = Select.ar(lpfBus >= 0, [sound, RLPF.ar(sound, In.kr(lpfBus), lpfRq)]);
 
 		// Apply delay and reverb if set.
 		delay = Select.ar(delayTime > 0, [
-			sound,
+			Silent.ar,
 			AllpassC.ar(
 				sound,
 				delayTime * 40,
@@ -33,7 +33,6 @@ var makeSynthDef = {
 		]);
 
 		sound = sound + delay;
-
 		// delay = (delay[0] + delay[1]) * 0.5;
 		// delay = PanAz.ar(4, delay, hardPan + ~getPanPositionEnvelope.value(delayTime));
 

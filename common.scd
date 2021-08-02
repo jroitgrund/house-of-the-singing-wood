@@ -129,6 +129,12 @@ Event.addEventType(\actionEvent, {
 
 ~getPanPositionEnvelope = {
 	| twentiethJumpDuration |
-	EnvGen.kr(Env([0, 0, 0.1, -0.2, 0.3, -0.4, 0.5, -0.6, 0.7, -0.8, 0.9, -1, -1.1, 1.2, -1.3, 1.4, -1.5, 1.6, -1.7, 1.8, -1.9, 0], [0] + (twentiethJumpDuration!19) + [0], loopNode: 0, releaseNode: 20, curve: 'hold'));
+	EnvGen.kr(Env(
+		[0, 0, 0.1, -0.2, 0.3, -0.4, 0.5, -0.6, 0.7, -0.8, 0.9, -1, -1.1, 1.2, -1.3, 1.4, -1.5, 1.6, -1.7, 1.8, -1.9, 0],
+		[0] + (twentiethJumpDuration!19) + [0],
+		loopNode: 0,
+		releaseNode: 20,
+		curve: 'hold'
+	));
 };
 )

@@ -14,8 +14,8 @@ s.reboot;
 
 (
 var runLoop;
-var firstPhaseDuration = 64;
-var secondPhaseDuration = 64;
+var firstPhaseDuration = 0;
+var secondPhaseDuration = 128;
 var thirdPhaseDuration = 64;
 var fourthPhaseDuration = 64;
 var fifthPhaseDuration = 64;
@@ -27,12 +27,12 @@ TempoClock.default.tempo = 90/60;
 runLoop = {
 	Ppar([
 		Pseq([Event.silent(0), Ppar([
-			~grillons.value(firstPhaseDuration + 16),
+			~grillons.value(firstPhaseDuration + 32),
 			Pseq([Event.silent(4), ~clochettes.value(firstPhaseDuration - 4)]),
 			~bass.value(firstPhaseDuration, rarement: true)
 		])]),
 		Pseq([Event.silent(firstPhaseDuration), Ppar([
-			Pseq([Event.silent(16), ~bassVoiceShaman.value(secondPhaseDuration)]),
+			Pseq([Event.silent(16), ~bassVoiceShaman.value(secondPhaseDuration - 8)]),
 			Pseq([Event.silent(0), ~murmuresLoops.value(secondPhaseDuration - 0)]),
 			Pseq([Event.silent(8), ~hiboux.value(secondPhaseDuration - 8)]),
 		])]),

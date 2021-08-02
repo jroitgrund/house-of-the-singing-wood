@@ -367,9 +367,9 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 				\dur, Pseq([duration]),
 				\legato, 1,
 				\instrument, \ampControl,
-				\atk, 16 / TempoClock.default.tempo,
-				\sus, (duration - 32) / TempoClock.default.tempo,
-				\rel, 16 / TempoClock.default.tempo,
+				\atk, 32 / TempoClock.default.tempo,
+				\sus, (duration - 64) / TempoClock.default.tempo,
+				\rel, 32 / TempoClock.default.tempo,
 				\controlBus, bassVoiceShamanAmpBus
 			)]),
 			Pif(withFifth, Ppar([

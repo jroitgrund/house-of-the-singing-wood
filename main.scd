@@ -70,6 +70,7 @@ runLoop = {
 			]),
 		]),
 
+		// This pauses longer than expected (too long?. Not 100% sure why.
 		Event.silent(pause),
 
 		// Ritual

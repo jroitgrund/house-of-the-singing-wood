@@ -14,11 +14,12 @@ s.reboot;
 
 (
 var runLoop;
-var firstPhaseDuration = 32;
-var secondPhaseDuration = 32;
-var thirdPhaseDuration = 32;
-var fourthPhaseDuration = 32;
-var fifthPhaseDuration = 32;
+var firstPhaseDuration = 64;
+var secondPhaseDuration = 64;
+var thirdPhaseDuration = 64;
+var fourthPhaseDuration = 64;
+var fifthPhaseDuration = 64;
+var total = firstPhaseDuration + secondPhaseDuration + thirdPhaseDuration + fourthPhaseDuration + fifthPhaseDuration;
 TempoClock.default.tempo = 90/60;
 "./common.scd".load;
 "./playLoop.scd".load;
@@ -27,38 +28,35 @@ runLoop = {
 	Ppar([
 		Pseq([Event.silent(0), Ppar([
 			~grillons.value(firstPhaseDuration + 16),
-			~clochettes.value(firstPhaseDuration),
+			Pseq([Event.silent(4), ~clochettes.value(firstPhaseDuration - 4)]),
 			~bass.value(firstPhaseDuration, rarement: true)
 		])]),
 		Pseq([Event.silent(firstPhaseDuration), Ppar([
-			~bassVoiceShaman.value(secondPhaseDuration),
-			Pseq([Event.silent(8), ~murmuresLoops.value(secondPhaseDuration - 8)]),
+			Pseq([Event.silent(16), ~bassVoiceShaman.value(secondPhaseDuration)]),
+			Pseq([Event.silent(0), ~murmuresLoops.value(secondPhaseDuration - 0)]),
 			Pseq([Event.silent(8), ~hiboux.value(secondPhaseDuration - 8)]),
 		])]),
 		Pseq([Event.silent(firstPhaseDuration + secondPhaseDuration), Ppar([
-			~kick.value(thirdPhaseDuration),
-			~snareTom.value(thirdPhaseDuration),
+			~kick.value(thirdPhaseDuration + 1),
 			~murmuresLoops.value(thirdPhaseDuration)
 		])]),
 		Pseq([Event.silent(firstPhaseDuration + secondPhaseDuration + thirdPhaseDuration), Ppar([
-			~murmuresLoops.value(fourthPhaseDuration),
-			~hiboux.value(fourthPhaseDuration),
-			~clochettes.value(fourthPhaseDuration, rarement: true),
-			~feuillesNappe.value(fourthPhaseDuration),
+			~murmures.value(fourthPhaseDuration),
+			Pseq([Event.silent(fourthPhaseDuration / 2), ~hiboux.value(fourthPhaseDuration / 2)]),
+			~clochettes.value(fourthPhaseDuration + 32, rarement: true),
+			~feuillesNappe.value(fourthPhaseDuration + 16),
 		])]),
-		Pseq([Event.silent(firstPhaseDuration + secondPhaseDuration + thirdPhaseDuration + fourthPhaseDuration), Ppar([
-			~drumRack.value(64),
-			~bassVoiceShaman.value(64)
+Pseq([Event.silent(firstPhaseDuration + secondPhaseDuration + thirdPhaseDuration + fourthPhaseDuration), Ppar([
+			Pseq([Event.silent(32), ~drumRack.value(fifthPhaseDuration - 32)]),
+			~bassVoiceShaman.value(fifthPhaseDuration, withFifth: false)
 		])])
 	]).play;
 };
 
 Routine({
-	var total = firstPhaseDuration + secondPhaseDuration + thirdPhaseDuration + fourthPhaseDuration + fifthPhaseDuration;
-
 	2.wait;
 
-	Array.series(10).do { | i |
+	Array.series(1).do { | i |
 		TempoClock.default.sched(total * i, runLoop);
 	};
 }).play;
@@ -73,7 +71,7 @@ TempoClock.default.tempo = 90/60;
 Routine({
 	2.wait;
 	// ~grillons.value(64).play;
-	//~feuillesNappe.value(64).play; // perhaps needs some enveloping
+	// ~feuillesNappe.value(64).play; // perhaps needs some enveloping
 	// ~murmures.value(64).play;
 	// ~murmuresLoops.value(64).play; // needs to be a bit louder
 	// ~clochettes.value(64).play;
@@ -90,30 +88,20 @@ Routine({
 	// ~tom1.value(64).play;
 	// ~snareTom.value(64).play;
 	// ~drumRack.value(64).play;
-		/*Pseq([Event.silent(0), Ppar([
-			~grillons.value(32),
-			~clochettes.value(32),
-			~bass.value(32, rarement: true)
-		])]).play;*/
-		Ppar([Ppar([
-		~bassVoiceShaman.value(32),
-			// ~murmuresLoops.value(32),
-		// ~hiboux.value(32)
-	]), Pbind(\dur, Pseq([Rest(31), 1]))]).play(TempoClock.default);
-		/*Pseq([Event.silent(firstPhaseDuration + secondPhaseDuration), Ppar([
-			~kick.value(thirdPhaseDuration),
-			~snareTom.value(thirdPhaseDuration),
-			~murmuresLoops.value(thirdPhaseDuration)
-		])]),
-		Pseq([Event.silent(firstPhaseDuration + secondPhaseDuration + thirdPhaseDuration), Ppar([
-			~murmuresLoops.value(fourthPhaseDuration),
-			~hiboux.value(fourthPhaseDuration),
-			~clochettes.value(fourthPhaseDuration, rarement: true),
-			~feuillesNappe.value(fourthPhaseDuration),
-		])]),
-		Pseq([Event.silent(firstPhaseDuration + secondPhaseDuration + thirdPhaseDuration + fourthPhaseDuration), Ppar([
-			~drumRack.value(64),
-			~bassVoiceShaman.value(64)
-		])])*/
+	// ~hiboux.value(32).play;
+	// ~clochettes.value(64, rarement: true).play;
 }).play;
 )
+
+
+(
+SynthDef(\test, {
+	var playBuf;
+	playBuf = PlayBuf.ar(2, Buffer.read(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/ClochetteOneShot/ClochetteReverb/ClochetteReverb1.aif"));
+	playBuf = (playBuf[0] + playBuf[1]) * 0.5;
+	Out.ar(0, 0.1 * PanAz.ar(4, playBuf, 0, orientation: 0));
+}).add);
+)
+(
+Synth(\test);
+}

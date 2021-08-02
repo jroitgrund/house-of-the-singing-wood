@@ -261,3 +261,19 @@ t = TempoClock.new(90 / 60);
 ).play(t, quant:1);
 
 //~semiTone = 1.0594630944;
+
+var testBus = Bus.control(s, 1);
+
+{
+	var playBuf = PlayBuf.ar(2, murmuresLoops[0]);
+	Out.kr(testBus, OnePole.kr(Amplitude.kr(playBuf, mul: 10), 0.9));
+	playBuf;
+}.play;
+
+Routine({
+	var touchDesigner = NetAddr.new("localhost", 10000);
+	loop {
+		testBus.get { |value| value.postln; touchDesigner.sendMsg("/test", value) };
+		(1/60).wait;
+	}
+}).play;

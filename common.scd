@@ -1,10 +1,12 @@
 (
+var loadedBuffers;
 var makeSynthDef = {
 	|name, numChannels|
 	SynthDef.new(name, {
-		| out, buf, amp = 1.0, ampBus = -1, pitchRatio = 0, window = 0.2, hpf = 0, rate = 1, hardPan = -1, panBus = -1, atk = -1, sus = -1, rel = 1000000, lpfBus = -1, lpf = 20000, revTime = 0, delayTime = 0, lfoSpeed = 0, loop = 0, loopAtk = -1, loopSus = -1, loopRel = -1, gate = 1, gateRelease = 0, lpfRq = 1, loopEnvOutBus = nil, envOutBus = nil |
+		| out, buf, amp = 1.0, ampBus = -1, pitchRatio = 0, window = 0.2, hpf = 0, rate = 1, hardPan = -1, panBus = -1, atk = -1, sus = -1, rel = 1000000, lpfBus = -1, lpf = 20000, revTime = 0, delayTime = 0, delayRepeat = 40, lfoSpeed = 0, loop = 0, loopAtk = -1, loopSus = -1, loopRel = -1, gate = 1, gateRelease = 0, lpfRq = 1, loopEnvOutBus = nil, envOutBus = nil |
 		var envelope, sound, ampBusEnvelope, loopEnvelope, pan, left, right, middle, linen, delay;
 
+		// Used to release synths when a pattern event ends and triggers a note off event, setting gate to zero.
 		linen = Linen.kr(gate, releaseTime: gateRelease, doneAction: 2);
 
 		// Load buffer
@@ -16,37 +18,37 @@ var makeSynthDef = {
 		// Apply HPF if set
 		sound = Select.ar(hpf > 0, [sound, HPF.ar(sound, hpf)]);
 
-		/**
-		 * TODO-LEWIS: I don't get what this is doing, looks like a low pass with the values being set by a sin osc going from 0 to 1.
-		 * This means it will filter all sounds above 1khz, or all sounds above 0khz. That doesn't sound right.
-		 */
+		// Apply LPF from bus if set.
 		sound = Select.ar(lpfBus >= 0, [sound, RLPF.ar(sound, In.kr(lpfBus), lpfRq)]);
 
-		// Apply delay and reverb if set.
+		// Apply delay if set. Both number of repeats and delay time are configurable.
 		delay = Select.ar(delayTime > 0, [
 			Silent.ar,
 			AllpassC.ar(
 				sound,
-				delayTime * 40,
+				delayTime * delayRepeat,
 				delayTime,
-				delayTime * 40)
+				delayTime * delayRepeat)
 		]);
 
 		sound = sound + delay;
+
+		// Dead code, this is supposed to be used for the ping pong delay.
 		// delay = (delay[0] + delay[1]) * 0.5;
 		// delay = PanAz.ar(4, delay, hardPan + ~getPanPositionEnvelope.value(delayTime));
 
 		// Get envelope if set.
 		envelope = Select.kr(atk >= 0, [1, EnvGen.kr(Env([0, 1, 1, 0], [atk, sus, rel]))]);
 
+		// An envelope which loops throughout the sample. Can be used to fade the sample in and out.
+		// We don't use this much, maybe we should, the extra dynamics could liven things up.
 		loopEnvelope = Select.kr(loopAtk >=0, [1, EnvGen.kr(Env([0, 0, 1, 1, 0, 0], [0, loopAtk, loopSus, loopRel, 0], loopNode: 0, releaseNode: 4))]);
 
-		// Get global envelope from control amp if set.
+		// Get envelope from control amp if set.
 		ampBusEnvelope = Select.kr(ampBus >= 0, [1, In.kr(ampBus)]);
 
 		// Apply envelopes.
 		sound = sound * envelope * ampBusEnvelope * loopEnvelope * amp * linen * 0.3;
-		// delay = sound * envelope * ampBusEnvelope * loopEnvelope * amp * linen * 0.3;
 
 		// Split into two channels.
 		left = sound[0];
@@ -74,20 +76,34 @@ var makeSynthDef = {
 	}).add;
 };
 
+
+// Attempt to fix the buffer ugen problem!
+Buffer.freeAll(s);
+
 makeSynthDef.value(\play, 2);
 
+// In all these control synths, linen is just used to free the synth with a pattern node off event.
 SynthDef.new(\ampControl, {
 	|controlBus, atk, sus, rel, gate = 1|
 	var linen = Linen.kr(gate, doneAction: 2);
 	Out.kr(controlBus, EnvGen.kr(Env([0, 1, 1, 0], [atk, sus, rel])));
 }).add;
 
+// This is a bit tricky to use because you can't retrigger this with a different direction and
+// phase, as this would cause the sound to "jump". We get around this by having the duration of
+// each panControl note be a multiple of the frequency, so that the audio is always at e.g. '0'
+// when changing direction.
+// waver is used to add a glitchy back and forth LFO to the pan, this is used on the melody
+// in part 2 of biosphere.
 SynthDef.new(\panControl, {
-	| controlBus, freq, iphase, direction = 1, gate = 1 |
+	| controlBus, freq, iphase, direction = 1, gate = 1, waver = 0 |
 	var linen = Linen.kr(gate, doneAction: 2);
-	Out.kr(controlBus, LFSaw.kr(freq, iphase, direction));
+	Out.kr(controlBus, LFSaw.kr(freq, iphase, direction) + SinOsc.kr(freq * 20, mul: waver));
 }).add;
 
+
+// This low pass is mostly useless except on the cave tom, because many of our sounds don't span
+// large frequency ranges.
 SynthDef.new(\lpfControl, {
 	| controlBus, min, max, freq, duration, phase = 0, gate = 1 |
 	var linen = Linen.kr(gate, doneAction: 2);
@@ -99,6 +115,27 @@ SynthDef.new(\lpfControl, {
 	PathName(path).entries.collect { |fn| Buffer.read(s, fn.fullPath); };
 };
 
+// This creates a function "loaded" which buffers call when they're done loading a sample.
+// Then, in main, we use "waitForBuffers" to make sure all 21 samples are loaded before playing.
+// Without this the buffer ugen bug happens all the time.
+// This prevents it from happening after rebooting the server, although it still ends up happening
+// eventually. See also https://scsynth.org/t/buffer-ugen-no-buffer-data/4319
+loadedBuffers = 0;
+~loaded = { loadedBuffers = loadedBuffers + 1; };
+~waitForBuffers = {
+	| action |
+	Routine({
+		while({ loadedBuffers < 21 }, {
+			loadedBuffers.postln;
+			1.wait;
+		});
+		loadedBuffers.postln;
+		1.wait;
+		action.value;
+	}).play;
+};
+
+// Everything under here is unused for now, mostly OSC stuff.
 ~getPollBufferAndSendAsOscRoutine = {
 	| oscServer, bus, oscMessage, multiply = 1, add = 0 |
 	Routine({
@@ -115,7 +152,7 @@ SynthDef.new(\lpfControl, {
 
 ~touchDesigner = NetAddr.new("localhost", 10000);
 
-Event.addEventType(\actionEvent, {
+Event.addEventType(\actionInstrument, {
 	var noteEvent;
 	~action.value();
 
@@ -124,6 +161,10 @@ Event.addEventType(\actionEvent, {
 		~type = \note;
 	};
 	noteEvent.play;
+});
+
+Event.addEventType(\actionEvent, {
+	~action.value();
 });
 
 ~getPanPositionEnvelope = {

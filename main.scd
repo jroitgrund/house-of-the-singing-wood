@@ -1,3 +1,4 @@
+// Actual device on PC, need to change for mac.
 (
 s.options.device = "ASIO : Focusrite USB ASIO";
 s.options.numOutputBusChannels = 4;
@@ -5,6 +6,8 @@ s.options.memSize = 1000000;
 s.reboot;
 )
 
+
+// Just for convenience if switching to internal laptop sound card.
 (
 s.options.device = "ASIO : Realtek ASIO";
 s.options.memSize = 1000000;
@@ -12,47 +15,94 @@ s.options.numOutputBusChannels = 2;
 s.reboot;
 );
 
+
+// Runs everything! Adjust durations and comment stuff out to run individual parts.
 (
 var runLoop;
-var firstPhaseDuration = 0;
-var secondPhaseDuration = 0;
-var thirdPhaseDuration = 0;
+
+var biosphereFirstPhaseDuration = 64;
+var biosphereSecondPhaseDuration = 64;
+var biosphereThirdPhaseDuration = 64;
+
+var pause = 8;
+
+var firstPhaseDuration = 64;
+var secondPhaseDuration = 64;
+var thirdPhaseDuration = 64;
 var fourthPhaseDuration = 64;
 var fifthPhaseDuration = 64;
-var total = firstPhaseDuration + secondPhaseDuration + thirdPhaseDuration + fourthPhaseDuration + fifthPhaseDuration;
-TempoClock.default.tempo = 90/60;
-"./common.scd".load;
-"./playLoop.scd".load;
+var total = biosphereFirstPhaseDuration + biosphereSecondPhaseDuration + biosphereThirdPhaseDuration + pause + firstPhaseDuration + secondPhaseDuration + thirdPhaseDuration + fourthPhaseDuration + fifthPhaseDuration;
 
+TempoClock.default.tempo = 90/60;
+
+"./common.scd".load;
+"./biosphere.scd".load;
+"./ritual.scd".load;
+
+// Chapters follow each other in a pseq since they have a pause in between them.
+// Inside chapters, parts are all in a Ppar since they have overlap. If a part needs to wait for
+// a previous part to complete, it uses a Pseq with Event.silent.  If a sound needs to bleed into
+// the next part, it uses a longer duration, e.g. 'gouttes' lasts for several parts.
 runLoop = {
-	Ppar([
-		Pseq([Event.silent(0), Ppar([
-			~grillons.value(firstPhaseDuration + 32),
-			Pseq([Event.silent(4), ~clochettes.value(firstPhaseDuration - 4)]),
-			~bass.value(firstPhaseDuration, rarement: true)
-		])]),
-		Pseq([Event.silent(firstPhaseDuration), Ppar([
-			Pseq([Event.silent(16), ~bassVoiceShaman.value(secondPhaseDuration - 8)]),
-			Pseq([Event.silent(0), ~murmuresLoops.value(secondPhaseDuration - 0)]),
-			Pseq([Event.silent(8), ~hiboux.value(secondPhaseDuration - 8)]),
-		])]),
-		Pseq([Event.silent(firstPhaseDuration + secondPhaseDuration), Ppar([
-			~kick.value(thirdPhaseDuration + 1),
-			~murmuresLoops.value(thirdPhaseDuration)
-		])]),
-		Pseq([Event.silent(firstPhaseDuration + secondPhaseDuration + thirdPhaseDuration), Ppar([
-			~murmures.value(fourthPhaseDuration),
-			Pseq([Event.silent(16), ~hiboux.value(fourthPhaseDuration - 16)]),
-			~clochettes.value(fourthPhaseDuration + 32, rarement: true),
-			~feuillesNappe.value(fourthPhaseDuration + 16),
-		])]),
-Pseq([Event.silent(firstPhaseDuration + secondPhaseDuration + thirdPhaseDuration + fourthPhaseDuration), Ppar([
-			Pseq([Event.silent(32), ~drumRack.value(fifthPhaseDuration - 32)]),
-			~bassVoiceShaman.value(fifthPhaseDuration, withFifth: false)
-		])])
+	Pseq([
+		// Biosphere
+		// I hear weird noise sometimes in the first part here, needs debugging!
+		Ppar([
+			Ppar([
+				Pseq([Event.silent(32), ~gouttes.value(biosphereFirstPhaseDuration + biosphereSecondPhaseDuration - 16)]),
+				Pseq([~owlNappe.value(biosphereFirstPhaseDuration + 8)]),
+				Pseq([Event.silent(16), ~owls.value(biosphereFirstPhaseDuration - 8)]),
+			]),
+			Pseq([
+				Event.silent(biosphereFirstPhaseDuration),
+				Ppar([
+					Pseq([~melodie.value(biosphereSecondPhaseDuration)]),
+					Pseq([~owls.value(biosphereSecondPhaseDuration + 32, rarement: true)])
+				])
+			]),
+			Pseq([
+				Event.silent(biosphereFirstPhaseDuration + biosphereSecondPhaseDuration),
+				Ppar([
+					Pseq([Event.silent(32), ~birds.value(biosphereThirdPhaseDuration - 32)]),
+					Pseq([Event.silent(24), ~frog.value(biosphereSecondPhaseDuration - 24)]),
+					Pseq([~water.value(biosphereSecondPhaseDuration)]),
+				])
+			]),
+		]),
+
+		Event.silent(pause),
+
+		// Ritual
+		Ppar([
+			Pseq([Event.silent(0), Ppar([
+				~grillons.value(firstPhaseDuration + 32),
+				Pseq([Event.silent(4), ~clochettes.value(firstPhaseDuration - 4)]),
+				~bass.value(firstPhaseDuration, rarement: true)
+			])]),
+			Pseq([Event.silent(firstPhaseDuration), Ppar([
+				Pseq([Event.silent(16), ~bassVoiceShaman.value(secondPhaseDuration - 8)]),
+				Pseq([Event.silent(0), ~murmuresLoops.value(secondPhaseDuration - 0)]),
+				Pseq([Event.silent(8), ~hiboux.value(secondPhaseDuration - 8)]),
+			])]),
+			Pseq([Event.silent(firstPhaseDuration + secondPhaseDuration), Ppar([
+				~kick.value(thirdPhaseDuration + 1),
+				~murmuresLoops.value(thirdPhaseDuration)
+			])]),
+			Pseq([Event.silent(firstPhaseDuration + secondPhaseDuration + thirdPhaseDuration), Ppar([
+				~murmures.value(fourthPhaseDuration),
+				Pseq([Event.silent(16), ~hiboux.value(fourthPhaseDuration - 16)]),
+				~clochettes.value(fourthPhaseDuration + 32, rarement: true),
+				~feuillesNappe.value(fourthPhaseDuration + 16),
+			])]),
+			Pseq([Event.silent(firstPhaseDuration + secondPhaseDuration + thirdPhaseDuration + fourthPhaseDuration), Ppar([
+				Pseq([Event.silent(32), ~drumRack.value(fifthPhaseDuration - 32)]),
+				~bassVoiceShaman.value(fifthPhaseDuration, withFifth: false)
+			])])
+		])
 	]).play;
 };
 
+// Adjust the number inside Array.series() to adjust the number of loops.
 Routine({
 	2.wait;
 
@@ -61,51 +111,3 @@ Routine({
 	};
 }).play;
 )
-
-(
-var play;
-TempoClock.default.tempo = 90/60;
-"./common.scd".load;
-"./playLoop.scd".load;
-
-Routine({
-	2.wait;
-	// ~grillons.value(64).play;
-	// ~feuillesNappe.value(64).play; // perhaps needs some enveloping
-	// ~murmures.value(64).play;
-	// ~murmuresLoops.value(64).play; // needs to be a bit louder
-	// ~clochettes.value(64).play;
-	// ~bassVoiceShaman.value(64).play; // louder
-	// ~hiboux.value(64).play; // more often
-	// ~bass.value(64).play;
-	// ~kick.value(64).play;
-	// ~coil.value(64).play; // louder
-	// ~cricket.value(64).play; // louder
-	// ~cricket2.value(64).play;
-	// ~hhdelay.value(64).play; // louder
-	// ~kickDelay.value(64).play; // louder
-	// ~snareTom.value(64).play; // louder, randomness
-	// ~tom1.value(64).play;
-	// ~snareTom.value(64).play;
-	// ~drumRack.value(64).play;
-	// ~hiboux.value(32).play;
-	// ~clochettes.value(64, rarement: true).play;
-	//~bassVoiceShaman.value(32, withFifth: false).play;
-	//(32/TempoClock.default.tempo).wait;
-	//~kick.value(32).play;
-	// ~clochettes.value(64, rarement: true).play;
-}).play;
-)
-
-
-(
-SynthDef(\test, {
-	var playBuf;
-	playBuf = PlayBuf.ar(2, Buffer.read(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/ClochetteOneShot/ClochetteReverb/ClochetteReverb1.aif"));
-	playBuf = (playBuf[0] + playBuf[1]) * 0.5;
-	Out.ar(0, 0.1 * PanAz.ar(4, playBuf, 0, orientation: 0));
-}).add);
-)
-(
-Synth(\test);
-}

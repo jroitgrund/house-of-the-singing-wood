@@ -1,52 +1,52 @@
 (
-var coil = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/coil.aif");
+var coil = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/coil.aif", action: ~loaded);
 var coilPanBus = Bus.control(s, 1);
 var coilAmpBus = Bus.control(s, 1);
 var coilLowPassBus = Bus.control(s, 1);
 
-var cricket1 = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/cricket1.aif");
+var cricket1 = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/cricket1.aif", action: ~loaded);
 var cricket1PanBus = Bus.control(s, 1);
 var cricket1AmpBus = Bus.control(s, 1);
 var cricket1LowPassBus = Bus.control(s, 1);
 
-var cricket2 = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/cricket2.aif");
+var cricket2 = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/cricket2.aif", action: ~loaded);
 var cricket2PanBus = Bus.control(s, 1);
 var cricket2AmpBus = Bus.control(s, 1);
 var cricket2LowPassBus = Bus.control(s, 1);
 
-var hhdelay = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/hhdelay.aif");
+var hhdelay = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/hhdelay.aif", action: ~loaded);
 var hhdelayPanBus = Bus.control(s, 1);
 var hhdelayAmpBus = Bus.control(s, 1);
 var hhdelayLowPassBus = Bus.control(s, 1);
 
-var kick = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/kick.aif");
+var kick = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/kick.aif", action: ~loaded);
 var kickPanBus = Bus.control(s, 1);
 var kickAmpBus = Bus.control(s, 1);
 var kickLowPassBus = Bus.control(s, 1);
 
-var kickDelay = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/kickDelay.aif");
+var kickDelay = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/kickDelay.aif", action: ~loaded);
 var kickDelayPanBus = Bus.control(s, 1);
 var kickDelayAmpBus = Bus.control(s, 1);
 var kickDelayLowPassBus = Bus.control(s, 1);
 
-var snareTom = Buffer.read(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/snareTom.wav");
+var snareTom = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/snareTom.wav", action: ~loaded);
 var snareTomPanBus = Bus.control(s, 1);
 var snareTomAmpBus = Bus.control(s, 1);
 var snareTomLowPassBus = Bus.control(s, 1);
 
-var tom1 = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/tom1.aif");
+var tom1 = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/tom1.aif", action: ~loaded);
 var tom1PanBus = Bus.control(s, 1);
 var tom1AmpBus = Bus.control(s, 1);
 var tom1LowPassBus = Bus.control(s, 1);
 
-var grillonOneShot = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/Grillons/GrillonOneShot.aif");
+var grillonOneShot = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/Grillons/GrillonOneShot.aif", action: ~loaded);
 var grillonOneShotPanBus = Bus.control(s, 1);
 var grillonOneShotPanBus2 = Bus.control(s, 1);
 var grillonOneShotAmpBus = Bus.control(s, 1);
 var grillonOneShotLowPassBus = Bus.control(s, 1);
 var grillonOneShotLowPassBus2 = Bus.control(s, 1);
 
-var feuillesNappe = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/feuillesNappe.aif");
+var feuillesNappe = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/feuillesNappe.aif", action: ~loaded);
 var feuillesNappePanBus = Bus.control(s, 1);
 var feuillesNappeAmpBus = Bus.control(s, 1);
 var feuillesNappeLowPassBus = Bus.control(s, 1);
@@ -61,12 +61,12 @@ var hibouxPanBus = Bus.control(s, 1);
 var hibouxAmpBus = Bus.control(s, 1);
 var hibouxLowPassBus = Bus.control(s, 1);
 
-var bass = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/Baaaaass.wav");
+var bass = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/Baaaaass.wav", action: ~loaded);
 var bassPanBus = Bus.control(s, 1);
 var bassAmpBus = Bus.control(s, 1);
 var bassLowPassBus = Bus.control(s, 1);
 
-var bassVoiceShaman = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/BassVoiceShaman.aif");
+var bassVoiceShaman = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/BassVoiceShaman.aif", action: ~loaded);
 var bassVoiceShamanPanBus = Bus.control(s, 1);
 var bassVoiceShamanAmpBus = Bus.control(s, 1);
 var bassVoiceShamanLowPassBus = Bus.control(s, 1);
@@ -85,6 +85,7 @@ var murmuresLoopsPanBus = Bus.control(s, 1);
 var murmuresLoopsAmpBus = Bus.control(s, 1);
 var murmuresLoopsLowPassBus = Bus.control(s, 1);
 
+// Four different grillons loops, differing in their octave or in their pan direction.
 ~grillons = {
 	| duration |
 	Ppar([
@@ -156,6 +157,8 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 	])
 };
 
+
+// Long sample with fade in and out.
 ~feuillesNappe = {
 	| duration |
 	Ppar([
@@ -169,13 +172,13 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 			\ampBus, feuillesNappeAmpBus,
 		),
 		Pbind(
-			\dur, Pseq([48], repeats: inf),
-			\legato, 1,
+			\dur, Pseq([48]),
 			\instrument, Pif(Ptime() < duration, \panControl),
-			\freq, TempoClock.default.tempo / 24,
+			\legato, 1,
 			\iphase, 0,
+			\freq, TempoClock.default.tempo / 24,
 			\controlBus, feuillesNappePanBus,
-			\direction, Prand([Pseq([1], 4), Pseq([-1], 4)], inf)
+			\direction, Prand([1, -1], inf)
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -189,6 +192,9 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 	]);
 };
 
+// These samples are quite long, so this feels like a loop.
+// This has a global fade in and out to help with transitions
+// since this sound takes up a lot of space.
 ~murmures = {
 	| duration |
 	Pseq([
@@ -224,42 +230,8 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 	]);
 };
 
-// ~murmuresLoops = {
-// 	| duration |
-// 	Pseq([
-// 		Ppar([
-// 			Pbind(
-// 				\buf, Pxrand(murmuresLoops, repeats: inf),
-// 				\dur, Pfunc({ | ev | (ev[\buf].duration * TempoClock.default.tempo).round(2) }),
-// 				\legato, 1,
-// 				\instrument, Pif(Ptime() < duration, \play),
-// 				\panBus, murmuresLoopsPanBus,
-// 				\ampBus, murmuresLoopsAmpBus,
-// 				\amp, 0.3,
-// 				\gateRelease, 7
-// 			),
-// 			Pbind(
-// 				\dur, Pseq([12], repeats: inf),
-// 				\legato, 1,
-// 				\instrument, Pif(Ptime() < duration, \panControl),
-// 				\freq, TempoClock.default.tempo / 24,
-// 				\iphase, Prand([0, 0.5, 1, 1.5], inf),
-// 				\controlBus, murmuresLoopsPanBus,
-// 				\direction, Prand([Pseq([1], 4), Pseq([-1], 4)], inf)
-// 			),
-// 			Pbind(
-// 				\dur, Pseq([duration]),
-// 				\legato, 1,
-// 				\instrument, \ampControl,
-// 				\atk, 16 / TempoClock.default.tempo,
-// 				\sus, (duration -  32) / TempoClock.default.tempo,
-// 				\rel, 16 / TempoClock.default.tempo,
-// 				\controlBus, murmuresLoopsAmpBus
-// 			),
-// 		])
-// 	]);
-// };
-
+// We use pfunc to adapt the duration to the length of the loop we're playing.
+// Global fade in and out to help with transitions as this takes up a lot of space.
 ~murmuresLoops = {
 	| duration |
 	Pseq([
@@ -302,6 +274,9 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 	]);
 };
 
+// Short samples hard-panned to one random speaker.
+// When played rarely, we add delay.
+// Low pass is probably useless, although can experiment with resonance.
 ~clochettes = {
 	| duration, rarement = false |
 	Ppar([
@@ -325,9 +300,10 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 			\buf, Pxrand(clochettes, repeats: inf),
 			\hardPan, Prand([0, 0.5, 1, 1.5], inf),
 			\lpfBus, clochettesLowPassBus,
-			\amp, 1,
-			\gateRelease, 3,
-			\delayTime, Pif(rarement, Prand([TempoClock.default.tempo / 9, TempoClock.default.tempo / 10], inf), 0)
+			\amp, Pwhite(0.8, 1.1, inf),
+			\gateRelease, 10,
+			\delayTime, Pif(rarement, Prand([TempoClock.default.tempo / 9, TempoClock.default.tempo / 10], inf), 0),
+			\delayRepeat, Pwhite(20, 40, inf)
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -341,6 +317,8 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 	]);
 };
 
+// Long sample with 4 bar fade in and out.
+// Can optionally add a second sample a fifth above, which fades in and out using loopEnv.
 ~bassVoiceShaman = {
 	| duration, withFifth = true |
 	Ppar([
@@ -409,6 +387,7 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 	]);
 };
 
+// Short-ish samples, long enough to use regular panning and not hard-pan to one speaker.
 ~hiboux = {
 	| duration |
 	Ppar([
@@ -444,6 +423,7 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 	]);
 };
 
+// No panning, single rhythmic pattern.
 ~bass = {
 	| duration, rarement = false |
 	Pbind(
@@ -461,6 +441,7 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 	 *************************
 	 */
 
+// No panning, single rhythmic pattern.
 ~kick = {
 	| duration |
 	Pbind(
@@ -473,6 +454,8 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 	);
 };
 
+// All drumrack elements below are randomly hard-panned to one speaker
+// and have a fixed pattern.
 ~coil = {
 	| duration |
 	Pbind(
@@ -613,11 +596,3 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 	]);
 };
 )
-/*
-		\type, \oscEvent,
-		\oscServer, ~touchDesigner,
-		\eventName, "/kick",
-		\eventValue, 1,
-		\offEventValue, 0,
-		\playSynth, true
-*/

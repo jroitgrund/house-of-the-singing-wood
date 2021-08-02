@@ -42,7 +42,7 @@ runLoop = {
 		])]),
 		Pseq([Event.silent(firstPhaseDuration + secondPhaseDuration + thirdPhaseDuration), Ppar([
 			~murmures.value(fourthPhaseDuration),
-			Pseq([Event.silent(fourthPhaseDuration / 2), ~hiboux.value(fourthPhaseDuration / 2)]),
+			Pseq([Event.silent(16), ~hiboux.value(fourthPhaseDuration - 16)]),
 			~clochettes.value(fourthPhaseDuration + 32, rarement: true),
 			~feuillesNappe.value(fourthPhaseDuration + 16),
 		])]),

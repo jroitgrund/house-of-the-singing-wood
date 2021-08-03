@@ -65,15 +65,15 @@ var makeSynthDef = {
 		left = PanAz.ar(4, left, pan + 0.01, orientation: 0);
 		right = PanAz.ar(4, right, pan - 0.01, orientation: 0);
 
-		Out.ar(out, Select.ar(
+		Out.ar(out, Splay.ar(Select.ar(
 			panBus >= 0,
 			[Select.ar(hardPan >= 0, [middle, left + right]),
-			left + right]));
+			left + right])));
 
 		// Write to OSC buses.
 		Out.kr(loopEnvOutBus, loopEnvelope);
 		Out.kr(envOutBus, envelope);
-		Out.kr(ampOutBus, WAmp.kr(Amplitude.ar(sound), 1 / 60));
+		Out.kr(ampOutBus, WAmp.kr(Amplitude.ar(sound), 1 / 10));
 	}).add;
 };
 
@@ -117,7 +117,6 @@ SynthDef.new(\lpfControl, {
 // Without this the buffer ugen bug happens all the time.
 // This prevents it from happening after rebooting the server, although it still ends up happening
 // eventually. See also https://scsynth.org/t/buffer-ugen-no-buffer-data/4319
-Buffer.freeAll(s);
 loadedBuffers = 0;
 ~loaded = { loadedBuffers = loadedBuffers + 1; };
 ~waitForBuffers = {
@@ -134,36 +133,9 @@ loadedBuffers = 0;
 };
 
 // Everything under here is unused for now, mostly OSC stuff.
-~getPollBufferAndSendAsOscRoutine = {
-	| oscServer, bus, oscMessage, multiply = 1, add = 0 |
-	Routine({
-		loop {
-			bus.get({
-				| value |
-				value = value * multiply + add;
-				oscServer.sendMsg(oscMessage, value);
-			});
-			(1/60).wait;
-		}
-	});
-};
-
 ~resolume = NetAddr.new("localhost", 7000);
 
-Event.addEventType(\actionInstrument, {
-	var noteEvent;
-	~action.value();
-
-	noteEvent = currentEnvironment.copy;
-	noteEvent.use { 
-		~type = \note;
-	};
-	noteEvent.play;
-});
-
-Event.addEventType(\actionEvent, {
-	~action.value();
-});
+Event.addEventType(\action, {});
 
 ~getPanPositionEnvelope = {
 	| twentiethJumpDuration |

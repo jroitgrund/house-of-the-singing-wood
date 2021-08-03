@@ -1,50 +1,39 @@
 (
-var birds1 = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Birds1.aif", action: ~loaded);
 var birds1PanBus = Bus.control(s, 1);
 var birds1AmpBus = Bus.control(s, 1);
 var birds1LowPassBus = Bus.control(s, 1);
 var birds1AmpOutBus = Bus.control(s, 1);
 
-var birds2 = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Birds2.aif", action: ~loaded);
 var birds2PanBus = Bus.control(s, 1);
 var birds2AmpBus = Bus.control(s, 1);
 var birds2LowPassBus = Bus.control(s, 1);
 var birds2AmpOutBus = Bus.control(s, 1);
 
-var frog = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Frog_1shot_Wrapped.aif", action: ~loaded);
 var frogPanBus = Bus.control(s, 1);
 var frogAmpBus = Bus.control(s, 1);
 var frogLowPassBus = Bus.control(s, 1);
 var frogAmpOutBus = Bus.control(s, 1);
 
-var gouttes = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Gouttes.aif", action: ~loaded);
 var gouttesPanBus = Bus.control(s, 1);
 var gouttesAmpBus = Bus.control(s, 1);
 var gouttesLowPassBus = Bus.control(s, 1);
 var gouttesAmpOutBus = Bus.control(s, 1);
 
-var melodie = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Melodie_Wrapped.aif", action: ~loaded);
 var melodiePanBus = Bus.control(s, 1);
 var melodieAmpBus = Bus.control(s, 1);
 var melodieLowPassBus = Bus.control(s, 1);
 var melodieAmpOutBus = Bus.control(s, 1);
 
-var owlNappe = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/OWL_1BAR.aif", action: ~loaded);
 var owlNappePanBus = Bus.control(s, 1);
 var owlNappeAmpBus = Bus.control(s, 1);
 var owlNappeLowPassBus = Bus.control(s, 1);
 var owlNappeAmpOutBus = Bus.control(s, 1);
 
-var owls = [
-    Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Owl-Sing1.aif", action: ~loaded),
-    Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Owl-Sing2.aif", action: ~loaded)
-];
 var owlsPanBus = Bus.control(s, 1);
 var owlsAmpBus = Bus.control(s, 1);
 var owlsLowPassBus = Bus.control(s, 1);
 var owlsAmpOutBus = Bus.control(s, 1);
 
-var water = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Water.aif", action: ~loaded);
 var waterPanBus = Bus.control(s, 1);
 var waterAmpBus = Bus.control(s, 1);
 var waterLowPassBus = Bus.control(s, 1);
@@ -60,7 +49,7 @@ var waterAmpOutBus = Bus.control(s, 1);
                     \dur, Pseq([duration - 16]),
                     \legato, 1,
                     \instrument, \play,
-                    \buf, birds2,
+                    \buf, ~birds2Buffer,
                     \loop, 1,
                     \panBus, birds2PanBus,
                     \ampBus, birds2AmpBus,
@@ -89,7 +78,7 @@ var waterAmpOutBus = Bus.control(s, 1);
 			\dur, Pseq([duration]),
 			\legato, 1,
 			\instrument, \play,
-			\buf, birds1,
+			\buf, ~birds1Buffer,
 			\loop, 1,
 			\panBus, birds1PanBus,
 			\ampBus, birds1AmpBus,
@@ -124,7 +113,7 @@ var waterAmpOutBus = Bus.control(s, 1);
 			\dur, Pseq([duration]),
 			\legato, 1,
 			\instrument, \play,
-			\buf, gouttes,
+			\buf, ~gouttesBuffer,
 			\loop, 1,
 			\panBus, gouttesPanBus,
 			\ampBus, gouttesAmpBus,
@@ -160,7 +149,7 @@ var waterAmpOutBus = Bus.control(s, 1);
 			\dur, Pseq([duration]),
 			\legato, 1,
 			\instrument, \play,
-			\buf, owlNappe,
+			\buf, ~owlNappeBuffer,
 			\loop, 1,
 			\panBus, owlNappePanBus,
 			\ampBus, owlNappeAmpBus,
@@ -210,29 +199,12 @@ var waterAmpOutBus = Bus.control(s, 1);
 				], repeats: inf)),
 				\legato, 1,
 			\instrument, Pif(Ptime() < duration, \play),
-			\buf, Pxrand(owls, repeats: inf),
+			\buf, Pxrand(~owlsBuffers, repeats: inf),
 			\hardPan, Pwhite(0.0, 2.0, inf),
             \lpfRq, 2,
 			\gateRelease, 60,
             \ampBus, owlsAmpBus,
-            \ampOutBus, owlsAmpOutBus,
-            \type, \actionInstrument,
-            \resolume, ~resolume,
-            \panToRotate, ~panToRotate,
-            \action, Pfunc({
-                |ev|
-                {
-                    ~resolume.sendMsg("/composition/layers/3/video/effects/transform/rotationz", ~panToRotate.value(ev[\hardPan]));
-                    Pbind(\type, \actionEvent, \dur, Pseq([1/60], 60), \frame, Pseries(), \resolume, ~resolume, \action, {
-
-                        if(~frame >= 59, {
-                            ~resolume.sendMsg("/composition/layers/3/video/opacity", 0)
-                        }, {
-                            ~resolume.sendMsg("/composition/layers/3/video/opacity", ~frame / 60)
-                        });
-                    }).play;
-                }
-            })
+            \ampOutBus, owlsAmpOutBus
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -256,7 +228,7 @@ var waterAmpOutBus = Bus.control(s, 1);
 			\dur, Pseq([duration]),
 			\legato, 1,
 			\instrument, \play,
-			\buf, melodie,
+			\buf, ~melodieBuffer,
 			\loop, 1,
 			\panBus, melodiePanBus,
 			\ampBus, melodieAmpBus,
@@ -281,11 +253,7 @@ var waterAmpOutBus = Bus.control(s, 1);
 			\sus, 0,
 			\rel, 0.5 * duration / TempoClock.default.tempo,
 			\controlBus, melodieAmpBus
-		),
-        ~pollActionPattern.value({
-            melodieAmpOutBus.get { | amp | ~resolume.sendMsg("/composition/layers/3/video/opacity", amp * 300); };
-            melodiePanBus.get { | pan | ~resolume.sendMsg("/composition/layers/3/video/effects/transform/rotationz", ((0.5 + ((pan - 0.25) / 2)) % 1)); };
-        }, duration);
+		)
 	]);
 };
 
@@ -315,7 +283,7 @@ var waterAmpOutBus = Bus.control(s, 1);
 				], repeats: inf)),
 				\legato, 1,
 			\instrument, Pif(Ptime() < duration, \play),
-			\buf, frog,
+			\buf, ~frogBuffer,
 			\hardPan, Pwhite(0.0, 2.0, inf),
             \lpfRq, 2,
 			\gateRelease, 20,
@@ -344,7 +312,7 @@ var waterAmpOutBus = Bus.control(s, 1);
 			\dur, Pseq([duration]),
 			\legato, 1,
 			\instrument, \play,
-			\buf, water,
+			\buf, ~waterBuffer,
 			\loop, 1,
 			\panBus, waterPanBus,
 			\ampBus, waterAmpBus,

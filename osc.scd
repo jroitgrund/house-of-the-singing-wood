@@ -1,32 +1,18 @@
-~selectClip = {
-    | layer, clip |
-    {
-        ~resolume.sendMsg("/composition/layers/" ++ layer ++ "/clips/" ++ clip ++ "/connect");
-    }
-};
-
-~setOpacity = {
-    | layer, opacity |
-    {
-        ~resolume.sendMsg("/composition/layers/" ++ layer ++ "/video/opacity", opacity);
-    }
-};
-
 ~singleActionPattern = {
     | action |
     Pbind(
-        \type, \actionEvent,
+        \type, \action,
         \dur, Pseq([1]),
-        \action, action
+        \pfunc, Pfuncn(action, inf)
     );
 };
 
 ~pollActionPattern = {
     | action, duration |
     Pbind(
-        \type, \actionEvent,
-        \dur, Pseq([1/60], duration * 60),
-        \action, action,
+        \type, \action,
+        \dur, Pseq([1/10], duration * 10),
+        \pfunc, Pfuncn(action, inf),
         \time, Ptime(inf)
     );
 };

@@ -304,7 +304,7 @@ var waterAmpOutBus = Bus.control(s, 1);
             \amp, Pwhite(0.05, 0.015, inf),
 			\ampBus, frogAmpBus,
             \delayTime, Prand([1.5 / TempoClock.default.tempo, 1 / TempoClock.default.tempo], inf),
-            \delayRepeat, Pwhite(0.1, 1, inf),
+            \delayRepeat, Pwhite(0.1, 1.0, inf),
 		),
 		Pbind(
 			\dur, Pseq([duration]),

@@ -47,14 +47,14 @@ TempoClock.default.tempo = 90/60;
 (
 var runLoop, resolume, selectClip, setOpacity, panToRotate;
 
-var biosphereFirstPhaseDuration = 32;
-var biosphereSecondPhaseDuration = 32;
-var biosphereThirdPhaseDuration = 32;
+var biosphereFirstPhaseDuration =64;
+var biosphereSecondPhaseDuration =64;
+var biosphereThirdPhaseDuration =64;
 
-var pause = 8;
+var pause = 0;
 
-var firstPhaseDuration = 0;
-var secondPhaseDuration = 512;
+var firstPhaseDuration 64;
+var secondPhaseDuration = 64;
 var thirdPhaseDuration = 64;
 var fourthPhaseDuration = 64;
 var fifthPhaseDuration = 64;
@@ -82,43 +82,43 @@ runLoop = {
 	Pseq([
 		// Biosphere
 		// I hear weird noise sometimes in the first part here, needs debugging!
-		// Ppar([
-		// 	Ppar([
-		// 		Pseq([~singleActionPattern.value({
-		// 			resolume.sendMsg("/composition/layers/3/clips/1/connect", 1);
-		// 		})]),
-		// 		Pseq([Event.silent(biosphereFirstPhaseDuration), ~singleActionPattern.value({
-		// 			resolume.sendMsg("/composition/layers/3/clear", 1);
-		// 		})]),
-		// 		Pseq([Event.silent(32), ~gouttes.value(biosphereFirstPhaseDuration + biosphereSecondPhaseDuration - 16)]),
-		// 		Pseq([~owlNappe.value(biosphereFirstPhaseDuration + 8)]),
-		// 		Pseq([Event.silent(16), ~owls.value(biosphereFirstPhaseDuration - 8)]),
-		// 	]),
-		// 	Pseq([
-		// 		Event.silent(biosphereFirstPhaseDuration),
-		// 		Ppar([
-		// 			Pseq([Event.silent(biosphereSecondPhaseDuration), ~singleActionPattern.value({
-		// 				resolume.sendMsg("/composition/layers/2/clips/2/connect", 1);
-		// 			})]),
-		// 			Pseq([~melodie.value(biosphereSecondPhaseDuration)]),
-		// 			Pseq([~owls.value(biosphereSecondPhaseDuration + 32, rarement: true)])
-		// 		])
-		// 	]),
-		// 	Pseq([
-		// 		Event.silent(biosphereFirstPhaseDuration + biosphereSecondPhaseDuration),
-		// 		Ppar([
-		// 			Pseq([Event.silent(biosphereThirdPhaseDuration), ~singleActionPattern.value({
-		// 				resolume.sendMsg("/composition/layers/1/clips/3/connect", 1);
-		// 			})]),
-		// 			Pseq([Event.silent(32), ~birds.value(biosphereThirdPhaseDuration - 32)]),
-		// 			Pseq([Event.silent(24), ~frog.value(biosphereSecondPhaseDuration - 24)]),
-		// 			Pseq([~water.value(biosphereSecondPhaseDuration)]),
-		// 		])
-		// 	]),
-		// ]),
+		Ppar([
+			Ppar([
+				Pseq([~singleActionPattern.value({
+					resolume.sendMsg("/composition/layers/3/clips/1/connect", 1);
+				})]),
+				Pseq([Event.silent(biosphereFirstPhaseDuration), ~singleActionPattern.value({
+					resolume.sendMsg("/composition/layers/3/clear", 1);
+				})]),
+				Pseq([Event.silent(32), ~gouttes.value(biosphereFirstPhaseDuration + biosphereSecondPhaseDuration - 16)]),
+				Pseq([~owlNappe.value(biosphereFirstPhaseDuration + 8)]),
+				Pseq([Event.silent(16), ~owls.value(biosphereFirstPhaseDuration - 8)]),
+			]),
+			Pseq([
+				Event.silent(biosphereFirstPhaseDuration),
+				Ppar([
+					Pseq([Event.silent(biosphereSecondPhaseDuration), ~singleActionPattern.value({
+						resolume.sendMsg("/composition/layers/2/clips/2/connect", 1);
+					})]),
+					Pseq([~melodie.value(biosphereSecondPhaseDuration)]),
+					Pseq([~owls.value(biosphereSecondPhaseDuration + 32, rarement: true)])
+				])
+			]),
+			Pseq([
+				Event.silent(biosphereFirstPhaseDuration + biosphereSecondPhaseDuration),
+				Ppar([
+					Pseq([Event.silent(biosphereThirdPhaseDuration), ~singleActionPattern.value({
+						resolume.sendMsg("/composition/layers/1/clips/3/connect", 1);
+					})]),
+					Pseq([Event.silent(32), ~birds.value(biosphereThirdPhaseDuration - 32)]),
+					Pseq([Event.silent(24), ~frog.value(biosphereSecondPhaseDuration - 24)]),
+					Pseq([~water.value(biosphereSecondPhaseDuration)]),
+				])
+			]),
+		]),
 
-		// // This pauses longer than expected (too long?. Not 100% sure why.
-		// Event.silent(pause),
+		// This pauses longer than expected (too long?. Not 100% sure why.
+		Event.silent(pause),
 
 		// Ritual
 		Ppar([

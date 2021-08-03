@@ -11,6 +11,8 @@ En general ecouter la track permet de bien se rendre compte de ce qui peut suivr
 
 On peut tout a fait juste trigger des clips sans suivre le son, parce que le clip "represente" le son. Mais le but c'est d'avoir un max de visuels qui "suivent" caremment le son. Dans ce cas la ce n'est pas du tout suffisant de juste trigger un clip en meme temps qu'une nappe sans que ses caracteristiques (position, volume) soient refletees dans le visuel.
 
+Pour mapper les positions - pas trop loin du centre ! Sinon ca sera super bas dans le dome et on ne remarquera pas a moins d'etre tourne dans le bon sens.
+
 ## Biosphere
 
 * **Owl nappe**: tourne autour, on peut suivre son volume parce qu'elle n'est pas du tout constante

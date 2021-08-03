@@ -8,7 +8,7 @@
 ~setOpacity = {
     | layer, opacity |
     {
-        ~resolume.sendMsg("/composition/layers/" ++ layer ++ "/video/opacity", opacity.postln);
+        ~resolume.sendMsg("/composition/layers/" ++ layer ++ "/video/opacity", opacity);
     }
 };
 

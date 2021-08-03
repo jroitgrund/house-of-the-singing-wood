@@ -1,50 +1,50 @@
 (
-var birds1 = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre1 - Biosphere/Birds1.aif", action: ~loaded);
+var birds1 = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Birds1.aif", action: ~loaded);
 var birds1PanBus = Bus.control(s, 1);
 var birds1AmpBus = Bus.control(s, 1);
 var birds1LowPassBus = Bus.control(s, 1);
 var birds1AmpOutBus = Bus.control(s, 1);
 
-var birds2 = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre1 - Biosphere/Birds2.aif", action: ~loaded);
+var birds2 = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Birds2.aif", action: ~loaded);
 var birds2PanBus = Bus.control(s, 1);
 var birds2AmpBus = Bus.control(s, 1);
 var birds2LowPassBus = Bus.control(s, 1);
 var birds2AmpOutBus = Bus.control(s, 1);
 
-var frog = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre1 - Biosphere/Frog_1shot_Wrapped.aif", action: ~loaded);
+var frog = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Frog_1shot_Wrapped.aif", action: ~loaded);
 var frogPanBus = Bus.control(s, 1);
 var frogAmpBus = Bus.control(s, 1);
 var frogLowPassBus = Bus.control(s, 1);
 var frogAmpOutBus = Bus.control(s, 1);
 
-var gouttes = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre1 - Biosphere/Gouttes.aif", action: ~loaded);
+var gouttes = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Gouttes.aif", action: ~loaded);
 var gouttesPanBus = Bus.control(s, 1);
 var gouttesAmpBus = Bus.control(s, 1);
 var gouttesLowPassBus = Bus.control(s, 1);
 var gouttesAmpOutBus = Bus.control(s, 1);
 
-var melodie = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre1 - Biosphere/Melodie_Wrapped.aif", action: ~loaded);
+var melodie = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Melodie_Wrapped.aif", action: ~loaded);
 var melodiePanBus = Bus.control(s, 1);
 var melodieAmpBus = Bus.control(s, 1);
 var melodieLowPassBus = Bus.control(s, 1);
 var melodieAmpOutBus = Bus.control(s, 1);
 
-var owlNappe = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre1 - Biosphere/OWL_1BAR.aif", action: ~loaded);
+var owlNappe = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/OWL_1BAR.aif", action: ~loaded);
 var owlNappePanBus = Bus.control(s, 1);
 var owlNappeAmpBus = Bus.control(s, 1);
 var owlNappeLowPassBus = Bus.control(s, 1);
 var owlNappeAmpOutBus = Bus.control(s, 1);
 
 var owls = [
-    Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre1 - Biosphere/Owl-Sing1.aif", action: ~loaded),
-    Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre1 - Biosphere/Owl-Sing2.aif", action: ~loaded)
+    Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Owl-Sing1.aif", action: ~loaded),
+    Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Owl-Sing2.aif", action: ~loaded)
 ];
 var owlsPanBus = Bus.control(s, 1);
 var owlsAmpBus = Bus.control(s, 1);
 var owlsLowPassBus = Bus.control(s, 1);
 var owlsAmpOutBus = Bus.control(s, 1);
 
-var water = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre1 - Biosphere/Water.aif", action: ~loaded);
+var water = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Water.aif", action: ~loaded);
 var waterPanBus = Bus.control(s, 1);
 var waterAmpBus = Bus.control(s, 1);
 var waterLowPassBus = Bus.control(s, 1);
@@ -284,7 +284,7 @@ var waterAmpOutBus = Bus.control(s, 1);
 		),
         ~pollActionPattern.value({
             melodieAmpOutBus.get { | amp | ~resolume.sendMsg("/composition/layers/3/video/opacity", amp * 300); };
-            melodiePanBus.get { | pan | ~resolume.sendMsg("/composition/layers/3/video/effects/transform/rotationz", ((0.5 + ((pan - 0.25) / 2)) % 1).postln); };
+            melodiePanBus.get { | pan | ~resolume.sendMsg("/composition/layers/3/video/effects/transform/rotationz", ((0.5 + ((pan - 0.25) / 2)) % 1)); };
         }, duration);
 	]);
 };
@@ -320,8 +320,18 @@ var waterAmpOutBus = Bus.control(s, 1);
             \lpfRq, 2,
 			\gateRelease, 20,
             \amp, Pwhite(0.05, 0.015, inf),
+			\ampBus, frogAmpBus,
             \delayTime, Prand([1.5 / TempoClock.default.tempo, 1 / TempoClock.default.tempo], inf),
-            \delayRepeat, Pwhite(0.1, 1, inf)
+            \delayRepeat, Pwhite(0.1, 1, inf),
+		),
+		Pbind(
+			\dur, Pseq([duration]),
+			\legato, 1,
+			\instrument, \ampControl,
+			\atk, 0 / TempoClock.default.tempo,
+			\sus, (duration -  16) / TempoClock.default.tempo,
+			\rel, 16 / TempoClock.default.tempo,
+			\controlBus, frogAmpBus
 		),
 	]);
 };

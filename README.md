@@ -6,8 +6,6 @@
 
 * Worth listening a lot of times to the whole thing to make sure there are no weird clicks, clips, bad transitions if randomness screws us over, etc. I've definitely heard some weird audio artifacts, but I haven't noticed any clipping in the server meter. This needs debugging.
 
-* Last part of both ritual and biosphere don't have real outros atm, need to make stuff fade out and / or make samples drop off one at a time.
-
 * For now let's do the dumb easy thing and just use find and replace in a text editor to fix the paths from `C:/Users/jonathan/Desktop/scc` to `/Users/lewismurray/Desktop/whatever`.
 
 * There are mostly two types of patterns.

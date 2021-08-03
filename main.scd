@@ -15,6 +15,19 @@ s.options.numOutputBusChannels = 2;
 s.reboot;
 );
 
+// Use this code block to test stuff out!
+(
+TempoClock.default.tempo = 90/60;
+
+"./common.scd".load;
+"./osc.scd".load;
+"./biosphere.scd".load;
+"./ritual.scd".load;
+
+// For example, to play murmures once with a duration of 64 beats:
+~murmures.value(64).play;
+)
+
 
 // Runs everything! Adjust durations and comment stuff out to run individual parts.
 (
@@ -112,18 +125,4 @@ Routine({
 		};
 	});
 }).play;
-)
-
-
-(
-TempoClock.default.tempo = 90/60;
-
-"./common.scd".load;
-"./osc.scd".load;
-"./biosphere.scd".load;
-"./ritual.scd".load;
-
-~waitForBuffers.value({
-	~melodie.value(64).play;
-});
 )

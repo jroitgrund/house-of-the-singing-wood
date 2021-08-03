@@ -124,10 +124,10 @@ loadedBuffers = 0;
 	| action |
 	Routine({
 		while({ loadedBuffers < 21 }, {
-			loadedBuffers.postln;
+			("Loaded" + loadedBuffers + "buffers").postln;
 			1.wait;
 		});
-		loadedBuffers.postln;
+		("Loaded" + loadedBuffers + "buffers").postln;
 		1.wait;
 		action.value;
 	}).play;
@@ -175,4 +175,6 @@ Event.addEventType(\actionEvent, {
 		curve: 'hold'
 	));
 };
+
+~basePath = "C:/Users/jonathan/Desktop/scc/sons/";
 )

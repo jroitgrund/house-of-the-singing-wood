@@ -47,13 +47,13 @@ TempoClock.default.tempo = 90/60;
 (
 var runLoop, resolume, selectClip, setOpacity, panToRotate;
 
-var biosphereFirstPhaseDuration =64;
-var biosphereSecondPhaseDuration =64;
-var biosphereThirdPhaseDuration =64;
+var biosphereFirstPhaseDuration = 64;
+var biosphereSecondPhaseDuration = 64;
+var biosphereThirdPhaseDuration = 64;
 
 var pause = 0;
 
-var firstPhaseDuration 64;
+var firstPhaseDuration = 64;
 var secondPhaseDuration = 64;
 var thirdPhaseDuration = 64;
 var fourthPhaseDuration = 64;

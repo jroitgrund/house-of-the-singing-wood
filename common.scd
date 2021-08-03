@@ -65,10 +65,10 @@ var makeSynthDef = {
 		left = PanAz.ar(4, left, pan + 0.01, orientation: 0);
 		right = PanAz.ar(4, right, pan - 0.01, orientation: 0);
 
-		Out.ar(out, Select.ar(
+		Out.ar(out, Splay.ar(Select.ar(
 			panBus >= 0,
 			[Select.ar(hardPan >= 0, [middle, left + right]),
-			left + right]));
+			left + right])));
 
 		// Write to OSC buses.
 		Out.kr(loopEnvOutBus, loopEnvelope);

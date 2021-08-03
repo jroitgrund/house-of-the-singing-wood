@@ -1,6 +1,6 @@
 ## General
 
-Si vous faites tourner des trucs, faites les tourner en rhythme !
+Si vous faites tourner des trucs avec after effects *avant resolume*, faites les tourner en rhythme !
 Par exemple une rotation complete en 2.66667 secondes (ou n'importe lesquelles des valeurs dans le drive de conversion). Ca sera plus facile de trouver la bonne vitesse de lecture de video car tous les sons tournent en rhythme aussi.
 
 Tous les sons longs type nappe, murmure tournent tout autour. De temps en temps ca fade out et ca reapparait a un autre endroit aleatoire, du coup c'est pas trop monotone si il y a quelquechose de visuel qui suit constamment leur position.

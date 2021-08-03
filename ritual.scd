@@ -46,8 +46,10 @@ var grillonOneShotPanBus2 = Bus.control(s, 1);
 var grillonOneShotAmpBus = Bus.control(s, 1);
 var grillonOneShotLowPassBus = Bus.control(s, 1);
 var grillonOneShotLowPassBus2 = Bus.control(s, 1);
-var grillonOneShotAmpOutBus = Bus.control(s, 1);
-var grillonOneShotAmpOutBus2 = Bus.control(s, 1);
+var grillonOneShotAmp0OutBus = Bus.control(s, 1);
+var grillonOneShotAmp1OutBus = Bus.control(s, 1);
+var grillonOneShotAmp2OutBus = Bus.control(s, 1);
+var grillonOneShotAmp3OutBus = Bus.control(s, 1);
 
 var feuillesNappePanBus = Bus.control(s, 1);
 var feuillesNappeAmpBus = Bus.control(s, 1);
@@ -111,7 +113,7 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 
 // Four different grillons loops, differing in their octave or in their pan direction.
 ~grillons = {
-	| duration |
+	| duration, grillonsClips = false |
 	Ppar([
 		Pbind(
 			\dur, Pseq([duration]),
@@ -120,8 +122,23 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\atk, 0,
 			\sus, (duration - 32) / TempoClock.default.tempo,
 			\rel, 32 / TempoClock.default.tempo,
-			\controlBus, grillonOneShotAmpBus
+			\controlBus, grillonOneShotAmpBus,
+			\amp0OutBus, grillonOneShotAmp0OutBus,
+			\amp1OutBus, grillonOneShotAmp1OutBus,
+			\amp2OutBus, grillonOneShotAmp2OutBus,
+			\amp3OutBus, grillonOneShotAmp3OutBus,
 		),
+		Pif(grillonsClips, ~pollActionPattern.value({
+			grillonOneShotAmp0OutBus.get(~setGrillonsTopLeftOpacity);
+			grillonOneShotAmp1OutBus.get(~setGrillonsTopRightOpacity);
+			grillonOneShotAmp2OutBus.get(~setGrillonsBottomRightOpacity);
+			grillonOneShotAmp3OutBus.get(~setGrillonsBottomLeftOpacity);
+		}, duration), 0),
+		Pif(grillonsClips, ~singleActionPattern.value(~launchGrillonsClips), 0),
+		Pif(grillonsClips, Pseq([
+			Event.silent(duration),
+			Ppar([~singleActionPattern.value(~clearGrillonsClips), ~singleActionPattern.value(~resetGrillonsLayersOpacity)])
+		]), 0),
 		Ppar([
 				[1, grillonOneShotPanBus, grillonOneShotLowPassBus, 12, 0, -12.midiratio, false, 0.05],
 				[-1, grillonOneShotPanBus2,  grillonOneShotLowPassBus2, 16, pi, -12.midiratio, false, 0.05],
@@ -155,7 +172,11 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 					\ampBus, grillonOneShotAmpBus,
 					\rate, rate,
 					\gateRelease, 3,
-					\amp, amp
+					\amp, amp,
+					\amp0OutBus, grillonOneShotAmp0OutBus,
+					\amp1OutBus, grillonOneShotAmp1OutBus,
+					\amp2OutBus, grillonOneShotAmp2OutBus,
+					\amp3OutBus, grillonOneShotAmp3OutBus
 				),
 				Pif(triggerControlSynths, Pbind(
 					\dur, Pseq([duration]),
@@ -178,13 +199,13 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 				)),
 			])
 		})
-	])
+	]);
 };
 
 
 // Long sample with fade in and out.
 ~feuillesNappe = {
-	| duration |
+	| duration, tribal8 = false |
 	Ppar([
 		Pbind(
 			\dur, Pseq([duration]),
@@ -193,16 +214,66 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\buf, ~feuillesNappeBuffer,
 			\loop, 1,
 			\panBus, feuillesNappePanBus,
-			\ampBus, feuillesNappeAmpBus,
+			\loopAtk, 16 / TempoClock.default.tempo,
+			\loopSus, 0 / TempoClock.default.tempo,
+			\loopRel, 16 / TempoClock.default.tempo,
+			\ampOutBus, feuillesNappeAmpOutBus
 		),
 		Pbind(
-			\dur, Pseq([48], inf),
+			\dur, Pseq([8], inf),
 			\instrument, Pif(Ptime() < duration, \panControl),
 			\legato, 1,
-			\iphase, 0,
+			\iphase, Prand([0, 0.5, 1, 1.5], inf),
 			\freq, TempoClock.default.tempo / 24,
 			\controlBus, feuillesNappePanBus,
-			\direction, Prand([1, -1], inf)
+			\direction, Prand([1, -1], inf),
+			\pfunc, Pif(tribal8, Pfuncn(~launchFeuillesNappeTribal8, inf), 0),
+		),
+		Pif(tribal8, ~pollActionPattern.value({
+			feuillesNappeAmpOutBus.get(~setFeuillesNappeTribal8Opacity);
+		}, duration), 0),
+		Pif(tribal8, Pseq([
+			Event.silent(duration),
+			~singleActionPattern.value(~clearFeuillesNappeTribal8),
+			~singleActionPattern.value(~resetFeuillesNapeTribal8LayerOpacity)
+		]), 0)
+	]);
+};
+
+// These samples are quite long, so this feels like a loop.
+// This has a global fade in and out to help with transitions
+// since this sound takes up a lot of space.
+~murmures = {
+	| duration, tribalOverlay = false |
+	Ppar([
+		Pbind(
+			\dur, Prand([24, 12], repeats: inf),
+			\legato, 1,
+			\instrument, Pif(Ptime() < duration, \play),
+			\buf, Pxrand(~murmuresBuffers, repeats: inf),
+			\panBus, murmuresPanBus,
+			\ampBus, murmuresAmpBus,
+			\gateRelease, 7,
+			\ampOutBus, murmuresAmpOutBus,
+			\resolume, ~resolume
+		),
+		Pif(tribalOverlay, ~singleActionPattern.value(~launchTribalOverlay), 0),
+		Pif(tribalOverlay, ~pollActionPattern.value({
+			murmuresAmpOutBus.get(~setTribalOverlayOpacity);
+		}, duration), 0),
+		Pif(tribalOverlay, Pseq([
+			Event.silent(duration),
+			~singleActionPattern.value(~removeTribalOverlay),
+			~singleActionPattern.value(~clearTribalOverlayLayerOpacity),
+		]), 0),
+		Pbind(
+			\dur, Pseq([12], repeats: inf),
+			\legato, 1,
+			\instrument, Pif(Ptime() < duration, \panControl),
+			\freq, TempoClock.default.tempo / 24,
+			\iphase, Prand([0, 0.5, 1, 1.5], inf),
+			\controlBus, murmuresPanBus,
+			\direction, Prand([Pseq([1], 4), Pseq([-1], 4)], inf)
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -211,102 +282,61 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\atk, 16 / TempoClock.default.tempo,
 			\sus, (duration -  32) / TempoClock.default.tempo,
 			\rel, 16 / TempoClock.default.tempo,
-			\controlBus, feuillesNappeAmpBus
-		),
-	]);
-};
-
-// These samples are quite long, so this feels like a loop.
-// This has a global fade in and out to help with transitions
-// since this sound takes up a lot of space.
-~murmures = {
-	| duration |
-	Pseq([
-		Ppar([
-			Pbind(
-				\dur, Prand([24, 12], repeats: inf),
-				\legato, 1,
-				\instrument, Pif(Ptime() < duration, \play),
-				\buf, Pxrand(~murmuresBuffers, repeats: inf),
-				\panBus, murmuresPanBus,
-				\ampBus, murmuresAmpBus,
-				\gateRelease, 7,
-				\ampOutBus, murmuresAmpOutBus,
-				\resolume, ~resolume
-			),
-			~singleActionPattern.value({
-				~resolume.sendMsg("/composition/layers/2/clips/2/connect", 1);
-			}),
-			~pollActionPattern.value({
-				murmuresAmpOutBus.get{ 
-					| amp |
-					~resolume.sendMsg("/composition/layers/2/video/opacity", amp * 700);
-				};
-			}, duration),
-			Pbind(
-				\dur, Pseq([12], repeats: inf),
-				\legato, 1,
-				\instrument, Pif(Ptime() < duration, \panControl),
-				\freq, TempoClock.default.tempo / 24,
-				\iphase, Prand([0, 0.5, 1, 1.5], inf),
-				\controlBus, murmuresPanBus,
-				\direction, Prand([Pseq([1], 4), Pseq([-1], 4)], inf)
-			),
-			Pbind(
-				\dur, Pseq([duration]),
-				\legato, 1,
-				\instrument, \ampControl,
-				\atk, 16 / TempoClock.default.tempo,
-				\sus, (duration -  32) / TempoClock.default.tempo,
-				\rel, 16 / TempoClock.default.tempo,
-				\controlBus, murmuresAmpBus
-			)
-		])
+			\controlBus, murmuresAmpBus
+		)
 	]);
 };
 
 // We use pfunc to adapt the duration to the length of the loop we're playing.
 // Global fade in and out to help with transitions as this takes up a lot of space.
 ~murmuresLoops = {
-	| duration |
-	Pseq([
-		Ppar([
-			Pbind(
-				\buf, Pxrand(~murmuresLoopsBuffers, repeats: inf),
-				\dur, Pxrand([0, 8, 12].collect {
-					| waitBeats |
-					Pfunc({
-						| ev |
-						(ev[\buf].duration * TempoClock.default.tempo).round(2) + waitBeats
-					})
-				}),
-				\legato, 1,
-				\instrument, Pif(Ptime() < duration, \play),
-				\panBus, murmuresLoopsPanBus,
-				\ampBus, murmuresLoopsAmpBus,
-				\amp, 0.15,
-				\gateRelease, 7
-			),
-			Pbind(
-				\dur, Pseq([12], repeats: inf),
-				\legato, 1,
-				\instrument, Pif(Ptime() < duration, \panControl),
-				\freq, TempoClock.default.tempo / 24,
-				\iphase, Prand([0, 0.5, 1, 1.5], inf),
-				\controlBus, murmuresLoopsPanBus,
-				\direction, Prand([Pseq([1], 4), Pseq([-1], 4)], inf)
-			),
-			Pbind(
-				\dur, Pseq([duration]),
-				\legato, 1,
-				\instrument, \ampControl,
-				\atk, 32 / TempoClock.default.tempo,
-				\sus, (duration -  48) / TempoClock.default.tempo,
-				\rel, 16 / TempoClock.default.tempo,
-				\controlBus, murmuresLoopsAmpBus
-			),
-		])
-	]);
+	| duration, fougeresRondes = false |
+	Ppar([
+		Pif(fougeresRondes, ~singleActionPattern.value(~launchFougeresRondes), 0),
+		Pif(fougeresRondes, ~pollActionPattern.value({
+			murmuresLoopsAmpOutBus.get(~setFougeresRondesOpacity);
+		}, duration), 0),
+		Pif(fougeresRondes, Pseq([
+			Event.silent(duration),
+			~singleActionPattern.value(~removeFougeresRondes),
+			~singleActionPattern.value(~resetFougeresRondesLayerOpacity)
+		]), 0),
+		Pbind(
+			\buf, Pxrand(~murmuresLoopsBuffers, repeats: inf),
+			\dur, Pxrand([0, 8, 12].collect {
+				| waitBeats |
+				Pfunc({
+					| ev |
+					(ev[\buf].duration * TempoClock.default.tempo).round(2) + waitBeats
+				})
+			}),
+			\legato, 1,
+			\instrument, Pif(Ptime() < duration, \play),
+			\panBus, murmuresLoopsPanBus,
+			\ampBus, murmuresLoopsAmpBus,
+			\ampOutBus, murmuresLoopsAmpOutBus,
+			\amp, 0.15,
+			\gateRelease, 7
+		),
+		Pbind(
+			\dur, Pseq([12], repeats: inf),
+			\legato, 1,
+			\instrument, Pif(Ptime() < duration, \panControl),
+			\freq, TempoClock.default.tempo / 24,
+			\iphase, Prand([0, 0.5, 1, 1.5], inf),
+			\controlBus, murmuresLoopsPanBus,
+			\direction, Prand([Pseq([1], 4), Pseq([-1], 4)], inf)
+		),
+		Pbind(
+			\dur, Pseq([duration]),
+			\legato, 1,
+			\instrument, \ampControl,
+			\atk, 32 / TempoClock.default.tempo,
+			\sus, (duration -  48) / TempoClock.default.tempo,
+			\rel, 16 / TempoClock.default.tempo,
+			\controlBus, murmuresLoopsAmpBus
+		),
+	])
 };
 
 // Short samples hard-panned to one random speaker.
@@ -355,7 +385,7 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 // Long sample with 4 bar fade in and out.
 // Can optionally add a second sample a fifth above, which fades in and out using loopEnv.
 ~bassVoiceShaman = {
-	| duration, withFifth = true |
+	| duration, withFifth = true, totem = false |
 	Ppar([
 		Ppar([
 			Pbind(
@@ -368,15 +398,16 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 				\ampOutBus, bassVoiceShamanAmpOutBus,
 				\loop, 1
 			),
-			~singleActionPattern.value({
-				~resolume.sendMsg("/composition/layers/3/clips/1/connect", 1);
-			}),
-			~pollActionPattern.value({
-				bassVoiceShamanAmpOutBus.get{ 
-					| amp |
-					~resolume.sendMsg("/composition/layers/3/video/effects/transform/scale", 0.05 + (amp * 30));
-				};
-			}, duration),
+			Pif(totem, ~singleActionPattern.value(~launchTotemClip), 0),
+			Pif(totem, ~pollActionPattern.value({
+				bassVoiceShamanPanBus.get(~rotateTotemClip);
+				bassVoiceShamanAmpBus.get(~setTotemLayerOpacity);
+			}, duration), 0),
+			Pif(totem, Pseq([
+				Event.silent(duration),
+				~singleActionPattern.value(~clearTotemClip),
+				~singleActionPattern.value(~resetTotemLayerOpacity)
+			])),
 			Pbind(
 				\dur, Pseq([64], repeats: inf),
 				\legato, 1,
@@ -434,7 +465,7 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 
 // Short-ish samples, long enough to use regular panning and not hard-pan to one speaker.
 ~hiboux = {
-	| duration |
+	| duration, tribalClip = false, part4Clip = false |
 	Ppar([
 		Pbind(
 			\dur, Prand([24, 16], repeats: inf),
@@ -445,16 +476,9 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\gateRelease, 13,
 			\amp, 0.275,
 			\ampBus, hibouxAmpBus,
-			\panBus, hibouxPanBus
-		),
-		Pbind(
-			\dur, 48,
-			\legato, 1,
-			\instrument, Pif(Ptime() < duration, \panControl),
-			\freq, TempoClock.default.tempo / 16,
-			\iphase, Prand([0, 0.5, 1, 1.5], inf),
-			\controlBus, hibouxPanBus,
-			\direction, Prand([1, -1], inf)
+			\hardPan, Pif(tribalClip, Prand([0, 0.5, 1, 1.5], inf), Pwhite(0.0, 2.0, inf), 0),
+			\pfunc, Pif(tribalClip, Pfuncn(~launchHibouxTribalClip, inf), 0),
+			\pfunc2, Pif(part4Clip, Pfuncn(~launchHibouxPart4Clip, inf), 0)
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -470,14 +494,17 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 
 // No panning, single rhythmic pattern.
 ~bass = {
-	| duration, rarement = false |
-	Pbind(
-		\dur, Pif(rarement, Prand([16, 24], inf), 8),
-		\legato, 1,
-		\instrument, Pif(Ptime() < duration, \play),
-		\buf, ~bassBuffer,
-		\amp, 0.7
-	);
+	| duration, rarement = false, launchBassOndeRouge = false |
+	Ppar([
+		Pbind(
+			\dur, Pif(rarement, Prand([16, 24], inf), 8),
+			\legato, 1,
+			\instrument, Pif(Ptime() < duration, \play),
+			\buf, ~bassBuffer,
+			\amp, 0.7,
+			\action, Pif(launchBassOndeRouge, Pfuncn(~launchBassOndeRouge, inf), 0)
+		),
+	]);
 };
 
 	/**
@@ -498,16 +525,17 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\buf, ~kickBuffer,
 			\ampBus, kickAmpBus,
 			\gateRelease, 4
-		), 
-	Pbind(
-		\dur, Pseq([duration]),
-		\legato, 1,
-		\instrument, \ampControl,
-		\atk, 0,
-		\sus, (duration - 16) / TempoClock.default.tempo,
-		\rel, 16,
-		\controlBus, kickAmpBus
-	)]);
+		),
+		Pbind(
+			\dur, Pseq([duration]),
+			\legato, 1,
+			\instrument, \ampControl,
+			\atk, 0,
+			\sus, (duration - 16) / TempoClock.default.tempo,
+			\rel, 16,
+			\controlBus, kickAmpBus
+		)
+	]);
 };
 
 // All drumrack elements below are randomly hard-panned to one speaker

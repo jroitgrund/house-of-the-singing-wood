@@ -39,8 +39,7 @@ TempoClock.default.tempo = 90/60;
 "./biosphere.scd".load;
 "./ritual.scd".load;
 
-// For example, to play murmures once with a duration of 64 beats:
-~bassVoiceShaman.value(256).play;
+~feuillesNappe.value(256, tribal8: true).play;
 )
 
 
@@ -54,8 +53,8 @@ var biosphereThirdPhaseDuration = 32;
 
 var pause = 8;
 
-var firstPhaseDuration = 64;
-var secondPhaseDuration = 64;
+var firstPhaseDuration = 0;
+var secondPhaseDuration = 512;
 var thirdPhaseDuration = 64;
 var fourthPhaseDuration = 64;
 var fifthPhaseDuration = 64;
@@ -83,82 +82,83 @@ runLoop = {
 	Pseq([
 		// Biosphere
 		// I hear weird noise sometimes in the first part here, needs debugging!
-		Ppar([
-			Ppar([
-				Pseq([~singleActionPattern.value({
-					resolume.sendMsg("/composition/layers/3/clips/1/connect", 1);
-				})]),
-				Pseq([Event.silent(biosphereFirstPhaseDuration), ~singleActionPattern.value({
-					resolume.sendMsg("/composition/layers/3/clear", 1);
-				})]),
-				Pseq([Event.silent(32), ~gouttes.value(biosphereFirstPhaseDuration + biosphereSecondPhaseDuration - 16)]),
-				Pseq([~owlNappe.value(biosphereFirstPhaseDuration + 8)]),
-				Pseq([Event.silent(16), ~owls.value(biosphereFirstPhaseDuration - 8)]),
-			]),
-			Pseq([
-				Event.silent(biosphereFirstPhaseDuration),
-				Ppar([
-					Pseq([Event.silent(biosphereSecondPhaseDuration), ~singleActionPattern.value({
-						resolume.sendMsg("/composition/layers/2/clips/2/connect", 1);
-					})]),
-					Pseq([~melodie.value(biosphereSecondPhaseDuration)]),
-					Pseq([~owls.value(biosphereSecondPhaseDuration + 32, rarement: true)])
-				])
-			]),
-			Pseq([
-				Event.silent(biosphereFirstPhaseDuration + biosphereSecondPhaseDuration),
-				Ppar([
-					Pseq([Event.silent(biosphereThirdPhaseDuration), ~singleActionPattern.value({
-						resolume.sendMsg("/composition/layers/1/clips/3/connect", 1);
-					})]),
-					Pseq([Event.silent(32), ~birds.value(biosphereThirdPhaseDuration - 32)]),
-					Pseq([Event.silent(24), ~frog.value(biosphereSecondPhaseDuration - 24)]),
-					Pseq([~water.value(biosphereSecondPhaseDuration)]),
-				])
-			]),
-		]),
+		// Ppar([
+		// 	Ppar([
+		// 		Pseq([~singleActionPattern.value({
+		// 			resolume.sendMsg("/composition/layers/3/clips/1/connect", 1);
+		// 		})]),
+		// 		Pseq([Event.silent(biosphereFirstPhaseDuration), ~singleActionPattern.value({
+		// 			resolume.sendMsg("/composition/layers/3/clear", 1);
+		// 		})]),
+		// 		Pseq([Event.silent(32), ~gouttes.value(biosphereFirstPhaseDuration + biosphereSecondPhaseDuration - 16)]),
+		// 		Pseq([~owlNappe.value(biosphereFirstPhaseDuration + 8)]),
+		// 		Pseq([Event.silent(16), ~owls.value(biosphereFirstPhaseDuration - 8)]),
+		// 	]),
+		// 	Pseq([
+		// 		Event.silent(biosphereFirstPhaseDuration),
+		// 		Ppar([
+		// 			Pseq([Event.silent(biosphereSecondPhaseDuration), ~singleActionPattern.value({
+		// 				resolume.sendMsg("/composition/layers/2/clips/2/connect", 1);
+		// 			})]),
+		// 			Pseq([~melodie.value(biosphereSecondPhaseDuration)]),
+		// 			Pseq([~owls.value(biosphereSecondPhaseDuration + 32, rarement: true)])
+		// 		])
+		// 	]),
+		// 	Pseq([
+		// 		Event.silent(biosphereFirstPhaseDuration + biosphereSecondPhaseDuration),
+		// 		Ppar([
+		// 			Pseq([Event.silent(biosphereThirdPhaseDuration), ~singleActionPattern.value({
+		// 				resolume.sendMsg("/composition/layers/1/clips/3/connect", 1);
+		// 			})]),
+		// 			Pseq([Event.silent(32), ~birds.value(biosphereThirdPhaseDuration - 32)]),
+		// 			Pseq([Event.silent(24), ~frog.value(biosphereSecondPhaseDuration - 24)]),
+		// 			Pseq([~water.value(biosphereSecondPhaseDuration)]),
+		// 		])
+		// 	]),
+		// ]),
 
-		// This pauses longer than expected (too long?. Not 100% sure why.
-		Event.silent(pause),
+		// // This pauses longer than expected (too long?. Not 100% sure why.
+		// Event.silent(pause),
 
 		// Ritual
 		Ppar([
 			Pseq([Event.silent(0), Ppar([
-				Pseq([Event.silent(thirdPhaseDuration), ~singleActionPattern.value({
-					~selectClip.value(0, 0);
-				})]),
-				~grillons.value(firstPhaseDuration + 32),
+				~singleActionPattern.value(~launchRondRouge),
+				~singleActionPattern.value(~launchParticules),
+				~grillons.value(firstPhaseDuration + 32, grillonsClips: true),
 				Pseq([Event.silent(4), ~clochettes.value(firstPhaseDuration - 4)]),
-				~bass.value(firstPhaseDuration, rarement: true)
+				~bass.value(firstPhaseDuration, rarement: true, launchBassOndeRouge: true)
 			])]),
 			Pseq([Event.silent(firstPhaseDuration), Ppar([
-				Pseq([Event.silent(thirdPhaseDuration), ~singleActionPattern.value({
-					~selectClip.value(0, 0);
-				})]),
-				Pseq([Event.silent(16), ~bassVoiceShaman.value(secondPhaseDuration - 8)]),
+				Pseq([Event.silent(16), ~bassVoiceShaman.value(secondPhaseDuration - 8, totem: true)]),
 				Pseq([Event.silent(0), ~murmuresLoops.value(secondPhaseDuration - 0)]),
-				Pseq([Event.silent(8), ~hiboux.value(secondPhaseDuration - 8)]),
+				Pseq([
+					Event.silent(8),
+					Ppar([
+						~singleActionPattern.value(~clearParticules),
+						~hiboux.value(secondPhaseDuration - 8, tribalClip: true),
+						~singleActionPattern.value(~launchBouleClip),
+						~singleActionPattern.value(~launchFondRougeRitualPart2Clip)
+					])
+				]),
 			])]),
 			Pseq([Event.silent(firstPhaseDuration + secondPhaseDuration), Ppar([
-				Pseq([Event.silent(thirdPhaseDuration), ~singleActionPattern.value({
-					~selectClip.value(0, 0);
-				})]),
 				~kick.value(thirdPhaseDuration + 1),
-				~murmuresLoops.value(thirdPhaseDuration)
+				~murmuresLoops.value(thirdPhaseDuration, fougeresRondes: true),
+				~singleActionPattern.value(~removeRedBackgroundAtEndOfRitualPart2),
+				~singleActionPattern.value(~launchRabbit),
+				~singleActionPattern.value(~launchKickParticles),
 			])]),
 			Pseq([Event.silent(firstPhaseDuration + secondPhaseDuration + thirdPhaseDuration), Ppar([
-				Pseq([Event.silent(thirdPhaseDuration), ~singleActionPattern.value({
-					~selectClip.value(0, 0);
-				})]),
-				~murmures.value(fourthPhaseDuration),
+				~murmures.value(fourthPhaseDuration, tribalOverlay: true),
 				Pseq([Event.silent(16), ~hiboux.value(fourthPhaseDuration - 16)]),
 				~clochettes.value(fourthPhaseDuration + 32, rarement: true),
-				~feuillesNappe.value(fourthPhaseDuration + 16),
+				~feuillesNappe.value(fourthPhaseDuration + 16, tribal8: true),
+				~singleActionPattern.value(~removeKickParticles),
+				~singleActionPattern.value(~launchSnakeLoop),
+				Pseq([Event.silent(fourthPhaseDuration - 16), ~singleActionPattern.value(~launchEndOfRitual4Circle)])
 			])]),
 			Pseq([Event.silent(firstPhaseDuration + secondPhaseDuration + thirdPhaseDuration + fourthPhaseDuration), Ppar([
-				Pseq([Event.silent(thirdPhaseDuration), ~singleActionPattern.value({
-					~selectClip.value(0, 0);
-				})]),
 				Pseq([Event.silent(32), ~drumRack.value(fifthPhaseDuration - 32)]),
 				~bassVoiceShaman.value(fifthPhaseDuration, withFifth: false)
 			])])

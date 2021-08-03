@@ -3,7 +3,7 @@ var loadedBuffers;
 var makeSynthDef = {
 	|name, numChannels|
 	SynthDef.new(name, {
-		| out, buf, amp = 1.0, ampBus = -1, pitchRatio = 0, window = 0.2, hpf = 0, rate = 1, hardPan = -1, panBus = -1, atk = -1, sus = -1, rel = 1000000, lpfBus = -1, lpf = 20000, revTime = 0, delayTime = 0, delayRepeat = 40, lfoSpeed = 0, loop = 0, loopAtk = -1, loopSus = -1, loopRel = -1, gate = 1, gateRelease = 0, lpfRq = 1, loopEnvOutBus = nil, envOutBus = nil, ampOutBus = nil |
+		| out, buf, amp = 1.0, ampBus = -1, pitchRatio = 0, window = 0.2, hpf = 0, rate = 1, hardPan = -1, panBus = -1, atk = -1, sus = -1, rel = 1000000, lpfBus = -1, lpf = 20000, revTime = 0, delayTime = 0, delayRepeat = 40, lfoSpeed = 0, loop = 0, loopAtk = -1, loopSus = -1, loopRel = -1, gate = 1, gateRelease = 0, lpfRq = 1, loopEnvOutBus = nil, envOutBus = nil, ampOutBus = nil, amp0OutBus = nil, amp1OutBus = nil, amp2OutBus = nil, amp3OutBus = nil |
 		var envelope, sound, ampBusEnvelope, loopEnvelope, pan, left, right, middle, linen, delay;
 
 		// Used to release synths when a pattern event ends and triggers a note off event, setting gate to zero.
@@ -65,15 +65,19 @@ var makeSynthDef = {
 		left = PanAz.ar(4, left, pan + 0.01, orientation: 0);
 		right = PanAz.ar(4, right, pan - 0.01, orientation: 0);
 
-		Out.ar(out, Splay.ar(Select.ar(
+		Out.ar(out, Select.ar(
 			panBus >= 0,
 			[Select.ar(hardPan >= 0, [middle, left + right]),
-			left + right])));
+			left + right]));
 
 		// Write to OSC buses.
 		Out.kr(loopEnvOutBus, loopEnvelope);
 		Out.kr(envOutBus, envelope);
 		Out.kr(ampOutBus, WAmp.kr(Amplitude.ar(sound), 1 / 10));
+		Out.kr(amp0OutBus, WAmp.kr(Amplitude.ar(left[0] + right[0]), 1 / 10));
+		Out.kr(amp1OutBus, WAmp.kr(Amplitude.ar(left[1] + right[1]), 1 / 10));
+		Out.kr(amp2OutBus, WAmp.kr(Amplitude.ar(left[2] + right[2]), 1 / 10));
+		Out.kr(amp3OutBus, WAmp.kr(Amplitude.ar(left[3] + right[3]), 1 / 10));
 	}).add;
 };
 

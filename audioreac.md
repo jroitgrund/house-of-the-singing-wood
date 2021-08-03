@@ -7,7 +7,9 @@ Tous les sons longs type nappe, murmure tournent tout autour. De temps en temps 
 
 Tous les sons super courts type cloche apparaissent dans une seule position aleatoire parce qu'on n'a pas le temps de les entendre tourner.
 
-En general ecouter la track permet de bien se rendre compte de ce qui peut suivre le son en trigger et en volume (a part pour le panning ou vous n'avez pas les quatre enceintes). Par exemple si un son est long et tout le temps au meme volume, on ne peut ni trigger ni suivre son intensite. Si il fade in on peut faire lentement apparaitre un clip. Si il est court on peut faire apparaitre et disparaitre un clip. Etc. Pour moi ca n'a **pas de sens** de juste trigger un clip en meme temps qu'une nappe longue si aucune caracteristique de la nappe (volume, position) n'est refletee dans le visuel.
+En general ecouter la track permet de bien se rendre compte de ce qui peut suivre le son en trigger et en volume (a part pour le panning ou vous n'avez pas les quatre enceintes). Par exemple si un son est long et tout le temps au meme volume, on ne peut ni trigger ni suivre son intensite. Si il fade in on peut faire lentement apparaitre un clip. Si il est court on peut faire apparaitre et disparaitre un clip. Etc.
+
+On peut tout a fait juste trigger des clips sans suivre le son, parce que le clip "represente" le son. Mais le but c'est d'avoir un max de visuels qui "suivent" caremment le son. Dans ce cas la ce n'est pas du tout suffisant de juste trigger un clip en meme temps qu'une nappe sans que ses caracteristiques (position, volume) soient refletees dans le visuel.
 
 ## Biosphere
 

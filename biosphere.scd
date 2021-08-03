@@ -39,6 +39,20 @@ var waterAmpBus = Bus.control(s, 1);
 var waterLowPassBus = Bus.control(s, 1);
 var waterAmpOutBus = Bus.control(s, 1);
 
+~loadBiosphereBuffers = {
+	~birds1Buffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Birds1.aif", action: ~loaded);
+	~birds2Buffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Birds2.aif", action: ~loaded);
+	~frogBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Frog_1shot_Wrapped.aif", action: ~loaded);
+	~gouttesBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Gouttes.aif", action: ~loaded);
+	~melodieBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Melodie_Wrapped.aif", action: ~loaded);
+	~owlNappeBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/OWL_1BAR.aif", action: ~loaded);
+	~owlsBuffers = [
+		Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Owl-Sing1.aif", action: ~loaded),
+		Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Owl-Sing2.aif", action: ~loaded)
+	];
+	~waterBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Water.aif", action: ~loaded);
+};
+
 // Plays birds1 and birds2, birds2 starts 4 bars after birds1 and they have separate pan and amp controls.
 // They both fade in and out over 4 bars.
 ~birds = {

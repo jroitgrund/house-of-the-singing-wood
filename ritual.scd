@@ -89,6 +89,26 @@ var murmuresLoopsAmpBus = Bus.control(s, 1);
 var murmuresLoopsLowPassBus = Bus.control(s, 1);
 var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 
+~loadRitualBuffers = {
+	~coilBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/DrumRackOneShot/coil.aif", action: ~loaded);
+	~cricket1Buffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/DrumRackOneShot/cricket1.aif", action: ~loaded);
+	~cricket2Buffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/DrumRackOneShot/cricket2.aif", action: ~loaded);
+	~hhdelayBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/DrumRackOneShot/hhdelay.aif", action: ~loaded);
+	~kickBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/DrumRackOneShot/kick.aif", action: ~loaded);
+	~kickDelayBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/DrumRackOneShot/kickDelay.aif", action: ~loaded);
+	~snareTomBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/DrumRackOneShot/snareTom.wav", action: ~loaded);
+	~tom1Buffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/DrumRackOneShot/tom1.aif", action: ~loaded);
+	~grillonOneShotBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/Grillons/GrillonOneShot.aif", action: ~loaded);
+	~feuillesNappeBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/feuillesNappe.aif", action: ~loaded);
+	~bassBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/Baaaaass.wav", action: ~loaded);
+	~bassVoiceShamanBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/BassVoiceShaman.aif", action: ~loaded);
+
+	~murmuresBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/MurmuresOneShot");
+	~hibouxBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/Hiboux");
+	~clochettesBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/ClochetteOneShot/ClochetteReverb");
+	~murmuresLoopsBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/Murmures");
+};
+
 // Four different grillons loops, differing in their octave or in their pan direction.
 ~grillons = {
 	| duration |

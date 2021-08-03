@@ -4,7 +4,7 @@
 
 * Ideas for adding variety:  pwhite on amp, delay on everything, prand on delay parameters (both delay time and delay repeats), more "rarement" type pattern variations, having sounds fade in and out constantly using loopEnv.
 
-* Worth listening a lot of times to the whole thing to make sure there are no weird clicks, clips, bad transitions if randomness screws us over, etc.
+* Worth listening a lot of times to the whole thing to make sure there are no weird clicks, clips, bad transitions if randomness screws us over, etc. I've definitely heard some weird audio artifacts, but I haven't noticed any clipping in the server meter. This needs debugging.
 
 * Last part of both ritual and biosphere don't have real outros atm, need to make stuff fade out and / or make samples drop off one at a time.
 

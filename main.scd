@@ -36,6 +36,7 @@ var total = biosphereFirstPhaseDuration + biosphereSecondPhaseDuration + biosphe
 TempoClock.default.tempo = 90/60;
 
 "./common.scd".load;
+"./osc.scd".load;
 "./biosphere.scd".load;
 "./ritual.scd".load;
 
@@ -105,10 +106,24 @@ runLoop = {
 
 // Adjust the number inside Array.series() to adjust the number of loops.
 Routine({
-	2.wait;
-
-	Array.series(1).do { | i |
-		TempoClock.default.sched(total * i, runLoop);
-	};
+	~waitForBuffers.value({
+		Array.series(1).do { | i |
+			TempoClock.default.sched(total * i, runLoop);
+		};
+	});
 }).play;
+)
+
+
+(
+TempoClock.default.tempo = 90/60;
+
+"./common.scd".load;
+"./osc.scd".load;
+"./biosphere.scd".load;
+"./ritual.scd".load;
+
+~waitForBuffers.value({
+	~melodie.value(64).play;
+});
 )

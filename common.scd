@@ -3,7 +3,7 @@ var loadedBuffers;
 var makeSynthDef = {
 	|name, numChannels|
 	SynthDef.new(name, {
-		| out, buf, amp = 1.0, ampBus = -1, pitchRatio = 0, window = 0.2, hpf = 0, rate = 1, hardPan = -1, panBus = -1, atk = -1, sus = -1, rel = 1000000, lpfBus = -1, lpf = 20000, revTime = 0, delayTime = 0, delayRepeat = 40, lfoSpeed = 0, loop = 0, loopAtk = -1, loopSus = -1, loopRel = -1, gate = 1, gateRelease = 0, lpfRq = 1, loopEnvOutBus = nil, envOutBus = nil |
+		| out, buf, amp = 1.0, ampBus = -1, pitchRatio = 0, window = 0.2, hpf = 0, rate = 1, hardPan = -1, panBus = -1, atk = -1, sus = -1, rel = 1000000, lpfBus = -1, lpf = 20000, revTime = 0, delayTime = 0, delayRepeat = 40, lfoSpeed = 0, loop = 0, loopAtk = -1, loopSus = -1, loopRel = -1, gate = 1, gateRelease = 0, lpfRq = 1, loopEnvOutBus = nil, envOutBus = nil, ampOutBus = nil |
 		var envelope, sound, ampBusEnvelope, loopEnvelope, pan, left, right, middle, linen, delay;
 
 		// Used to release synths when a pattern event ends and triggers a note off event, setting gate to zero.
@@ -62,8 +62,8 @@ var makeSynthDef = {
 		 */
 		pan = Select.kr(hardPan >= 0, [In.kr(panBus), hardPan]);
 		middle = [sound[0] * 0.25, sound[0] * 0.25, sound[1] * 0.25, sound[1] * 0.25];
-		left = PanAz.ar(4, left, pan + 0.1, orientation: 0);
-		right = PanAz.ar(4, right, pan - 0.1, orientation: 0);
+		left = PanAz.ar(4, left, pan + 0.01, orientation: 0);
+		right = PanAz.ar(4, right, pan - 0.01, orientation: 0);
 
 		Out.ar(out, Select.ar(
 			panBus >= 0,
@@ -73,12 +73,9 @@ var makeSynthDef = {
 		// Write to OSC buses.
 		Out.kr(loopEnvOutBus, loopEnvelope);
 		Out.kr(envOutBus, envelope);
+		Out.kr(ampOutBus, WAmp.kr(Amplitude.ar(sound), 1 / 60));
 	}).add;
 };
-
-
-// Attempt to fix the buffer ugen problem!
-Buffer.freeAll(s);
 
 makeSynthDef.value(\play, 2);
 
@@ -120,6 +117,7 @@ SynthDef.new(\lpfControl, {
 // Without this the buffer ugen bug happens all the time.
 // This prevents it from happening after rebooting the server, although it still ends up happening
 // eventually. See also https://scsynth.org/t/buffer-ugen-no-buffer-data/4319
+Buffer.freeAll(s);
 loadedBuffers = 0;
 ~loaded = { loadedBuffers = loadedBuffers + 1; };
 ~waitForBuffers = {
@@ -150,7 +148,7 @@ loadedBuffers = 0;
 	});
 };
 
-~touchDesigner = NetAddr.new("localhost", 10000);
+~resolume = NetAddr.new("localhost", 7000);
 
 Event.addEventType(\actionInstrument, {
 	var noteEvent;

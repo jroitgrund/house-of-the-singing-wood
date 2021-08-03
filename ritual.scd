@@ -3,41 +3,49 @@ var coil = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 -
 var coilPanBus = Bus.control(s, 1);
 var coilAmpBus = Bus.control(s, 1);
 var coilLowPassBus = Bus.control(s, 1);
+var coilAmpOutBus = Bus.control(s, 1);
 
 var cricket1 = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/cricket1.aif", action: ~loaded);
 var cricket1PanBus = Bus.control(s, 1);
 var cricket1AmpBus = Bus.control(s, 1);
 var cricket1LowPassBus = Bus.control(s, 1);
+var cricket1AmpOutBus = Bus.control(s, 1);
 
 var cricket2 = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/cricket2.aif", action: ~loaded);
 var cricket2PanBus = Bus.control(s, 1);
 var cricket2AmpBus = Bus.control(s, 1);
 var cricket2LowPassBus = Bus.control(s, 1);
+var cricket2AmpOutBus = Bus.control(s, 1);
 
 var hhdelay = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/hhdelay.aif", action: ~loaded);
 var hhdelayPanBus = Bus.control(s, 1);
 var hhdelayAmpBus = Bus.control(s, 1);
 var hhdelayLowPassBus = Bus.control(s, 1);
+var hhdelayAmpOutBus = Bus.control(s, 1);
 
 var kick = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/kick.aif", action: ~loaded);
 var kickPanBus = Bus.control(s, 1);
 var kickAmpBus = Bus.control(s, 1);
 var kickLowPassBus = Bus.control(s, 1);
+var kickAmpOutBus = Bus.control(s, 1);
 
 var kickDelay = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/kickDelay.aif", action: ~loaded);
 var kickDelayPanBus = Bus.control(s, 1);
 var kickDelayAmpBus = Bus.control(s, 1);
 var kickDelayLowPassBus = Bus.control(s, 1);
+var kickDelayAmpOutBus = Bus.control(s, 1);
 
 var snareTom = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/snareTom.wav", action: ~loaded);
 var snareTomPanBus = Bus.control(s, 1);
 var snareTomAmpBus = Bus.control(s, 1);
 var snareTomLowPassBus = Bus.control(s, 1);
+var snareTomAmpOutBus = Bus.control(s, 1);
 
 var tom1 = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/DrumRackOneShot/tom1.aif", action: ~loaded);
 var tom1PanBus = Bus.control(s, 1);
 var tom1AmpBus = Bus.control(s, 1);
 var tom1LowPassBus = Bus.control(s, 1);
+var tom1AmpOutBus = Bus.control(s, 1);
 
 var grillonOneShot = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/Grillons/GrillonOneShot.aif", action: ~loaded);
 var grillonOneShotPanBus = Bus.control(s, 1);
@@ -45,45 +53,55 @@ var grillonOneShotPanBus2 = Bus.control(s, 1);
 var grillonOneShotAmpBus = Bus.control(s, 1);
 var grillonOneShotLowPassBus = Bus.control(s, 1);
 var grillonOneShotLowPassBus2 = Bus.control(s, 1);
+var grillonOneShotAmpOutBus = Bus.control(s, 1);
+var grillonOneShotAmpOutBus2 = Bus.control(s, 1);
 
 var feuillesNappe = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/feuillesNappe.aif", action: ~loaded);
 var feuillesNappePanBus = Bus.control(s, 1);
 var feuillesNappeAmpBus = Bus.control(s, 1);
 var feuillesNappeLowPassBus = Bus.control(s, 1);
+var feuillesNappeAmpOutBus = Bus.control(s, 1);
 
 var murmures = ~readContentsAsBuffers.value("C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/MurmuresOneShot");
 var murmuresPanBus = Bus.control(s, 1);
 var murmuresAmpBus = Bus.control(s, 1);
 var murmuresLowPassBus = Bus.control(s, 1);
+var murmuresAmpOutBus = Bus.control(s, 1);
 
 var hiboux = ~readContentsAsBuffers.value("C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/Hiboux");
 var hibouxPanBus = Bus.control(s, 1);
 var hibouxAmpBus = Bus.control(s, 1);
 var hibouxLowPassBus = Bus.control(s, 1);
+var hibouxAmpOutBus = Bus.control(s, 1);
 
 var bass = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/Baaaaass.wav", action: ~loaded);
 var bassPanBus = Bus.control(s, 1);
 var bassAmpBus = Bus.control(s, 1);
 var bassLowPassBus = Bus.control(s, 1);
+var bassAmpOutBus = Bus.control(s, 1);
 
 var bassVoiceShaman = Buffer.readChannel(s, "C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/BassVoiceShaman.aif", action: ~loaded);
 var bassVoiceShamanPanBus = Bus.control(s, 1);
 var bassVoiceShamanAmpBus = Bus.control(s, 1);
 var bassVoiceShamanLowPassBus = Bus.control(s, 1);
+var bassVoiceShamanAmpOutBus = Bus.control(s, 1);
 
 var bassVoiceShaman2PanBus = Bus.control(s, 1);
 var bassVoiceShaman2AmpBus = Bus.control(s, 1);
 var bassVoiceShaman2LowPassBus = Bus.control(s, 1);
+var bassVoiceShaman2AmpOutBus = Bus.control(s, 1);
 
 var clochettes = ~readContentsAsBuffers.value("C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/ClochetteOneShot/ClochetteReverb");
 var clochettesPanBus = Bus.control(s, 1);
 var clochettesAmpBus = Bus.control(s, 1);
 var clochettesLowPassBus = Bus.control(s, 1);
+var clochettesAmpOutBus = Bus.control(s, 1);
 
 var murmuresLoops = ~readContentsAsBuffers.value("C:/Users/jonathan/Desktop/scc/sons/Chapitre3 - Rituel/Murmures");
 var murmuresLoopsPanBus = Bus.control(s, 1);
 var murmuresLoopsAmpBus = Bus.control(s, 1);
 var murmuresLoopsLowPassBus = Bus.control(s, 1);
+var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 
 // Four different grillons loops, differing in their octave or in their pan direction.
 ~grillons = {
@@ -172,7 +190,7 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 			\ampBus, feuillesNappeAmpBus,
 		),
 		Pbind(
-			\dur, Pseq([48]),
+			\dur, Pseq([48], inf),
 			\instrument, Pif(Ptime() < duration, \panControl),
 			\legato, 1,
 			\iphase, 0,
@@ -298,7 +316,7 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 				\legato, 1,
 			\instrument, Pif(Ptime() < duration, \play),
 			\buf, Pxrand(clochettes, repeats: inf),
-			\hardPan, Prand([0, 0.5, 1, 1.5], inf),
+			\hardPan, Pwhite(0.0, 2.0, inf),
 			\lpfBus, clochettesLowPassBus,
 			\amp, Pwhite(0.8, 1.1, inf),
 			\gateRelease, 10,
@@ -464,7 +482,7 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 		\instrument, Pif(Ptime() < duration, \play),
 		\buf, coil,
 		\gateRelease, 8,
-		\hardPan, Prand([0, 0.5, 1, 1.5], inf)
+		\hardPan, Pwhite(0.0, 2.0, inf)
 	);
 };
 
@@ -476,7 +494,7 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 		\instrument, Pif(Ptime() < duration, \play),
 		\buf, cricket1,
 		\gateRelease, 2,
-		\hardPan, Prand([0, 0.5, 1, 1.5], inf)
+		\hardPan, Pwhite(0.0, 2.0, inf)
 	);
 };
 
@@ -518,7 +536,7 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 		\legato, 1,
 		\instrument, Pif(Ptime() < duration, \play),
 		\buf, hhdelay,
-		\hardPan, Prand([0, 0.5, 1, 1.5], inf)
+		\hardPan, Pwhite(0.0, 2.0, inf)
 	);
 };
 
@@ -530,7 +548,7 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 		\instrument, Pif(Ptime() < duration, \play),
 		\buf, kickDelay,
 		\gateRelease, 3,
-		\hardPan, Prand([0, 0.5, 1, 1.5], inf)
+		\hardPan, Pwhite(0.0, 2.0, inf)
 	);
 };
 
@@ -544,7 +562,7 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 			\buf, snareTom,
 			\gateRelease, 3,
 			\amp, Pfunc( { | ev | 0.05 + (ev[\dur] / 20) } ),
-			\hardPan, Prand([0, 0.5, 1, 1.5], inf),
+			\hardPan, Pwhite(0.0, 2.0, inf),
 			\lpfBus, snareTomLowPassBus,
 			\lpfRq, 0.5,
 			\ampBus, snareTomAmpBus,
@@ -578,7 +596,7 @@ var murmuresLoopsLowPassBus = Bus.control(s, 1);
 		\instrument, Pif(Ptime() < duration, \play),
 		\buf, tom1,
 		\gateRelease, 1,
-		\hardPan, Prand([0, 0.5, 1, 1.5], inf)
+		\hardPan, Pwhite(0.0, 2.0, inf)
 	);
 };
 

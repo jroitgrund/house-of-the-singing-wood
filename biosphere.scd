@@ -428,7 +428,7 @@ var nappeBaleineAmpOutBus = Bus.control(s, 1);
 ~biospherePart2 = {
 	| secondPhaseDuration |
 	Ppar([
-		Pseq([Event.silent(0), ~melodie.value(secondPhaseDuration)]),
+		Pseq([Event.silent(0), ~melodie.value(secondPhaseDuration + 8)]),
 	]);
 };
 
@@ -440,6 +440,24 @@ var nappeBaleineAmpOutBus = Bus.control(s, 1);
 		Pseq([Event.silent(0), ~water.value(thirdPhaseDuration)]),
 		Pseq([Event.silent(birdsIn), ~birds.value(thirdPhaseDuration - birdsIn)]),
 		Pseq([Event.silent(frogsIn), ~frog.value(thirdPhaseDuration - frogsIn)]),
+	]);
+};
+
+~biosphere = {
+	| biosphereFirstPhaseDuration, biosphereSecondPhaseDuration, biosphereThirdPhaseDuration |
+	Ppar([
+		Pseq([
+			Event.silent(0),
+			~biospherePart1.value(biosphereFirstPhaseDuration, biosphereSecondPhaseDuration)
+		]),
+		Pseq([
+			Event.silent(biosphereFirstPhaseDuration),
+			~biospherePart2.value(biosphereSecondPhaseDuration)
+		]),
+		Pseq([
+			Event.silent(biosphereFirstPhaseDuration + biosphereSecondPhaseDuration),
+			~biospherePart3.value(biosphereThirdPhaseDuration)
+		])
 	]);
 };
 

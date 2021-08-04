@@ -365,9 +365,9 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\buf, Pxrand(~clochettesBuffers, repeats: inf),
 			\hardPan, Pwhite(0.0, 2.0, inf),
 			\lpfBus, clochettesLowPassBus,
-			\amp, Pwhite(0.8, 1.1, inf),
+			\amp, Pwhite(0.5, 0.7, inf),
 			\gateRelease, 10,
-			\delayTime, Pif(rarement, Prand([TempoClock.default.tempo / 9, TempoClock.default.tempo / 10], inf)),
+			\delayTime, Pif(rarement, Prand([TempoClock.default.tempo / 9, TempoClock.default.tempo / 10], inf), 0),
 			\delayRepeat, Pwhite(20, 40, inf)
 		),
 		Pbind(
@@ -448,11 +448,11 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 					\direction, Prand([1, -1], inf)
 				),
 				Pbind(
-					\dur, Pseq([duration]),
+					\dur, Pseq([Rest(16), 32], inf),
 					\legato, 1,
-					\instrument, \ampControl,
-					\atk, 16 / TempoClock.default.tempo,
-					\sus, (duration -  32) / TempoClock.default.tempo,
+					\instrument, Pif(Ptime() < duration, \ampControl),
+					\atk, 32 / TempoClock.default.tempo,
+					\sus, 0,
 					\rel, 16 / TempoClock.default.tempo,
 					\controlBus, bassVoiceShaman2AmpBus
 				)]
@@ -498,7 +498,7 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\legato, 1,
 			\instrument, Pif(Ptime() < duration, \play),
 			\buf, ~bassBuffer,
-			\amp, 0.7,
+			\amp, 0.5,
 			\pfunc, Pif(launchBassOndeRouge, Pfuncn(~launchBassOndeRouge, inf), 1)
 		),
 	]);
@@ -528,8 +528,8 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\legato, 1,
 			\instrument, \ampControl,
 			\atk, 0,
-			\sus, (duration - 16) / TempoClock.default.tempo,
-			\rel, 16,
+			\sus, (duration - 32) / TempoClock.default.tempo,
+			\rel, 32,
 			\controlBus, kickAmpBus
 		)
 	]);
@@ -654,8 +654,8 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\legato, 1,
 			\instrument, \ampControl,
 			\atk, 16,
-			\sus, (duration - 32) / TempoClock.default.tempo,
-			\rel, 16,
+			\sus, (duration - 48) / TempoClock.default.tempo,
+			\rel, 32,
 			\controlBus, snareTomAmpBus
 		),
 	]);
@@ -781,4 +781,31 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 		Pseq([Event.silent(stabsIn), ~stabs.value(fifthPhaseDuration - stabsIn)]),
 	]);
 };
+
+~ritual = {
+	| ritualFirstPhaseDuration, ritualSecondPhaseDuration, ritualThirdPhaseDuration, ritualFourthPhaseDuration, ritualFifthPhaseDuration |
+	Ppar([
+		Pseq([
+			Event.silent(0),
+			~ritualPart1.value(ritualFirstPhaseDuration)
+		]),
+		Pseq([
+			Event.silent(ritualFirstPhaseDuration),
+			~ritualPart2.value(ritualSecondPhaseDuration)
+		]),
+		Pseq([
+			Event.silent(ritualFifthPhaseDuration + ritualSecondPhaseDuration),
+			~ritualPart3.value(ritualThirdPhaseDuration)
+		]),
+		Pseq([
+			Event.silent(ritualFifthPhaseDuration + ritualSecondPhaseDuration + ritualThirdPhaseDuration),
+			~ritualPart4.value(ritualFourthPhaseDuration)
+		]),
+		Pseq([
+			Event.silent(ritualFirstPhaseDuration + ritualSecondPhaseDuration + ritualThirdPhaseDuration + ritualFourthPhaseDuration),
+			~ritualPart5.value(ritualFifthPhaseDuration)
+		]),
+	]);
+};
+
 )

@@ -44,39 +44,8 @@ TempoClock.default.tempo = 90/60;
 
 // Runs everything! Adjust durations and comment stuff out to run individual parts.
 (
-var fullLoop, biosphere, ritual;
-
-var biosphereFirstPhaseDuration = 448;
-var biosphereSecondPhaseDuration = 448;
-var biosphereThirdPhaseDuration = 448;
-var biosphereTotalDuration = (
-	biosphereFirstPhaseDuration
-	+ biosphereSecondPhaseDuration
-	+ biosphereThirdPhaseDuration
-);
-
-var pause = 8;
-
-var ritualFirstPhaseDuration = 448;
-var ritualSecondPhaseDuration = 448;
-var ritualThirdPhaseDuration = 448;
-var ritualFourthPhaseDuration = 448;
-var ritualFifthPhaseDuration = 448;
-
-var total = (
-	biosphereFirstPhaseDuration
-	+ biosphereSecondPhaseDuration
-	+ biosphereThirdPhaseDuration
-	+ pause
-	+ ritualFirstPhaseDuration
-	+ ritualSecondPhaseDuration
-	+ ritualThirdPhaseDuration
-	+ ritualFourthPhaseDuration
-	+ ritualFifthPhaseDuration
-);
-
-
-~volume = 0.3;
+var getFullLoop, allLoops;
+~volume = 1;
 TempoClock.default.tempo = 90/60;
 
 "./common.scd".load;
@@ -84,61 +53,62 @@ TempoClock.default.tempo = 90/60;
 "./biosphere.scd".load;
 "./ritual.scd".load;
 
-// Chapters follow each other in a pseq since they have a pause in between them.
-// Inside chapters, parts are all in a Ppar since they have overlap. If a part needs to wait for
-// a previous part to complete, it uses a Pseq with Event.silent.  If a sound needs to bleed into
-// the next part, it uses a longer duration, e.g. 'gouttes' lasts for several parts.
+getFullLoop = {
+	var biosphereFirstPhaseDuration = 64;
+	var biosphereSecondPhaseDuration = 64;
+	var biosphereThirdPhaseDuration = 64;
+	var biosphereTotalDuration = (
+		biosphereFirstPhaseDuration
+		+ biosphereSecondPhaseDuration
+		+ biosphereThirdPhaseDuration
+	);
 
-biosphere = Ppar([
-	Pseq([
-		Event.silent(0),
-		~biospherePart1.value(biosphereFirstPhaseDuration, biosphereSecondPhaseDuration)
-	]),
-	Pseq([
-		Event.silent(biosphereFirstPhaseDuration),
-		~biospherePart2.value(biosphereSecondPhaseDuration)
-	]),
-	Pseq([
-		Event.silent(biosphereFirstPhaseDuration + biosphereSecondPhaseDuration),
-		~biospherePart3.value(biosphereThirdPhaseDuration)
-	])
-]);
+	var pause = 8;
 
-ritual = Ppar([
-	Pseq([
-		Event.silent(0),
-		~ritualPart1.value(ritualFirstPhaseDuration)
-	]),
-	Pseq([
-		Event.silent(ritualFirstPhaseDuration),
-		~ritualPart2.value(ritualSecondPhaseDuration)
-	]),
-	Pseq([
-		Event.silent(ritualFifthPhaseDuration + ritualSecondPhaseDuration),
-		~ritualPart3.value(ritualThirdPhaseDuration)
-	]),
-	Pseq([
-		Event.silent(ritualFifthPhaseDuration + ritualSecondPhaseDuration + ritualThirdPhaseDuration),
-		~ritualPart4.value(ritualFourthPhaseDuration)
-	]),
-	Pseq([
-		Event.silent(ritualFirstPhaseDuration + ritualSecondPhaseDuration + ritualThirdPhaseDuration + ritualFourthPhaseDuration),
-		~ritualPart5.value(ritualFifthPhaseDuration)
-	]),
-]);
+	var ritualFirstPhaseDuration = 64;
+	var ritualSecondPhaseDuration = 64;
+	var ritualThirdPhaseDuration = 64;
+	var ritualFourthPhaseDuration = 64;
+	var ritualFifthPhaseDuration = 64;
 
+	var totalDuration = (
+		biosphereFirstPhaseDuration
+		+ biosphereSecondPhaseDuration
+		+ biosphereThirdPhaseDuration
+		+ pause
+		+ ritualFirstPhaseDuration
+		+ ritualSecondPhaseDuration
+		+ ritualThirdPhaseDuration
+		+ ritualFourthPhaseDuration
+		+ ritualFifthPhaseDuration
+	);
 
-fullLoop = {
-	Ppar([
-		biosphere,
-		Pseq([Event.silent(biosphereTotalDuration), Event.silent(pause), ritual]);
-	]).play;
+	[
+		Ppar([
+			~biosphere.value(biosphereFirstPhaseDuration, biosphereSecondPhaseDuration, biosphereThirdPhaseDuration),
+			Pseq([
+				Event.silent(biosphereTotalDuration),
+				Event.silent(pause),
+				~ritual.value(ritualFirstPhaseDuration, ritualSecondPhaseDuration, ritualThirdPhaseDuration, ritualFourthPhaseDuration, ritualFifthPhaseDuration)
+			])
+		]),
+		totalDuration
+	];
 };
 
-// Adjust the number inside Array.series() to adjust the number of loops.
-Array.series(1).do { | i |
-	s.record("C:/Users/jonathan/Desktop/scc/loop.aiff", 0, 4);
-	TempoClock.default.sched(total * i, fullLoop);
-	TempoClock.default.sched(total, { s.stopRecording });
+allLoops = {
+	var wait = 0;
+	// Adjust the number inside Array.series() to adjust the number of loops.
+	Array.series(1).do { | i |
+		var result = getFullLoop.value;
+		var fullLoop = result[0];
+		var totalDuration = result[1];
+		s.record("C:/Users/jonathan/Desktop/scc/loop.aiff", 0, 4);
+		TempoClock.default.sched(wait, { fullLoop.play });
+		TempoClock.default.sched(wait + totalDuration, { s.stopRecording });
+		wait = wait + totalDuration;
+	};
 };
+
+allLoops.value;
 )

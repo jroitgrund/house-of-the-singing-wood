@@ -1,6 +1,7 @@
 ~sendMsg = {
     | msg, value |
     // ~resolume.sendMsg(msg, value);
+    1
 };
 
 ~singleActionPattern = {

@@ -95,7 +95,7 @@ biosphere = Ppar([
 	]),
 ]);
 
-ritual = Pseq([Event.silent(biosphereFirstPhaseDuration + pause), Ppar([
+ritual = Pseq([Event.silent(biosphereTotal + pause), Ppar([
 	Pseq([Event.silent(0), Ppar([
 		~singleActionPattern.value(~launchRondRouge),
 		~singleActionPattern.value(~launchParticules),

@@ -133,12 +133,12 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			grillonOneShotAmp1OutBus.get(~setGrillonsTopRightOpacity);
 			grillonOneShotAmp2OutBus.get(~setGrillonsBottomRightOpacity);
 			grillonOneShotAmp3OutBus.get(~setGrillonsBottomLeftOpacity);
-		}, duration), 0),
-		Pif(grillonsClips, ~singleActionPattern.value(~launchGrillonsClips), 0),
+		}, duration)),
+		Pif(grillonsClips, ~singleActionPattern.value(~launchGrillonsClips)),
 		Pif(grillonsClips, Pseq([
 			Event.silent(duration),
 			Ppar([~singleActionPattern.value(~clearGrillonsClips), ~singleActionPattern.value(~resetGrillonsLayersOpacity)])
-		]), 0),
+		])),
 		Ppar([
 				[1, grillonOneShotPanBus, grillonOneShotLowPassBus, 12, 0, -12.midiratio, false, 0.05],
 				[-1, grillonOneShotPanBus2,  grillonOneShotLowPassBus2, 16, pi, -12.midiratio, false, 0.05],
@@ -227,16 +227,16 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\freq, TempoClock.default.tempo / 24,
 			\controlBus, feuillesNappePanBus,
 			\direction, Prand([1, -1], inf),
-			\pfunc, Pif(tribal8, Pfuncn(~launchFeuillesNappeTribal8, inf), 0),
+			\pfunc, Pif(tribal8, Pfuncn(~launchFeuillesNappeTribal8, inf)),
 		),
 		Pif(tribal8, ~pollActionPattern.value({
 			feuillesNappeAmpOutBus.get(~setFeuillesNappeTribal8Opacity);
-		}, duration), 0),
+		}, duration)),
 		Pif(tribal8, Pseq([
 			Event.silent(duration),
 			~singleActionPattern.value(~clearFeuillesNappeTribal8),
 			~singleActionPattern.value(~resetFeuillesNapeTribal8LayerOpacity)
-		]), 0)
+		]))
 	]);
 };
 
@@ -255,17 +255,16 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\ampBus, murmuresAmpBus,
 			\gateRelease, 7,
 			\ampOutBus, murmuresAmpOutBus,
-			\resolume, ~resolume
 		),
-		Pif(tribalOverlay, ~singleActionPattern.value(~launchTribalOverlay), 0),
+		Pif(tribalOverlay, ~singleActionPattern.value(~launchTribalOverlay)),
 		Pif(tribalOverlay, ~pollActionPattern.value({
 			murmuresAmpOutBus.get(~setTribalOverlayOpacity);
-		}, duration), 0),
+		}, duration)),
 		Pif(tribalOverlay, Pseq([
 			Event.silent(duration),
 			~singleActionPattern.value(~removeTribalOverlay),
 			~singleActionPattern.value(~clearTribalOverlayLayerOpacity),
-		]), 0),
+		])),
 		Pbind(
 			\dur, Pseq([12], repeats: inf),
 			\legato, 1,
@@ -292,15 +291,15 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 ~murmuresLoops = {
 	| duration, fougeresRondes = false |
 	Ppar([
-		Pif(fougeresRondes, ~singleActionPattern.value(~launchFougeresRondes), 0),
+		Pif(fougeresRondes, ~singleActionPattern.value(~launchFougeresRondes)),
 		Pif(fougeresRondes, ~pollActionPattern.value({
 			murmuresLoopsAmpOutBus.get(~setFougeresRondesOpacity);
-		}, duration), 0),
+		}, duration)),
 		Pif(fougeresRondes, Pseq([
 			Event.silent(duration),
 			~singleActionPattern.value(~removeFougeresRondes),
 			~singleActionPattern.value(~resetFougeresRondesLayerOpacity)
-		]), 0),
+		])),
 		Pbind(
 			\buf, Pxrand(~murmuresLoopsBuffers, repeats: inf),
 			\dur, Pxrand([0, 8, 12].collect {
@@ -367,7 +366,7 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\lpfBus, clochettesLowPassBus,
 			\amp, Pwhite(0.8, 1.1, inf),
 			\gateRelease, 10,
-			\delayTime, Pif(rarement, Prand([TempoClock.default.tempo / 9, TempoClock.default.tempo / 10], inf), 0),
+			\delayTime, Pif(rarement, Prand([TempoClock.default.tempo / 9, TempoClock.default.tempo / 10], inf)),
 			\delayRepeat, Pwhite(20, 40, inf)
 		),
 		Pbind(
@@ -398,11 +397,11 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 				\ampOutBus, bassVoiceShamanAmpOutBus,
 				\loop, 1
 			),
-			Pif(totem, ~singleActionPattern.value(~launchTotemClip), 0),
+			Pif(totem, ~singleActionPattern.value(~launchTotemClip)),
 			Pif(totem, ~pollActionPattern.value({
 				bassVoiceShamanPanBus.get(~rotateTotemClip);
 				bassVoiceShamanAmpBus.get(~setTotemLayerOpacity);
-			}, duration), 0),
+			}, duration)),
 			Pif(totem, Pseq([
 				Event.silent(duration),
 				~singleActionPattern.value(~clearTotemClip),
@@ -476,9 +475,9 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\gateRelease, 13,
 			\amp, 0.275,
 			\ampBus, hibouxAmpBus,
-			\hardPan, Pif(tribalClip, Prand([0, 0.5, 1, 1.5], inf), Pwhite(0.0, 2.0, inf), 0),
-			\pfunc, Pif(tribalClip, Pfuncn(~launchHibouxTribalClip, inf), 0),
-			\pfunc2, Pif(part4Clip, Pfuncn(~launchHibouxPart4Clip, inf), 0)
+			\hardPan, Pif(tribalClip, Prand([0, 0.5, 1, 1.5], inf), Pwhite(0.0, 2.0, inf)),
+			\pfunc, Pif(tribalClip, Pfuncn(~launchHibouxTribalClip, inf)),
+			\pfunc2, Pif(part4Clip, Pfuncn(~launchHibouxPart4Clip, inf))
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -502,7 +501,7 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\instrument, Pif(Ptime() < duration, \play),
 			\buf, ~bassBuffer,
 			\amp, 0.7,
-			\action, Pif(launchBassOndeRouge, Pfuncn(~launchBassOndeRouge, inf), 0)
+			\action, Pif(launchBassOndeRouge, Pfuncn(~launchBassOndeRouge, inf))
 		),
 	]);
 };

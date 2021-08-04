@@ -48,7 +48,7 @@ var makeSynthDef = {
 		ampBusEnvelope = Select.kr(ampBus >= 0, [1, In.kr(ampBus)]);
 
 		// Apply envelopes.
-		sound = sound * envelope * ampBusEnvelope * loopEnvelope * amp * linen * 0.3;
+		sound = sound * envelope * ampBusEnvelope * loopEnvelope * amp * linen * ~volume;
 
 		// Split into two channels.
 		left = sound[0];
@@ -65,10 +65,10 @@ var makeSynthDef = {
 		left = PanAz.ar(4, left, pan + 0.01, orientation: 0);
 		right = PanAz.ar(4, right, pan - 0.01, orientation: 0);
 
-		Out.ar(out, Select.ar(
+		Out.ar(out, Splay.ar(Select.ar(
 			panBus >= 0,
 			[Select.ar(hardPan >= 0, [middle, left + right]),
-			left + right]));
+			left + right])));
 
 		// Write to OSC buses.
 		Out.kr(loopEnvOutBus, loopEnvelope);
@@ -111,11 +111,6 @@ SynthDef.new(\lpfControl, {
 	Out.kr(controlBus, SinOsc.kr(freq, mul: (max - min) / 2, add: min + (max - min) / 2, phase: phase));
 }).add;
 
-~readContentsAsBuffers = {
-	|path|
-	PathName(path).entries.collect { |fn| Buffer.read(s, fn.fullPath); };
-};
-
 // This creates a function "loaded" which buffers call when they're done loading a sample.
 // Then, in main, we use "waitForBuffers" to make sure all 21 samples are loaded before playing.
 // Without this the buffer ugen bug happens all the time.
@@ -126,7 +121,7 @@ loadedBuffers = 0;
 ~waitForBuffers = {
 	| action |
 	Routine({
-		while({ loadedBuffers < 21 }, {
+		while({ loadedBuffers < 64 }, {
 			("Loaded" + loadedBuffers + "buffers").postln;
 			1.wait;
 		});
@@ -134,6 +129,11 @@ loadedBuffers = 0;
 		1.wait;
 		action.value;
 	}).play;
+};
+
+~readContentsAsBuffers = {
+	|path|
+	PathName(path).entries.collect { |fn| Buffer.readChannel(s, fn.fullPath, action: ~loaded); };
 };
 
 // Everything under here is unused for now, mostly OSC stuff.

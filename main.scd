@@ -32,6 +32,7 @@ s.waitForBoot({
 
 // Use this code block to test stuff out!
 (
+~volume = 0.3;
 TempoClock.default.tempo = 90/60;
 
 "./common.scd".load;
@@ -40,26 +41,26 @@ TempoClock.default.tempo = 90/60;
 "./ritual.scd".load;
 )
 
-
 // Runs everything! Adjust durations and comment stuff out to run individual parts.
 (
 var runLoop, biosphere, ritual;
 
-var biosphereFirstPhaseDuration = 64;
-var biosphereSecondPhaseDuration = 64;
-var biosphereThirdPhaseDuration = 64;
+var biosphereFirstPhaseDuration = 192;
+var biosphereSecondPhaseDuration = 192;
+var biosphereThirdPhaseDuration = 192;
 var biosphereTotal = biosphereFirstPhaseDuration + biosphereSecondPhaseDuration + biosphereThirdPhaseDuration;
 
 var pause = 8;
 
-var firstPhaseDuration = 64;
-var secondPhaseDuration = 64;
-var thirdPhaseDuration = 64;
-var fourthPhaseDuration = 64;
-var fifthPhaseDuration = 64;
+var firstPhaseDuration = 192;
+var secondPhaseDuration = 192;
+var thirdPhaseDuration = 192;
+var fourthPhaseDuration = 192;
+var fifthPhaseDuration = 192;
 var total = biosphereFirstPhaseDuration + biosphereSecondPhaseDuration + biosphereThirdPhaseDuration + pause + firstPhaseDuration + secondPhaseDuration + thirdPhaseDuration + fourthPhaseDuration + fifthPhaseDuration;
 
 
+~volume = 0.3;
 TempoClock.default.tempo = 90/60;
 
 "./common.scd".load;
@@ -75,14 +76,15 @@ TempoClock.default.tempo = 90/60;
 biosphere = Ppar([
 	Ppar([
 		Pseq([Event.silent(32), ~gouttes.value(biosphereFirstPhaseDuration + biosphereSecondPhaseDuration - 16)]),
-		Pseq([~owlNappe.value(biosphereFirstPhaseDuration + 8)]),
+		Pseq([~nappeBaleine.value(biosphereFirstPhaseDuration + 8)]),
 		Pseq([Event.silent(16), ~owls.value(biosphereFirstPhaseDuration - 8)]),
+		Pseq([Event.silent(8), ~sirens.value(biosphereFirstPhaseDuration - 8)]),
 	]),
 	Pseq([
 		Event.silent(biosphereFirstPhaseDuration),
 		Ppar([
 			Pseq([~melodie.value(biosphereSecondPhaseDuration)]),
-			Pseq([~owls.value(biosphereSecondPhaseDuration + 32, rarement: true)])
+			Pseq([~owls.value(biosphereSecondPhaseDuration + 32)])
 		])
 	]),
 	Pseq([
@@ -150,3 +152,4 @@ Array.series(1).do { | i |
 	TempoClock.default.sched(total, { s.stopRecording });
 };
 )
+

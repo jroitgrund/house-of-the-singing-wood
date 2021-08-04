@@ -39,18 +39,33 @@ var waterAmpBus = Bus.control(s, 1);
 var waterLowPassBus = Bus.control(s, 1);
 var waterAmpOutBus = Bus.control(s, 1);
 
+var sirensPanBus = Bus.control(s, 1);
+var sirensAmpBus = Bus.control(s, 1);
+var sirensLowPassBus = Bus.control(s, 1);
+var sirensAmpOutBus = Bus.control(s, 1);
+
+var nappeBaleinePanBus = Bus.control(s, 1);
+var nappeBaleineAmpBus = Bus.control(s, 1);
+var nappeBaleineLowPassBus = Bus.control(s, 1);
+var nappeBaleineAmpOutBus = Bus.control(s, 1);
+
 ~loadBiosphereBuffers = {
 	~birds1Buffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Birds1.aif", action: ~loaded);
 	~birds2Buffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Birds2.aif", action: ~loaded);
-	~frogBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Frog_1shot_Wrapped.aif", action: ~loaded);
+	~frogBuffers = [Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Frog_1shot_Wrapped.aif", action: ~loaded)] ++ ~readContentsAsBuffers.value(~basePath + "Chapitre1 - Biosphere/frogs");
 	~gouttesBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Gouttes.aif", action: ~loaded);
 	~melodieBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Melodie_Wrapped.aif", action: ~loaded);
-	~owlNappeBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/OWL_1BAR.aif", action: ~loaded);
+	~owlNappeBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/OWL_1BAR.aif", action:~loaded);
+	~owlNappeBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/owlnappe");
+	~owlNappeEndBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/owlnappeend");
+	~nappeBaleineBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/nappe-baleines.wav", action:~loaded);
 	~owlsBuffers = [
 		Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Owl-Sing1.aif", action: ~loaded),
 		Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Owl-Sing2.aif", action: ~loaded)
-	];
+	] ++ ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/owls");
 	~waterBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Water.aif", action: ~loaded);
+
+	~sirensBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/sirens");
 };
 
 // Plays birds1 and birds2, birds2 starts 4 bars after birds1 and they have separate pan and amp controls.
@@ -67,13 +82,16 @@ var waterAmpOutBus = Bus.control(s, 1);
                     \loop, 1,
                     \panBus, birds2PanBus,
                     \ampBus, birds2AmpBus,
+					\loopAtk, 4,
+					\loopSus, 40,
+					\loopRel, 4
                 ),
                 Pbind(
                     \dur, Pseq([48], repeats: inf),
                     \legato, 1,
                     \instrument, Pif(Ptime() < (duration - 16), \panControl),
-                    \freq, TempoClock.default.tempo / 24,
-                    \iphase, 0,
+                    \freq, TempoClock.default.tempo / 32,
+                    \iphase, Pwhite(0.0, 2.0, inf),
                     \controlBus, birds2PanBus,
                     \direction, Prand([1, -1], inf)
                 ),
@@ -96,13 +114,16 @@ var waterAmpOutBus = Bus.control(s, 1);
 			\loop, 1,
 			\panBus, birds1PanBus,
 			\ampBus, birds1AmpBus,
+			\loopAtk, 4,
+			\loopSus, 24,
+			\loopRel, 4
 		),
 		Pbind(
-			\dur, Pseq([48], repeats: inf),
+			\dur, Pseq([32], repeats: inf),
 			\legato, 1,
 			\instrument, Pif(Ptime() < duration, \panControl),
-			\freq, TempoClock.default.tempo / 24,
-			\iphase, 0,
+			\freq, TempoClock.default.tempo / 28,
+			\iphase, Pwhite(0.0, 2.0, inf),
 			\controlBus, birds1PanBus,
 			\direction, Prand([1, -1], inf)
 		),
@@ -131,13 +152,16 @@ var waterAmpOutBus = Bus.control(s, 1);
 			\loop, 1,
 			\panBus, gouttesPanBus,
 			\ampBus, gouttesAmpBus,
+			\loopAtk, 16 / TempoClock.default.tempo,
+			\loopSus, 0,
+			\loopRel, 16 / TempoClock.default.tempo
 		),
 		Pbind(
-			\dur, Pseq([36], repeats: inf),
+			\dur, Pseq([32], repeats: inf),
 			\legato, 1,
 			\instrument, Pif(Ptime() < duration, \panControl),
-			\freq, TempoClock.default.tempo / 18,
-			\iphase, 0,
+			\freq, TempoClock.default.tempo / 12,
+			\iphase, Pwhite(0.0, 2.0, inf),
 			\controlBus, gouttesPanBus,
 			\direction, Prand([1, -1], inf)
 		),
@@ -148,33 +172,42 @@ var waterAmpOutBus = Bus.control(s, 1);
 			\atk, 16 / TempoClock.default.tempo,
 			\sus, (duration -  32) / TempoClock.default.tempo,
 			\rel, 16 / TempoClock.default.tempo,
-			\controlBus, gouttesAmpBus
+			\controlBus, owlNappeAmpBus
 		)
     ]);
 };
 
-// Long sample with fade in and out.
-// This is actually quite in rhythm and maybe a bit repetitive, maybe we could chop it up
-// and trigger it more randomly.
-~owlNappe = {
+~nappeBaleine = {
 	| duration |
 	Ppar([
 		Pbind(
 			\dur, Pseq([duration]),
 			\legato, 1,
 			\instrument, \play,
-			\buf, ~owlNappeBuffer,
+			\buf, ~nappeBaleineBuffer,
 			\loop, 1,
-			\panBus, owlNappePanBus,
-			\ampBus, owlNappeAmpBus,
+			\panBus, nappeBaleinePanBus,
+			\ampBus, nappeBaleineAmpBus
 		),
+		Pseq([Event.silent(6), Pbind(
+			\dur, Pseq([
+				8,
+				7,
+				5,
+				44
+			], inf),
+			\type, \action,
+			\pfunc, Pif(Ptime() < duration, Pfunc({
+				"baleine!".postln;
+			})),
+		)]),
 		Pbind(
-			\dur, Pseq([28], inf),
+			\dur, Pseq([32], inf),
 			\instrument, Pif(Ptime() < duration, \panControl),
 			\legato, 1,
 			\iphase, 0,
-			\freq, TempoClock.default.tempo / 14,
-			\controlBus, owlNappePanBus,
+			\freq, TempoClock.default.tempo / 16,
+			\controlBus, nappeBaleinePanBus,
 			\direction, Prand([1, -1], inf)
 		),
 		Pbind(
@@ -184,7 +217,7 @@ var waterAmpOutBus = Bus.control(s, 1);
 			\atk, 16 / TempoClock.default.tempo,
 			\sus, (duration -  32) / TempoClock.default.tempo,
 			\rel, 16 / TempoClock.default.tempo,
-			\controlBus, owlNappeAmpBus
+			\controlBus, nappeBaleineAmpBus
 		),
 	]);
 };
@@ -194,26 +227,54 @@ var waterAmpOutBus = Bus.control(s, 1);
 // Could be worth adding something to spice it up as the owl samples are just
 // identical source material pitched up or down (and same as in ritual).
 ~owls = {
-	| duration, rarement = false |
+	| duration |
 	Ppar([
 		Pbind(
-			\dur, Pif(
-				rarement,
-				Pxrand([
-					Pseq([12, 12, 24]),
-					Pseq([18, 6, 24]),
-					Pseq([18, 12, 18]),
-					Pseq([30, 6, 12]),
-				], repeats: inf),
-				Pxrand([
-					Pseq([4, 4, 8]),
-					Pseq([6, 2, 8]),
-					Pseq([6, 4, 6]),
-					Pseq([10, 2, 4]),
-				], repeats: inf)),
-				\legato, 1,
-			\instrument, Pif(Ptime() < duration, \play),
 			\buf, Pxrand(~owlsBuffers, repeats: inf),
+			\dur, Pwrand(
+				[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].collect {
+					| waitBeats |
+					Pfuncn({
+						| ev |
+						(ev[\buf].duration * TempoClock.default.tempo).round(2) + waitBeats
+					}, inf)
+				},
+				[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].normalizeSum),
+			\legato, 1,
+			\instrument, Pif(Ptime() < duration, \play),
+			\hardPan, Pwhite(0.0, 2.0, inf),
+            \lpfRq, 2,
+			\gateRelease, 60,
+            \ampBus, owlsAmpBus,
+            \ampOutBus, owlsAmpOutBus
+		),
+		Pbind(
+			\dur, Pseq([duration]),
+			\legato, 1,
+			\instrument, \ampControl,
+			\atk, 0,
+			\sus, (duration -  16) / TempoClock.default.tempo,
+			\rel, 16 / TempoClock.default.tempo,
+			\controlBus, owlsAmpBus
+		),
+	]);
+};
+
+~sirens = {
+	| duration |
+	Ppar([
+		Pbind(
+			\buf, Pxrand(~sirensBuffers, repeats: inf),
+			\dur, Prand(
+				[8, 9, 10, 11, 12, 13, 15, 16, 17, 18, 19, 20].collect {
+					| waitBeats |
+					Pfuncn({
+						| ev |
+						(ev[\buf].duration * TempoClock.default.tempo).round(2) + waitBeats
+					}, inf)
+				}),
+			\legato, 1,
+			\instrument, Pif(Ptime() < duration, \play),
 			\hardPan, Pwhite(0.0, 2.0, inf),
             \lpfRq, 2,
 			\gateRelease, 60,
@@ -250,11 +311,11 @@ var waterAmpOutBus = Bus.control(s, 1);
             \ampOutBus, melodieAmpOutBus
 		),
 		Pbind(
-			\dur, Pseq([27], inf),
+			\dur, Pseq([48], inf),
 			\instrument, Pif(Ptime() < duration, \panControl),
 			\legato, 1,
 			\iphase, 0,
-			\freq, TempoClock.default.tempo / 18,
+			\freq, TempoClock.default.tempo / 24,
 			\controlBus, melodiePanBus,
 			\direction, Prand([1, -1], inf),
             \waver, 0.05
@@ -278,26 +339,21 @@ var waterAmpOutBus = Bus.control(s, 1);
 // These also showcase adding randomness to delayTime and delayRepeat (not sure it sounds amazing,
 // but use this code as a reference).
 ~frog = {
-	| duration, rarement = false |
+	| duration |
 	Ppar([
 		Pbind(
-			\dur, Pif(
-				rarement,
-				Pxrand([
-					Pseq([12, 12, 24]),
-					Pseq([18, 6, 24]),
-					Pseq([18, 12, 18]),
-					Pseq([30, 6, 12]),
-				], repeats: inf),
-				Pxrand([
-					Pseq([4, 4, 8]),
-					Pseq([6, 2, 8]),
-					Pseq([6, 4, 6]),
-					Pseq([10, 2, 4]),
-				], repeats: inf)),
-				\legato, 1,
+			\buf, Pxrand(~frogBuffers, inf),
+			\dur, Pwrand(
+				[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].collect {
+					| waitBeats |
+					Pfuncn({
+						| ev |
+						(ev[\buf].duration * TempoClock.default.tempo).round(2) + waitBeats
+					}, inf)
+				},
+				[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].normalizeSum),
+			\legato, 1,
 			\instrument, Pif(Ptime() < duration, \play),
-			\buf, ~frogBuffer,
 			\hardPan, Pwhite(0.0, 2.0, inf),
             \lpfRq, 2,
 			\gateRelease, 20,
@@ -330,13 +386,16 @@ var waterAmpOutBus = Bus.control(s, 1);
 			\loop, 1,
 			\panBus, waterPanBus,
 			\ampBus, waterAmpBus,
+			\loopAtk, 16,
+			\loopRel, 16,
+			\loopSus, 0
 		),
 		Pbind(
-			\dur, Pseq([36], inf),
+			\dur, Pseq([32], inf),
 			\instrument, Pif(Ptime() < duration, \panControl),
 			\legato, 1,
-			\iphase, 0,
-			\freq, TempoClock.default.tempo / 18,
+			\iphase, Pwhite(0.0, 2.0, inf),
+			\freq, TempoClock.default.tempo / 12,
 			\controlBus, waterPanBus,
 			\direction, Prand([1, -1], inf),
 		),

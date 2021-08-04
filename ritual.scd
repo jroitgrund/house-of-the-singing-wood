@@ -183,7 +183,7 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 					\legato, 1,
 					\instrument, \panControl,
 					\freq, TempoClock.default.tempo / 12,
-					\iphase, 0,
+					\iphase, Pwhite(0.0, 2.0, inf),
 					\controlBus, panBus,
 					\direction, direction
 				)),
@@ -220,10 +220,10 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\ampOutBus, feuillesNappeAmpOutBus
 		),
 		Pbind(
-			\dur, Pseq([8], inf),
+			\dur, Pseq([32], inf),
 			\instrument, Pif(Ptime() < duration, \panControl),
 			\legato, 1,
-			\iphase, Prand([0, 0.5, 1, 1.5], inf),
+			\iphase, Pwhite(0.0, 2.0, inf),
 			\freq, TempoClock.default.tempo / 24,
 			\controlBus, feuillesNappePanBus,
 			\direction, Prand([1, -1], inf),
@@ -270,9 +270,9 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\legato, 1,
 			\instrument, Pif(Ptime() < duration, \panControl),
 			\freq, TempoClock.default.tempo / 24,
-			\iphase, Prand([0, 0.5, 1, 1.5], inf),
+			\iphase, Pwhite(0.0, 2.0, inf),
 			\controlBus, murmuresPanBus,
-			\direction, Prand([Pseq([1], 4), Pseq([-1], 4)], inf)
+			\direction, Prand([1, -1], inf)
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -322,9 +322,9 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\legato, 1,
 			\instrument, Pif(Ptime() < duration, \panControl),
 			\freq, TempoClock.default.tempo / 24,
-			\iphase, Prand([0, 0.5, 1, 1.5], inf),
+			\iphase, Pwhite(0.0, 2.0, inf),
 			\controlBus, murmuresLoopsPanBus,
-			\direction, Prand([Pseq([1], 4), Pseq([-1], 4)], inf)
+			\direction, Prand([-1, 1], inf)
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -435,17 +435,14 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 					\ampBus, bassVoiceShaman2AmpBus,
 					\rate, 7.midiratio,
 					\amp, 0.05,
-					\loop, 1,
-					\atk, 16 / TempoClock.default.tempo,
-					\sus, 0,
-					\rel, 16 / TempoClock.default.tempo,
+					\loop, 1
 				),
 				Pbind(
 					\dur, Pseq([Rest(16), 32], inf),
 					\legato, 1,
 					\instrument, Pif(Ptime() < duration, \panControl),
 					\freq, TempoClock.default.tempo / 32,
-					\iphase, Prand([0, 0.5, 1, 1.5], inf),
+					\iphase, Pwhite(0.0, 2.0, inf),
 					\controlBus, bassVoiceShaman2PanBus,
 					\direction, Prand([1, -1], inf)
 				),

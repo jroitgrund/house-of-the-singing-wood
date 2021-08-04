@@ -4,6 +4,7 @@ s.options.device = "ASIO : Focusrite USB ASIO";
 s.options.numOutputBusChannels = 4;
 s.options.memSize = 1000000;
 s.waitForBoot({
+	~volume = 0.3;
 	"./common.scd".load;
 	"./ritual.scd".load;
 	"./biosphere.scd".load;
@@ -19,6 +20,7 @@ s.options.device = "ASIO : Realtek ASIO";
 s.options.memSize = 1000000;
 s.options.numOutputBusChannels = 2;
 s.waitForBoot({
+	~volume = 0.3;
 	"./common.scd".load;
 	"./ritual.scd".load;
 	"./biosphere.scd".load;
@@ -32,15 +34,12 @@ s.waitForBoot({
 
 // Use this code block to test stuff out!
 (
-~volume = 0.3;
 TempoClock.default.tempo = 90/60;
 
 "./common.scd".load;
 "./osc.scd".load;
 "./biosphere.scd".load;
 "./ritual.scd".load;
-
-~gouttes.value(128).play;
 )
 
 // Runs everything! Adjust durations and comment stuff out to run individual parts.
@@ -91,17 +90,41 @@ TempoClock.default.tempo = 90/60;
 // the next part, it uses a longer duration, e.g. 'gouttes' lasts for several parts.
 
 biosphere = Ppar([
-	~biospherePart1.value(biosphereFirstPhaseDuration, biosphereSecondPhaseDuration),
-	~biospherePart2.value(biosphereFirstPhaseDuration, biosphereSecondPhaseDuration),
-	~biospherePart3.value(biosphereFirstPhaseDuration, biosphereSecondPhaseDuration, biosphereThirdPhaseDuration)
+	Pseq([
+		Event.silent(0),
+		~biospherePart1.value(biosphereFirstPhaseDuration, biosphereSecondPhaseDuration)
+	]),
+	Pseq([
+		Event.silent(biosphereFirstPhaseDuration),
+		~biospherePart2.value(biosphereSecondPhaseDuration)
+	]),
+	Pseq([
+		Event.silent(biosphereFirstPhaseDuration + biosphereSecondPhaseDuration),
+		~biospherePart3.value(biosphereThirdPhaseDuration)
+	])
 ]);
 
 ritual = Ppar([
-	~ritualPart1.value(ritualFirstPhaseDuration),
-	~ritualPart2.value(ritualFirstPhaseDuration, ritualSecondPhaseDuration),
-	~ritualPart3.value(ritualFirstPhaseDuration, ritualSecondPhaseDuration, ritualThirdPhaseDuration),
-	~ritualPart4.value(ritualFirstPhaseDuration, ritualSecondPhaseDuration, ritualThirdPhaseDuration, ritualFourthPhaseDuration),
-	~ritualPart5.value(ritualFirstPhaseDuration, ritualSecondPhaseDuration, ritualThirdPhaseDuration, ritualFourthPhaseDuration, ritualFifthPhaseDuration),
+	Pseq([
+		Event.silent(0),
+		~ritualPart1.value(ritualFirstPhaseDuration)
+	]),
+	Pseq([
+		Event.silent(ritualFirstPhaseDuration),
+		~ritualPart2.value(ritualSecondPhaseDuration)
+	]),
+	Pseq([
+		Event.silent(ritualFifthPhaseDuration + ritualSecondPhaseDuration),
+		~ritualPart3.value(ritualThirdPhaseDuration)
+	]),
+	Pseq([
+		Event.silent(ritualFifthPhaseDuration + ritualSecondPhaseDuration + ritualThirdPhaseDuration),
+		~ritualPart4.value(ritualFourthPhaseDuration)
+	]),
+	Pseq([
+		Event.silent(ritualFirstPhaseDuration + ritualSecondPhaseDuration + ritualThirdPhaseDuration + ritualFourthPhaseDuration),
+		~ritualPart5.value(ritualFifthPhaseDuration)
+	]),
 ]);
 
 

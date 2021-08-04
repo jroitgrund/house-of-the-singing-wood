@@ -540,20 +540,16 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 	| duration |
 	Pbind(
 		\dur, Pseq([
-				Rest(42),
-				Prand([
-					Pseq([47/4]),
-					Pseq([15/4]),
-					Pseq([76]),
-					Pseq([96])
-				], inf)
-			]),
+			Rest(20),
+			Prand([47/4, 15/4, 31, 26], inf)
+		]),
 		\legato, 1,
 		\instrument, Pif(Ptime() < duration, \play),
 		\buf, ~coilBuffer,
 		\gateRelease, 8,
 		\hardPan, Pwhite(0.0, 2.0, inf),
-		\ampBus, drumRackAmpBus
+		\ampBus, drumRackAmpBus,
+		\amp, 0.3
 	);
 };
 
@@ -580,7 +576,7 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\buf, ~cricket2Buffer,
 			\panBus, cricket2PanBus,
 			\gateRelease, 1,
-			\controlBus, drumRackAmpBus,
+			\ampBus, drumRackAmpBus,
 			\lpfBus, cricket2LowPassBus
 		),
 		Pbind(
@@ -607,18 +603,14 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 	Pbind(
 		\dur, Pseq([
 				Rest(14),
-				Prand([
-					Pseq([78]),
-					Pseq([93]),
-					Pseq([35]),
-					Pseq([23])
-				], inf)
+				Prand([78, 93, 35, 23, 14, 17], inf)
 			]),
 		\legato, 1,
 		\instrument, Pif(Ptime() < duration, \play),
 		\buf, ~hhdelayBuffer,
 		\hardPan, Pwhite(0.0, 2.0, inf),
-		\ampBus, drumRackAmpBus
+		\ampBus, drumRackAmpBus,
+		\amp, 0.3
 	);
 };
 
@@ -680,7 +672,7 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 		\buf, ~tom1Buffer,
 		\gateRelease, 1,
 		\hardPan, Pwhite(0.0, 2.0, inf),
-		\controlBus, drumRackAmpBus
+		\ampBus, drumRackAmpBus
 	);
 };
 
@@ -721,10 +713,10 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 };
 
 ~ritualPart2 = {
-	| firstPhaseDuration, secondPhaseDuration |
-	var bassVoiceShamanIn = (firstPhaseDuration / 6).round(4);
-	var hibouxIn = (2 * firstPhaseDuration / 6).round(4);
-	Pseq([Event.silent(firstPhaseDuration), Ppar([
+	| secondPhaseDuration |
+	var bassVoiceShamanIn = (secondPhaseDuration / 6).round(4);
+	var hibouxIn = (2 * secondPhaseDuration / 6).round(4);
+	Ppar([
 		Pseq([Event.silent(0), ~murmuresLoops.value(secondPhaseDuration)]),
 		Pseq([
 			Event.silent(hibouxIn),
@@ -736,24 +728,24 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			])
 		]),
 		Pseq([Event.silent(bassVoiceShamanIn), ~bassVoiceShaman.value(secondPhaseDuration + 6 - bassVoiceShamanIn, totem: true)]),
-	])]);
+	]);
 };
 
 ~ritualPart3 = {
-	| firstPhaseDuration, secondPhaseDuration, thirdPhaseDuration |
-	Pseq([Event.silent(firstPhaseDuration + secondPhaseDuration), Ppar([
+	| thirdPhaseDuration |
+	Ppar([
 		~kick.value(thirdPhaseDuration + 1),
 		~murmuresLoops.value(thirdPhaseDuration, fougeresRondes: true),
 		~singleActionPattern.value(~removeRedBackgroundAtEndOfRitualPart2),
 		~singleActionPattern.value(~launchRabbit),
 		~singleActionPattern.value(~launchKickParticles),
-	])]);
+	]);
 };
 
 ~ritualPart4 = {
-	| firstPhaseDuration, secondPhaseDuration, thirdPhaseDuration, fourthPhaseDuration |
-	var hibouxIn = (2 * firstPhaseDuration / 6).round(4);
-	Pseq([Event.silent(firstPhaseDuration + secondPhaseDuration + thirdPhaseDuration), Ppar([
+	| fourthPhaseDuration |
+	var hibouxIn = (2 * fourthPhaseDuration / 6).round(4);
+	Ppar([
 		~murmures.value(fourthPhaseDuration, tribalOverlay: true),
 		~feuillesNappe.value(fourthPhaseDuration + 16, tribal8: true),
 		~clochettes.value(fourthPhaseDuration + 32, rarement: true),
@@ -761,17 +753,14 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 		~singleActionPattern.value(~removeKickParticles),
 		~singleActionPattern.value(~launchSnakeLoop),
 		Pseq([Event.silent(fourthPhaseDuration - 16), ~singleActionPattern.value(~launchEndOfRitual4Circle)])
-	])]);
+	]);
 };
 
 ~ritualPart5 = {
-	| firstPhaseDuration, secondPhaseDuration, thirdPhaseDuration, fourthPhaseDuration, fifthPhaseDuration |
-	Pseq([
-		Event.silent(firstPhaseDuration + secondPhaseDuration + thirdPhaseDuration + fourthPhaseDuration),
-		Ppar([
-			~bassVoiceShaman.value(fifthPhaseDuration, withFifth: false),
-			Pseq([Event.silent(32), ~drumRack.value(fifthPhaseDuration - 32)])
-		])
+	| fifthPhaseDuration |
+	Ppar([
+		~bassVoiceShaman.value(fifthPhaseDuration, withFifth: false),
+		Pseq([Event.silent(32), ~drumRack.value(fifthPhaseDuration - 32)])
 	]);
 };
 )

@@ -716,8 +716,8 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 
 ~ritualPart1 = {
 	| firstPhaseDuration |
-	var bassIn = (firstPhaseDuration / 6).round(4);
 	var clochettesIn = (2 * firstPhaseDuration / 6).round(4);
+	var bassIn = (3 * firstPhaseDuration / 6).round(4);
 	Ppar([
 		~singleActionPattern.value(~launchRondRouge),
 		~singleActionPattern.value(~launchParticules),
@@ -729,7 +729,7 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 
 ~ritualPart2 = {
 	| secondPhaseDuration |
-	var bassVoiceShamanIn = (secondPhaseDuration / 6).round(4);
+	var bassVoiceShamanIn = (1 * secondPhaseDuration / 6).round(4);
 	var hibouxIn = (2 * secondPhaseDuration / 6).round(4);
 	Ppar([
 		Pseq([Event.silent(0), ~murmuresLoops.value(secondPhaseDuration)]),
@@ -773,8 +773,8 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 
 ~ritualPart5 = {
 	| fifthPhaseDuration |
-	var grillonsIn = (1 * fifthPhaseDuration / 6).round(4);
-	var stabsIn = (2 * fifthPhaseDuration / 6).round(4);
+	var grillonsIn = (2 * fifthPhaseDuration / 6).round(4);
+	var stabsIn = (3 * fifthPhaseDuration / 6).round(4);
 	Ppar([
 		~bassVoiceShaman.value(fifthPhaseDuration, withFifth: false),
 		Pseq([Event.silent(32), ~drumRack.value(fifthPhaseDuration - 32)]),

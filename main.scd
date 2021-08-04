@@ -46,7 +46,7 @@ TempoClock.default.tempo = 90/60;
 
 // Runs everything! Adjust durations and comment stuff out to run individual parts.
 (
-var getFullLoop, allLoops;
+var getFullLoop, allLoops, minutesToDuration;
 ~volume = 1;
 TempoClock.default.tempo = 90/60;
 
@@ -55,10 +55,15 @@ TempoClock.default.tempo = 90/60;
 "./biosphere.scd".load;
 "./ritual.scd".load;
 
+minutesToDuration = {
+	| min, max |
+	rrand(min * 96, max * 96).round(32);
+};
+
 getFullLoop = {
-	var biosphereFirstPhaseDuration = 128;
-	var biosphereSecondPhaseDuration = 128;
-	var biosphereThirdPhaseDuration = 128;
+	var biosphereFirstPhaseDuration = minutesToDuration.value(6, 8);
+	var biosphereSecondPhaseDuration = minutesToDuration.value(4, 6);
+	var biosphereThirdPhaseDuration = minutesToDuration.value(2, 5);
 	var biosphereTotalDuration = (
 		biosphereFirstPhaseDuration
 		+ biosphereSecondPhaseDuration
@@ -67,11 +72,11 @@ getFullLoop = {
 
 	var pause = 8;
 
-	var ritualFirstPhaseDuration = 128;
-	var ritualSecondPhaseDuration = 128;
-	var ritualThirdPhaseDuration = 128;
-	var ritualFourthPhaseDuration = 128;
-	var ritualFifthPhaseDuration = 128;
+	var ritualFirstPhaseDuration = minutesToDuration.value(4, 7);
+	var ritualSecondPhaseDuration = minutesToDuration.value(4, 7);
+	var ritualThirdPhaseDuration = minutesToDuration.value(3, 5);
+	var ritualFourthPhaseDuration = minutesToDuration.value(3, 5);
+	var ritualFifthPhaseDuration = minutesToDuration.value(6, 8);
 
 	var totalDuration = (
 		biosphereFirstPhaseDuration

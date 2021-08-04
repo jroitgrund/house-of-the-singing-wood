@@ -133,12 +133,12 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			grillonOneShotAmp1OutBus.get(~setGrillonsTopRightOpacity);
 			grillonOneShotAmp2OutBus.get(~setGrillonsBottomRightOpacity);
 			grillonOneShotAmp3OutBus.get(~setGrillonsBottomLeftOpacity);
-		}, duration)),
-		Pif(grillonsClips, ~singleActionPattern.value(~launchGrillonsClips)),
+		}, duration), 1),
+		Pif(grillonsClips, ~singleActionPattern.value(~launchGrillonsClips), 1),
 		Pif(grillonsClips, Pseq([
 			Event.silent(duration),
 			Ppar([~singleActionPattern.value(~clearGrillonsClips), ~singleActionPattern.value(~resetGrillonsLayersOpacity)])
-		])),
+		]), 1),
 		Ppar([
 				[1, grillonOneShotPanBus, grillonOneShotLowPassBus, 12, 0, -12.midiratio, false, 0.05],
 				[-1, grillonOneShotPanBus2,  grillonOneShotLowPassBus2, 16, pi, -12.midiratio, false, 0.05],
@@ -227,16 +227,16 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\freq, TempoClock.default.tempo / 24,
 			\controlBus, feuillesNappePanBus,
 			\direction, Prand([1, -1], inf),
-			\pfunc, Pif(tribal8, Pfuncn(~launchFeuillesNappeTribal8, inf)),
+			\pfunc, Pif(tribal8, Pfuncn(~launchFeuillesNappeTribal8, inf), 1),
 		),
 		Pif(tribal8, ~pollActionPattern.value({
 			feuillesNappeAmpOutBus.get(~setFeuillesNappeTribal8Opacity);
-		}, duration)),
+		}, duration), 1),
 		Pif(tribal8, Pseq([
 			Event.silent(duration),
 			~singleActionPattern.value(~clearFeuillesNappeTribal8),
 			~singleActionPattern.value(~resetFeuillesNapeTribal8LayerOpacity)
-		]))
+		]), 1)
 	]);
 };
 
@@ -256,15 +256,15 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\gateRelease, 7,
 			\ampOutBus, murmuresAmpOutBus,
 		),
-		Pif(tribalOverlay, ~singleActionPattern.value(~launchTribalOverlay)),
+		Pif(tribalOverlay, ~singleActionPattern.value(~launchTribalOverlay), 1),
 		Pif(tribalOverlay, ~pollActionPattern.value({
 			murmuresAmpOutBus.get(~setTribalOverlayOpacity);
-		}, duration)),
+		}, duration), 1),
 		Pif(tribalOverlay, Pseq([
 			Event.silent(duration),
 			~singleActionPattern.value(~removeTribalOverlay),
 			~singleActionPattern.value(~clearTribalOverlayLayerOpacity),
-		])),
+		]), 1),
 		Pbind(
 			\dur, Pseq([12], repeats: inf),
 			\legato, 1,
@@ -291,15 +291,15 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 ~murmuresLoops = {
 	| duration, fougeresRondes = false |
 	Ppar([
-		Pif(fougeresRondes, ~singleActionPattern.value(~launchFougeresRondes)),
+		Pif(fougeresRondes, ~singleActionPattern.value(~launchFougeresRondes), 1),
 		Pif(fougeresRondes, ~pollActionPattern.value({
 			murmuresLoopsAmpOutBus.get(~setFougeresRondesOpacity);
-		}, duration)),
+		}, duration), 1),
 		Pif(fougeresRondes, Pseq([
 			Event.silent(duration),
 			~singleActionPattern.value(~removeFougeresRondes),
 			~singleActionPattern.value(~resetFougeresRondesLayerOpacity)
-		])),
+		]), 1),
 		Pbind(
 			\buf, Pxrand(~murmuresLoopsBuffers, repeats: inf),
 			\dur, Pxrand([0, 8, 12].collect {
@@ -397,16 +397,16 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 				\ampOutBus, bassVoiceShamanAmpOutBus,
 				\loop, 1
 			),
-			Pif(totem, ~singleActionPattern.value(~launchTotemClip)),
+			Pif(totem, ~singleActionPattern.value(~launchTotemClip), 1),
 			Pif(totem, ~pollActionPattern.value({
 				bassVoiceShamanPanBus.get(~rotateTotemClip);
 				bassVoiceShamanAmpBus.get(~setTotemLayerOpacity);
-			}, duration)),
+			}, duration), 1),
 			Pif(totem, Pseq([
 				Event.silent(duration),
 				~singleActionPattern.value(~clearTotemClip),
 				~singleActionPattern.value(~resetTotemLayerOpacity)
-			])),
+			]), 1),
 			Pbind(
 				\dur, Pseq([64], repeats: inf),
 				\legato, 1,
@@ -473,8 +473,8 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\amp, 0.275,
 			\ampBus, hibouxAmpBus,
 			\hardPan, Pif(tribalClip, Prand([0, 0.5, 1, 1.5], inf), Pwhite(0.0, 2.0, inf)),
-			\pfunc, Pif(tribalClip, Pfuncn(~launchHibouxTribalClip, inf)),
-			\pfunc2, Pif(part4Clip, Pfuncn(~launchHibouxPart4Clip, inf))
+			\pfunc, Pif(tribalClip, Pfuncn(~launchHibouxTribalClip, inf), 1),
+			\pfunc2, Pif(part4Clip, Pfuncn(~launchHibouxPart4Clip, inf), 1)
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -498,7 +498,7 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\instrument, Pif(Ptime() < duration, \play),
 			\buf, ~bassBuffer,
 			\amp, 0.7,
-			\action, Pif(launchBassOndeRouge, Pfuncn(~launchBassOndeRouge, inf))
+			\pfunc, Pif(launchBassOndeRouge, Pfuncn(~launchBassOndeRouge, inf), 1)
 		),
 	]);
 };
@@ -539,7 +539,15 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 ~coil = {
 	| duration |
 	Pbind(
-		\dur, Pseq([Rest(47/4), 17/4], repeats: inf),
+		\dur, Pseq([
+				Rest(42),
+				Prand([
+					Pseq([47/4]),
+					Pseq([15/4]),
+					Pseq([76]),
+					Pseq([96])
+				], inf)
+			]),
 		\legato, 1,
 		\instrument, Pif(Ptime() < duration, \play),
 		\buf, ~coilBuffer,
@@ -558,7 +566,7 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 		\buf, ~cricket1Buffer,
 		\gateRelease, 2,
 		\hardPan, Pwhite(0.0, 2.0, inf),
-		\ampBus, drumRackAmpBus
+		\ampBus, drumRackAmpBus,
 	);
 };
 
@@ -572,7 +580,8 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\buf, ~cricket2Buffer,
 			\panBus, cricket2PanBus,
 			\gateRelease, 1,
-			\controlBus, drumRackAmpBus
+			\controlBus, drumRackAmpBus,
+			\lpfBus, cricket2LowPassBus
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -580,14 +589,31 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\instrument, \panControl,
 			\freq, TempoClock.default.tempo / 4,
 			\controlBus, cricket2PanBus
-		)
+		),
+		Pbind(
+			\dur, Pseq([duration]),
+			\legato, 1,
+			\instrument, \lpfControl,
+			\freq, 4 * TempoClock.default.tempo / 24,
+			\min, 4000,
+			\max, 20000,
+			\controlBus, cricket2LowPassBus,
+		),
 	]);
 };
 
 ~hhdelay = {
 	| duration |
 	Pbind(
-		\dur, Pseq([Rest(14), 22], repeats: inf),
+		\dur, Pseq([
+				Rest(14),
+				Prand([
+					Pseq([78]),
+					Pseq([93]),
+					Pseq([35]),
+					Pseq([23])
+				], inf)
+			]),
 		\legato, 1,
 		\instrument, Pif(Ptime() < duration, \play),
 		\buf, ~hhdelayBuffer,
@@ -678,6 +704,74 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\rel, 16 / TempoClock.default.tempo,
 			\controlBus, drumRackAmpBus
 		),
+	]);
+};
+
+~ritualPart1 = {
+	| firstPhaseDuration |
+	var bassIn = (firstPhaseDuration / 6).round(4);
+	var clochettesIn = (2 * firstPhaseDuration / 6).round(4);
+	Ppar([
+		~singleActionPattern.value(~launchRondRouge),
+		~singleActionPattern.value(~launchParticules),
+		Pseq([Event.silent(0), ~grillons.value(firstPhaseDuration + 32, grillonsClips: true)]),
+		Pseq([Event.silent(bassIn), ~bass.value(firstPhaseDuration - bassIn, rarement: true, launchBassOndeRouge: true)]),
+		Pseq([Event.silent(clochettesIn), ~clochettes.value(firstPhaseDuration - clochettesIn)]),
+	]);
+};
+
+~ritualPart2 = {
+	| firstPhaseDuration, secondPhaseDuration |
+	var bassVoiceShamanIn = (firstPhaseDuration / 6).round(4);
+	var hibouxIn = (2 * firstPhaseDuration / 6).round(4);
+	Pseq([Event.silent(firstPhaseDuration), Ppar([
+		Pseq([Event.silent(0), ~murmuresLoops.value(secondPhaseDuration)]),
+		Pseq([
+			Event.silent(hibouxIn),
+			Ppar([
+				~hiboux.value(secondPhaseDuration - hibouxIn, tribalClip: true),
+				~singleActionPattern.value(~clearParticules),
+				~singleActionPattern.value(~launchBouleClip),
+				~singleActionPattern.value(~launchFondRougeRitualPart2Clip)
+			])
+		]),
+		Pseq([Event.silent(bassVoiceShamanIn), ~bassVoiceShaman.value(secondPhaseDuration + 6 - bassVoiceShamanIn, totem: true)]),
+	])]);
+};
+
+~ritualPart3 = {
+	| firstPhaseDuration, secondPhaseDuration, thirdPhaseDuration |
+	Pseq([Event.silent(firstPhaseDuration + secondPhaseDuration), Ppar([
+		~kick.value(thirdPhaseDuration + 1),
+		~murmuresLoops.value(thirdPhaseDuration, fougeresRondes: true),
+		~singleActionPattern.value(~removeRedBackgroundAtEndOfRitualPart2),
+		~singleActionPattern.value(~launchRabbit),
+		~singleActionPattern.value(~launchKickParticles),
+	])]);
+};
+
+~ritualPart4 = {
+	| firstPhaseDuration, secondPhaseDuration, thirdPhaseDuration, fourthPhaseDuration |
+	var hibouxIn = (2 * firstPhaseDuration / 6).round(4);
+	Pseq([Event.silent(firstPhaseDuration + secondPhaseDuration + thirdPhaseDuration), Ppar([
+		~murmures.value(fourthPhaseDuration, tribalOverlay: true),
+		~feuillesNappe.value(fourthPhaseDuration + 16, tribal8: true),
+		~clochettes.value(fourthPhaseDuration + 32, rarement: true),
+		Pseq([Event.silent(hibouxIn), ~hiboux.value(fourthPhaseDuration - hibouxIn)]),
+		~singleActionPattern.value(~removeKickParticles),
+		~singleActionPattern.value(~launchSnakeLoop),
+		Pseq([Event.silent(fourthPhaseDuration - 16), ~singleActionPattern.value(~launchEndOfRitual4Circle)])
+	])]);
+};
+
+~ritualPart5 = {
+	| firstPhaseDuration, secondPhaseDuration, thirdPhaseDuration, fourthPhaseDuration, fifthPhaseDuration |
+	Pseq([
+		Event.silent(firstPhaseDuration + secondPhaseDuration + thirdPhaseDuration + fourthPhaseDuration),
+		Ppar([
+			~bassVoiceShaman.value(fifthPhaseDuration, withFifth: false),
+			Pseq([Event.silent(32), ~drumRack.value(fifthPhaseDuration - 32)])
+		])
 	]);
 };
 )

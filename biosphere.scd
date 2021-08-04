@@ -172,7 +172,7 @@ var nappeBaleineAmpOutBus = Bus.control(s, 1);
 			\atk, 16 / TempoClock.default.tempo,
 			\sus, (duration -  32) / TempoClock.default.tempo,
 			\rel, 16 / TempoClock.default.tempo,
-			\controlBus, owlNappeAmpBus
+			\controlBus, gouttesAmpBus
 		)
     ]);
 };
@@ -198,7 +198,8 @@ var nappeBaleineAmpOutBus = Bus.control(s, 1);
 			], inf),
 			\type, \action,
 			\pfunc, Pif(Ptime() < duration, Pfunc({
-				"baleine!".postln;
+				// Run code to be triggered on baleine noises here.
+				1
 			})),
 		)]),
 		Pbind(
@@ -408,6 +409,43 @@ var nappeBaleineAmpOutBus = Bus.control(s, 1);
 			\rel, 16 / TempoClock.default.tempo,
 			\controlBus, waterAmpBus
 		),
+	]);
+};
+
+~biospherePart1 = {
+	| firstPhaseDuration, secondPhaseDuration |
+	var sireneIn = (firstPhaseDuration / 6).round(4);
+	var gouttesIn = (2 * firstPhaseDuration / 6).round(4);
+	var owlsIn = (3 * firstPhaseDuration / 6).round(4);
+	Ppar([
+		Pseq([Event.silent(0), ~nappeBaleine.value(firstPhaseDuration + 8)]),
+		Pseq([Event.silent(sireneIn), ~sirens.value(firstPhaseDuration - sireneIn)]),
+		Pseq([Event.silent(gouttesIn), ~gouttes.value(firstPhaseDuration + secondPhaseDuration + 16 - gouttesIn)]),
+		Pseq([Event.silent(owlsIn), ~owls.value(firstPhaseDuration + secondPhaseDuration + 32 - owlsIn)])
+	]);
+};
+
+~biospherePart2 = {
+	| firstPhaseDuration, secondPhaseDuration |
+	Pseq([
+		Event.silent(firstPhaseDuration),
+		Ppar([
+			Pseq([Event.silent(0), ~melodie.value(secondPhaseDuration)]),
+		])
+	]);
+};
+
+~biospherePart3 = {
+	| firstPhaseDuration, secondPhaseDuration, thirdPhaseDuration |
+	var birdsIn = (firstPhaseDuration / 6).round(4);
+	var frogsIn = (2 * firstPhaseDuration / 6).round(4);
+	Pseq([
+		Event.silent(firstPhaseDuration + secondPhaseDuration),
+		Ppar([
+			Pseq([Event.silent(0), ~water.value(thirdPhaseDuration)]),
+			Pseq([Event.silent(birdsIn), ~birds.value(thirdPhaseDuration - birdsIn)]),
+			Pseq([Event.silent(frogsIn), ~frog.value(secondPhaseDuration - frogsIn)]),
+		])
 	]);
 };
 

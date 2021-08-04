@@ -4,7 +4,7 @@ var makeSynthDef = {
 	|name, numChannels|
 	SynthDef.new(name, {
 		| out, buf, amp = 1.0, ampBus = -1, ampBus2 = -1, pitchRatio = 0, window = 0.2, hpf = 0, rate = 1, hardPan = -1, panBus = -1, atk = -1, sus = -1, rel = 1000000, lpfBus = -1, lpf = 20000, revTime = 0, delayTime = 0, delayRepeat = 40, lfoSpeed = 0, loop = 0, loopAtk = -1, loopSus = -1, loopRel = -1, gate = 1, gateRelease = 0, lpfRq = 1, loopEnvOutBus = nil, envOutBus = nil, ampOutBus = nil, amp0OutBus = nil, amp1OutBus = nil, amp2OutBus = nil, amp3OutBus = nil |
-		var envelope, sound, ampBusEnvelope, loopEnvelope, pan, left, right, middle, linen, delay;
+		var envelope, sound, ampBusEnvelope, ampBusEnvelope2, loopEnvelope, pan, left, right, middle, linen, delay;
 
 		// Used to release synths when a pattern event ends and triggers a note off event, setting gate to zero.
 		linen = Linen.kr(gate, releaseTime: gateRelease, doneAction: 2);

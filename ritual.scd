@@ -109,6 +109,7 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 	~hibouxBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/Hiboux");
 	~clochettesBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/ClochetteOneShot/ClochetteReverb");
 	~murmuresLoopsBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/Murmures");
+	~stabBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/stabs");
 };
 
 // Four different grillons loops, differing in their octave or in their pan direction.
@@ -539,10 +540,7 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 ~coil = {
 	| duration |
 	Pbind(
-		\dur, Pseq([
-			Rest(20),
-			Prand([47/4, 15/4, 31, 26], inf)
-		]),
+		\dur, Pseq([Rest(47/4), 17/4], repeats: inf),
 		\legato, 1,
 		\instrument, Pif(Ptime() < duration, \play),
 		\buf, ~coilBuffer,
@@ -676,13 +674,29 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 	);
 };
 
+~stabs = {
+	| duration |
+	Pbind(
+		\dur, Pseq([
+			Rest(26/4),
+			Pxrand([33, 76, 90, 22, 5], inf)
+		]),
+		\legato, 1,
+		\instrument, Pif(Ptime() < duration, \play),
+		\buf, Pxrand(~stabBuffers, inf),
+		\gateRelease, 1,
+		\hardPan, Pwhite(0.0, 2.0, inf),
+		\ampBus, drumRackAmpBus,
+		\amp, 0.2
+	);
+};
+
 ~drumRack = {
 	| duration |
 	Ppar([
 		~kick.value(duration),
 		~coil.value(duration),
 		~cricket.value(duration),
-		~cricket2.value(duration),
 		~hhdelay.value(duration),
 		~kickdelay.value(duration),
 		~snareTom.value(duration),
@@ -758,9 +772,13 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 
 ~ritualPart5 = {
 	| fifthPhaseDuration |
+	var grillonsIn = (1 * fifthPhaseDuration / 6).round(4);
+	var stabsIn = (2 * fifthPhaseDuration / 6).round(4);
 	Ppar([
 		~bassVoiceShaman.value(fifthPhaseDuration, withFifth: false),
-		Pseq([Event.silent(32), ~drumRack.value(fifthPhaseDuration - 32)])
+		Pseq([Event.silent(32), ~drumRack.value(fifthPhaseDuration - 32)]),
+		Pseq([Event.silent(grillonsIn), ~cricket2.value(fifthPhaseDuration - grillonsIn)]),
+		Pseq([Event.silent(stabsIn), ~stabs.value(fifthPhaseDuration - stabsIn)]),
 	]);
 };
 )

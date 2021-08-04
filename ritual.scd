@@ -434,6 +434,7 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 					\buf, ~bassVoiceShamanBuffer,
 					\panBus, bassVoiceShaman2PanBus,
 					\ampBus, bassVoiceShaman2AmpBus,
+					\ampBus2, bassVoiceShamanAmpBus,
 					\rate, 7.midiratio,
 					\amp, 0.05,
 					\loop, 1
@@ -498,7 +499,7 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\legato, 1,
 			\instrument, Pif(Ptime() < duration, \play),
 			\buf, ~bassBuffer,
-			\amp, 0.5,
+			\amp, 0.3,
 			\pfunc, Pif(launchBassOndeRouge, Pfuncn(~launchBassOndeRouge, inf), 1)
 		),
 	]);
@@ -741,7 +742,7 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 				~singleActionPattern.value(~launchFondRougeRitualPart2Clip)
 			])
 		]),
-		Pseq([Event.silent(bassVoiceShamanIn), ~bassVoiceShaman.value(secondPhaseDuration + 6 - bassVoiceShamanIn, totem: true)]),
+		Pseq([Event.silent(bassVoiceShamanIn), ~bassVoiceShaman.value(secondPhaseDuration + 4 - bassVoiceShamanIn, totem: true)]),
 	]);
 };
 

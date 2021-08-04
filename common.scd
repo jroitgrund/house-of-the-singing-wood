@@ -3,7 +3,7 @@ var loadedBuffers;
 var makeSynthDef = {
 	|name, numChannels|
 	SynthDef.new(name, {
-		| out, buf, amp = 1.0, ampBus = -1, pitchRatio = 0, window = 0.2, hpf = 0, rate = 1, hardPan = -1, panBus = -1, atk = -1, sus = -1, rel = 1000000, lpfBus = -1, lpf = 20000, revTime = 0, delayTime = 0, delayRepeat = 40, lfoSpeed = 0, loop = 0, loopAtk = -1, loopSus = -1, loopRel = -1, gate = 1, gateRelease = 0, lpfRq = 1, loopEnvOutBus = nil, envOutBus = nil, ampOutBus = nil, amp0OutBus = nil, amp1OutBus = nil, amp2OutBus = nil, amp3OutBus = nil |
+		| out, buf, amp = 1.0, ampBus = -1, ampBus2 = -1, pitchRatio = 0, window = 0.2, hpf = 0, rate = 1, hardPan = -1, panBus = -1, atk = -1, sus = -1, rel = 1000000, lpfBus = -1, lpf = 20000, revTime = 0, delayTime = 0, delayRepeat = 40, lfoSpeed = 0, loop = 0, loopAtk = -1, loopSus = -1, loopRel = -1, gate = 1, gateRelease = 0, lpfRq = 1, loopEnvOutBus = nil, envOutBus = nil, ampOutBus = nil, amp0OutBus = nil, amp1OutBus = nil, amp2OutBus = nil, amp3OutBus = nil |
 		var envelope, sound, ampBusEnvelope, loopEnvelope, pan, left, right, middle, linen, delay;
 
 		// Used to release synths when a pattern event ends and triggers a note off event, setting gate to zero.
@@ -46,9 +46,10 @@ var makeSynthDef = {
 
 		// Get envelope from control amp if set.
 		ampBusEnvelope = Select.kr(ampBus >= 0, [1, In.kr(ampBus)]);
-
+		ampBusEnvelope2 = Select.kr(ampBus2 >= 0, [1, In.kr(ampBus2)]);
+`
 		// Apply envelopes.
-		sound = sound * envelope * ampBusEnvelope * loopEnvelope * amp * linen * ~volume;
+		sound = sound * envelope * ampBusEnvelope * ampBusEnvelope2 * loopEnvelope * amp * linen * ~volume;
 
 		// Split into two channels.
 		left = sound[0];

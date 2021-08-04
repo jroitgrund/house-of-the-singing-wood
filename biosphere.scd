@@ -82,9 +82,9 @@ var nappeBaleineAmpOutBus = Bus.control(s, 1);
                     \loop, 1,
                     \panBus, birds2PanBus,
                     \ampBus, birds2AmpBus,
-					\loopAtk, 4,
-					\loopSus, 40,
-					\loopRel, 4
+					\loopAtk, 4 / TempoClock.default.tempo,
+					\loopSus, 40 / TempoClock.default.tempo,
+					\loopRel, 4 / TempoClock.default.tempo
                 ),
                 Pbind(
                     \dur, Pseq([48], repeats: inf),
@@ -114,9 +114,9 @@ var nappeBaleineAmpOutBus = Bus.control(s, 1);
 			\loop, 1,
 			\panBus, birds1PanBus,
 			\ampBus, birds1AmpBus,
-			\loopAtk, 4,
-			\loopSus, 24,
-			\loopRel, 4
+			\loopAtk, 4 / TempoClock.default.tempo,
+			\loopSus, 24 / TempoClock.default.tempo,
+			\loopRel, 4 / TempoClock.default.tempo
 		),
 		Pbind(
 			\dur, Pseq([32], repeats: inf),
@@ -387,8 +387,8 @@ var nappeBaleineAmpOutBus = Bus.control(s, 1);
 			\loop, 1,
 			\panBus, waterPanBus,
 			\ampBus, waterAmpBus,
-			\loopAtk, 16,
-			\loopRel, 16,
+			\loopAtk, 16 / TempoClock.default.tempo,
+			\loopRel, 16 / TempoClock.default.tempo,
 			\loopSus, 0
 		),
 		Pbind(
@@ -404,8 +404,8 @@ var nappeBaleineAmpOutBus = Bus.control(s, 1);
 			\dur, Pseq([duration]),
 			\legato, 1,
 			\instrument, \ampControl,
-			\atk, 16 / TempoClock.default.tempo,
-			\sus, (duration -  32) / TempoClock.default.tempo,
+			\atk, 8 / TempoClock.default.tempo,
+			\sus, (duration -  24) / TempoClock.default.tempo,
 			\rel, 16 / TempoClock.default.tempo,
 			\controlBus, waterAmpBus
 		),
@@ -418,7 +418,7 @@ var nappeBaleineAmpOutBus = Bus.control(s, 1);
 	var gouttesIn = (2 * firstPhaseDuration / 6).round(4);
 	var owlsIn = (3 * firstPhaseDuration / 6).round(4);
 	Ppar([
-		Pseq([Event.silent(0), ~nappeBaleine.value(firstPhaseDuration + 8)]),
+		Pseq([Event.silent(0), ~nappeBaleine.value(firstPhaseDuration + 16)]),
 		Pseq([Event.silent(sireneIn), ~sirens.value(firstPhaseDuration - sireneIn)]),
 		Pseq([Event.silent(gouttesIn), ~gouttes.value(firstPhaseDuration + secondPhaseDuration + 16 - gouttesIn)]),
 		Pseq([Event.silent(owlsIn), ~owls.value(firstPhaseDuration + secondPhaseDuration + 32 - owlsIn)])
@@ -428,7 +428,7 @@ var nappeBaleineAmpOutBus = Bus.control(s, 1);
 ~biospherePart2 = {
 	| secondPhaseDuration |
 	Ppar([
-		Pseq([Event.silent(0), ~melodie.value(secondPhaseDuration + 8)]),
+		Pseq([Event.silent(0), ~melodie.value(secondPhaseDuration + 16)]),
 	]);
 };
 

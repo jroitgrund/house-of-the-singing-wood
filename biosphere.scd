@@ -402,9 +402,9 @@ var nappeBaleineAmpOutBus = Bus.control(s, 1);
 			\loop, 1,
 			\panBus, waterPanBus,
 			\ampBus, waterAmpBus,
-			\loopAtk, 4 / TempoClock.default.tempo,
-			\loopRel, 4 / TempoClock.default.tempo,
-			\loopSus, 24 / TempoClock.default.tempo
+			\loopAtk, 16 / TempoClock.default.tempo,
+			\loopRel, 16 / TempoClock.default.tempo,
+			\loopSus, 0
 		),
 		Pbind(
 			\dur, Pseq([32], inf),
@@ -454,7 +454,7 @@ var nappeBaleineAmpOutBus = Bus.control(s, 1);
 	var frogsIn = (2 * thirdPhaseDuration / 6).round(4);
 	Ppar([
 		Pseq([Event.silent(0), ~water.value(thirdPhaseDuration)]),
-		// Pseq([Event.silent(uduIn), ~udu.value(thirdPhaseDuration - uduIn)]),
+		Pseq([Event.silent(uduIn), ~udu.value(thirdPhaseDuration - uduIn)]),
 		Pseq([Event.silent(birdsIn), ~birds.value(thirdPhaseDuration - birdsIn)]),
 		Pseq([Event.silent(frogsIn), ~frog.value(thirdPhaseDuration - frogsIn)]),
 	]);

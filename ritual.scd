@@ -217,9 +217,9 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\buf, ~feuillesNappeBuffer,
 			\loop, 1,
 			\panBus, feuillesNappePanBus,
-			\loopAtk, 4 / TempoClock.default.tempo,
-			\loopSus, 24 / TempoClock.default.tempo,
-			\loopRel, 4 / TempoClock.default.tempo,
+			\loopAtk, 16 / TempoClock.default.tempo,
+			\loopSus, 0,
+			\loopRel, 16 / TempoClock.default.tempo,
 			\ampOutBus, feuillesNappeAmpOutBus
 		),
 		Pbind(

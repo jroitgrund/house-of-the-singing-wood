@@ -104,6 +104,8 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 	~feuillesNappeBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/feuillesNappe.aif", action: ~loaded);
 	~bassBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/Baaaaass.wav", action: ~loaded);
 	~bassVoiceShamanBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/BassVoiceShaman.aif", action: ~loaded);
+	~bolTibetainBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/bol-tibetain.wav", action: ~loaded);
+	~batonPluieBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/baton-pluie.wav", action: ~loaded);
 
 	~murmuresBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/MurmuresOneShot");
 	~hibouxBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/Hiboux");
@@ -215,9 +217,9 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\buf, ~feuillesNappeBuffer,
 			\loop, 1,
 			\panBus, feuillesNappePanBus,
-			\loopAtk, 16 / TempoClock.default.tempo,
-			\loopSus, 0 / TempoClock.default.tempo,
-			\loopRel, 16 / TempoClock.default.tempo,
+			\loopAtk, 4 / TempoClock.default.tempo,
+			\loopSus, 24 / TempoClock.default.tempo,
+			\loopRel, 4 / TempoClock.default.tempo,
 			\ampOutBus, feuillesNappeAmpOutBus
 		),
 		Pbind(
@@ -505,6 +507,34 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 	]);
 };
 
+~bolTibetain = {
+	| duration |
+	Ppar([
+		Pbind(
+			\dur, Pseq([duration]),
+			\legato, 1,
+			\instrument, \play,
+			\buf, ~bolTibetainBuffer,
+			\loop, 1,
+			\amp, 1
+		)
+	]);
+};
+
+~batonPluie = {
+	| duration |
+	Ppar([
+		Pbind(
+			\dur, Pseq([duration]),
+			\legato, 1,
+			\instrument, \play,
+			\buf, ~batonPluieBuffer,
+			\loop, 1,
+			\amp, 1
+		)
+	]);
+};
+
 	/**
 	 *************************
 	 * DRUM RACK STARTS HERE *
@@ -680,7 +710,7 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 	Pbind(
 		\dur, Pseq([
 			Rest(26/4),
-			Pxrand([33, 76, 90, 22, 5], inf)
+			Pxrand([33, 76, 22, 5, 17], inf)
 		]),
 		\legato, 1,
 		\instrument, Pif(Ptime() < duration, \play),
@@ -751,6 +781,7 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 	Ppar([
 		~kick.value(thirdPhaseDuration + 1),
 		~murmuresLoops.value(thirdPhaseDuration, fougeresRondes: true),
+		// ~batonPluie.value(thirdPhaseDuration),
 		~singleActionPattern.value(~removeRedBackgroundAtEndOfRitualPart2),
 		~singleActionPattern.value(~launchRabbit),
 		~singleActionPattern.value(~launchKickParticles),

@@ -64,6 +64,7 @@ var nappeBaleineAmpOutBus = Bus.control(s, 1);
 		Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Owl-Sing2.aif", action: ~loaded)
 	] ++ ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/owls");
 	~waterBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Water.aif", action: ~loaded);
+	~uduBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/udu");
 
 	~sirensBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/sirens");
 };
@@ -375,6 +376,20 @@ var nappeBaleineAmpOutBus = Bus.control(s, 1);
 	]);
 };
 
+~udu = {
+	| duration |
+	Ppar([
+		Pbind(
+			\buf, Pxrand(~uduBuffers, inf),
+			\dur, Pxrand([8, 6, 12, 14], inf),
+			\legato, 1,
+			\instrument, Pif(Ptime() < duration, \play),
+			\gateRelease, 2,
+			\amp, Pwhite(0.8, 1.1, inf)
+		),
+	]);
+};
+
 // Long sample with fade in and out.
 ~water = {
 	| duration |
@@ -387,9 +402,9 @@ var nappeBaleineAmpOutBus = Bus.control(s, 1);
 			\loop, 1,
 			\panBus, waterPanBus,
 			\ampBus, waterAmpBus,
-			\loopAtk, 16 / TempoClock.default.tempo,
-			\loopRel, 16 / TempoClock.default.tempo,
-			\loopSus, 0
+			\loopAtk, 4 / TempoClock.default.tempo,
+			\loopRel, 4 / TempoClock.default.tempo,
+			\loopSus, 24 / TempoClock.default.tempo
 		),
 		Pbind(
 			\dur, Pseq([32], inf),
@@ -434,10 +449,12 @@ var nappeBaleineAmpOutBus = Bus.control(s, 1);
 
 ~biospherePart3 = {
 	| thirdPhaseDuration |
+	var uduIn = 8;
 	var birdsIn = (thirdPhaseDuration / 6).round(4);
 	var frogsIn = (2 * thirdPhaseDuration / 6).round(4);
 	Ppar([
 		Pseq([Event.silent(0), ~water.value(thirdPhaseDuration)]),
+		// Pseq([Event.silent(uduIn), ~udu.value(thirdPhaseDuration - uduIn)]),
 		Pseq([Event.silent(birdsIn), ~birds.value(thirdPhaseDuration - birdsIn)]),
 		Pseq([Event.silent(frogsIn), ~frog.value(thirdPhaseDuration - frogsIn)]),
 	]);

@@ -66,10 +66,10 @@ var makeSynthDef = {
 		left = PanAz.ar(4, left, pan + 0.01, orientation: 0);
 		right = PanAz.ar(4, right, pan - 0.01, orientation: 0);
 
-		Out.ar(out, Select.ar(
+		Out.ar(out, Splay.ar(Select.ar(
 			panBus >= 0,
 			[Select.ar(hardPan >= 0, [middle, left + right]),
-			left + right]));
+			left + right])));
 
 		// Write to OSC buses.
 		Out.kr(loopEnvOutBus, loopEnvelope);
@@ -122,7 +122,7 @@ loadedBuffers = 0;
 ~waitForBuffers = {
 	| action |
 	Routine({
-		while({ loadedBuffers < 79 }, {
+		while({ loadedBuffers < 76 }, {
 			("Loaded" + loadedBuffers + "buffers").postln;
 			1.wait;
 		});
@@ -138,7 +138,7 @@ loadedBuffers = 0;
 };
 
 // Everything under here is unused for now, mostly OSC stuff.
-~resolume = NetAddr.new("localhost", 7000);
+~resolume = NetAddr.new("192.168.1.13", 7000);
 
 Event.addEventType(\action, {});
 

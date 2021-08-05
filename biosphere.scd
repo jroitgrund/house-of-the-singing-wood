@@ -381,11 +381,41 @@ var nappeBaleineAmpOutBus = Bus.control(s, 1);
 	Ppar([
 		Pbind(
 			\buf, Pxrand(~uduBuffers, inf),
-			\dur, Pxrand([8, 6, 12, 14], inf),
-			\legato, 1,
+			\dur, Pseq([
+				Prand(Array.fill(8, {
+					| i |
+					Pseq([
+						Prand([
+							Pwrand(
+								[1/4, Rest(1/4)],
+								[0.9, 0.1]
+							),
+							Pwrand(
+								[1/4, Rest(1/4)],
+								[0.7, 0.3]
+							)
+						]),
+						Prand([
+							Pwrand(
+								[1/4, Rest(1/4)],
+								[0.7, 0.3],
+							),
+							Pwrand(
+								[1/4, Rest(1/4)],
+								[0.9, 0.1],
+							)
+						])
+					], 2 * (8 + i))
+				})),
+				Prand(Array.fill(6, { | i | Rest(i) }))
+			],
+			inf),
+			\legato, 2,
 			\instrument, Pif(Ptime() < duration, \play),
-			\gateRelease, 2,
-			\amp, Pwhite(0.8, 1.1, inf)
+			\gateRelease, 0.1,
+			\hardPan, Pwhite(0.0, 2.0),
+			\amp, Pwhite(0.05, 0.5, inf),
+			\hpf, Pwrand([0, 500, 1000, 1500, 2000], [0.5, 0.2, 0.1,0.05, 0.05], inf)
 		),
 	]);
 };
@@ -449,14 +479,14 @@ var nappeBaleineAmpOutBus = Bus.control(s, 1);
 
 ~biospherePart3 = {
 	| thirdPhaseDuration |
-	var uduIn = 8;
-	var birdsIn = (thirdPhaseDuration / 6).round(4);
-	var frogsIn = (2 * thirdPhaseDuration / 6).round(4);
+	var birdsIn = (thirdPhaseDuration / 9).round(4);
+	var frogsIn = (2 * thirdPhaseDuration / 9).round(4);
+	var uduIn = (3 * thirdPhaseDuration / 9).round(4);
 	Ppar([
 		Pseq([Event.silent(0), ~water.value(thirdPhaseDuration)]),
-		Pseq([Event.silent(uduIn), ~udu.value(thirdPhaseDuration - uduIn)]),
 		Pseq([Event.silent(birdsIn), ~birds.value(thirdPhaseDuration - birdsIn)]),
 		Pseq([Event.silent(frogsIn), ~frog.value(thirdPhaseDuration - frogsIn)]),
+		Pseq([Event.silent(uduIn), ~udu.value(thirdPhaseDuration - uduIn)])
 	]);
 };
 

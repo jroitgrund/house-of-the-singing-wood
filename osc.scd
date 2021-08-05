@@ -1,6 +1,6 @@
 ~sendMsg = {
     | msg, value |
-    // ~resolume.sendMsg(msg, value);
+    ~resolume.sendMsg(msg, value);
     1
 };
 
@@ -36,11 +36,15 @@
 };
 
 ~launchRondRouge = {
-    ~sendMsg.value("/composition/layers/1/clips/1/connect", 1);
+    ~sendMsg.value("/composition/layers/8/clips/1/connect", 1);
+};
+
+~launchDeuxiemeRondRouge = {
+    ~sendMsg.value("/composition/layers/7/clips/1/connect", 1);
 };
 
 ~launchParticules = {
-    ~sendMsg.value("/composition/layers/1/clips/1/connect", 1);
+    ~sendMsg.value("/composition/layers/9/clips/1/connect", 1);
 };
 
 ~clearParticules = {

@@ -91,6 +91,16 @@ var murmuresLoopsAmpBus = Bus.control(s, 1);
 var murmuresLoopsLowPassBus = Bus.control(s, 1);
 var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 
+var batonPluiePanBus = Bus.control(s, 1);
+var batonPluieAmpBus = Bus.control(s, 1);
+var batonPluieLowPassBus = Bus.control(s, 1);
+var batonPluieAmpOutBus = Bus.control(s, 1);
+
+var bolTibetainPanBus = Bus.control(s, 1);
+var bolTibetainAmpBus = Bus.control(s, 1);
+var bolTibetainLowPassBus = Bus.control(s, 1);
+var bolTibetainAmpOutBus = Bus.control(s, 1);
+
 ~loadRitualBuffers = {
 	~coilBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/DrumRackOneShot/coil.aif", action: ~loaded);
 	~cricket1Buffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/DrumRackOneShot/cricket1.aif", action: ~loaded);
@@ -530,8 +540,21 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 			\instrument, \play,
 			\buf, ~batonPluieBuffer,
 			\loop, 1,
-			\amp, 1
-		)
+			\panBus, batonPluiePanBus,
+			\loopAtk, 8 / TempoClock.default.tempo,
+			\loopSus, 48,
+			\loopRel, 8 / TempoClock.default.tempo,
+			\amp, 0.05
+		),
+		Pbind(
+			\dur, Pseq([64], inf),
+			\instrument, Pif(Ptime() < duration, \panControl),
+			\legato, 1,
+			\iphase, Pwhite(0.0, 2.0, inf),
+			\freq, TempoClock.default.tempo / 24,
+			\controlBus, batonPluiePanBus,
+			\direction, Prand([1, -1], inf),
+		),
 	]);
 };
 
@@ -750,8 +773,10 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 	var bassIn = (3 * firstPhaseDuration / 6).round(4);
 	Ppar([
 		~singleActionPattern.value(~launchRondRouge),
+		Pseq([Event.silent(4), ~singleActionPattern.value(~launchDeuxiemeRondRouge)]),
 		~singleActionPattern.value(~launchParticules),
 		Pseq([Event.silent(0), ~grillons.value(firstPhaseDuration + 32, grillonsClips: true)]),
+
 		Pseq([Event.silent(bassIn), ~bass.value(firstPhaseDuration - bassIn, rarement: true, launchBassOndeRouge: true)]),
 		Pseq([Event.silent(clochettesIn), ~clochettes.value(firstPhaseDuration - clochettesIn)]),
 	]);
@@ -778,10 +803,11 @@ var murmuresLoopsAmpOutBus = Bus.control(s, 1);
 
 ~ritualPart3 = {
 	| thirdPhaseDuration |
+	var batonPluieIn = (1 * thirdPhaseDuration / 6).round(4);
 	Ppar([
 		~kick.value(thirdPhaseDuration + 1),
 		~murmuresLoops.value(thirdPhaseDuration, fougeresRondes: true),
-		// ~batonPluie.value(thirdPhaseDuration),
+		Pseq([Event.silent(batonPluieIn), ~batonPluie.value(thirdPhaseDuration - batonPluieIn)]),
 		~singleActionPattern.value(~removeRedBackgroundAtEndOfRitualPart2),
 		~singleActionPattern.value(~launchRabbit),
 		~singleActionPattern.value(~launchKickParticles),

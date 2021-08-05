@@ -49,6 +49,11 @@ var nappeBaleineAmpBus = Bus.control(s, 1);
 var nappeBaleineLowPassBus = Bus.control(s, 1);
 var nappeBaleineAmpOutBus = Bus.control(s, 1);
 
+var uduPanBus = Bus.control(s, 1);
+var uduAmpBus = Bus.control(s, 1);
+var uduLowPassBus = Bus.control(s, 1);
+var uduAmpOutBus = Bus.control(s, 1);
+
 ~loadBiosphereBuffers = {
 	~birds1Buffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Birds1.aif", action: ~loaded);
 	~birds2Buffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Birds2.aif", action: ~loaded);
@@ -415,8 +420,18 @@ var nappeBaleineAmpOutBus = Bus.control(s, 1);
 			\gateRelease, 0.1,
 			\hardPan, Pwhite(0.0, 2.0),
 			\amp, Pwhite(0.05, 0.5, inf),
-			\hpf, Pwrand([0, 500, 1000, 1500, 2000], [0.5, 0.2, 0.1,0.05, 0.05], inf)
+			\hpf, Pwrand([0, 500, 1000, 1500, 2000], [0.5, 0.2, 0.1,0.05, 0.05], inf),
+			\ampBus, uduAmpBus
 		),
+		Pbind(
+			\dur, Pseq([duration]),
+			\legato, 1,
+			\instrument, \ampControl,
+			\atk, 16 / TempoClock.default.tempo,
+			\sus, (duration -  32) / TempoClock.default.tempo,
+			\rel, 16 / TempoClock.default.tempo,
+			\controlBus, uduAmpBus
+		)
 	]);
 };
 

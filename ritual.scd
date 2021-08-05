@@ -526,8 +526,21 @@ var bolTibetainAmpOutBus = Bus.control(s, 1);
 			\instrument, \play,
 			\buf, ~bolTibetainBuffer,
 			\loop, 1,
-			\amp, 1
-		)
+			\panBus, bolTibetainPanBus,
+			\loopAtk, 4 / TempoClock.default.tempo,
+			\loopSus, 24,
+			\loopRel, 4 / TempoClock.default.tempo,
+			\ampOutBus, bolTibetainAmpOutBus
+		),
+		Pbind(
+			\dur, Pseq([32], inf),
+			\instrument, Pif(Ptime() < duration, \panControl),
+			\legato, 1,
+			\iphase, Pwhite(0.0, 2.0, inf),
+			\freq, TempoClock.default.tempo / 24,
+			\controlBus, bolTibetainPanBus,
+			\direction, Prand([1, -1], inf),
+		),
 	]);
 };
 
@@ -816,11 +829,13 @@ var bolTibetainAmpOutBus = Bus.control(s, 1);
 
 ~ritualPart4 = {
 	| fourthPhaseDuration |
+	var bolTibetainIn = (fourthPhaseDuration / 6).round(4);
 	var hibouxIn = (2 * fourthPhaseDuration / 6).round(4);
 	Ppar([
 		~murmures.value(fourthPhaseDuration, tribalOverlay: true),
 		~feuillesNappe.value(fourthPhaseDuration + 16, tribal8: true),
 		~clochettes.value(fourthPhaseDuration + 32, rarement: true),
+		Pseq([Event.silent(bolTibetainIn), ~bolTibetain.value(fourthPhaseDuration - bolTibetainIn)]),
 		Pseq([Event.silent(hibouxIn), ~hiboux.value(fourthPhaseDuration - hibouxIn)]),
 		~singleActionPattern.value(~removeKickParticles),
 		~singleActionPattern.value(~launchSnakeLoop),

@@ -101,6 +101,11 @@ var bolTibetainAmpBus = Bus.control(s, 1);
 var bolTibetainLowPassBus = Bus.control(s, 1);
 var bolTibetainAmpOutBus = Bus.control(s, 1);
 
+var rootsPanBus = Bus.control(s, 1);
+var rootsAmpBus = Bus.control(s, 1);
+var rootsLowPassBus = Bus.control(s, 1);
+var rootsAmpOutBus = Bus.control(s, 1);
+
 ~loadRitualBuffers = {
 	~coilBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/DrumRackOneShot/coil.aif", action: ~loaded);
 	~cricket1Buffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/DrumRackOneShot/cricket1.aif", action: ~loaded);
@@ -122,6 +127,7 @@ var bolTibetainAmpOutBus = Bus.control(s, 1);
 	~clochettesBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/ClochetteOneShot/ClochetteReverb");
 	~murmuresLoopsBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/Murmures");
 	~stabBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/stabs");
+	~rootsBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/roots");
 };
 
 // Four different grillons loops, differing in their octave or in their pan direction.
@@ -541,6 +547,15 @@ var bolTibetainAmpOutBus = Bus.control(s, 1);
 			\controlBus, bolTibetainPanBus,
 			\direction, Prand([1, -1], inf),
 		),
+		Pbind(
+			\dur, Pseq([duration]),
+			\legato, 1,
+			\instrument, \ampControl,
+			\atk, 16,
+			\sus, (duration -  32) / TempoClock.default.tempo,
+			\rel, 16 / TempoClock.default.tempo,
+			\controlBus, bolTibetainAmpBus
+		),
 	]);
 };
 
@@ -567,6 +582,39 @@ var bolTibetainAmpOutBus = Bus.control(s, 1);
 			\freq, TempoClock.default.tempo / 24,
 			\controlBus, batonPluiePanBus,
 			\direction, Prand([1, -1], inf),
+		),
+	]);
+};
+
+~roots = {
+	| duration |
+	Ppar([
+		Pbind(
+			\buf, Pxrand(~rootsBuffers, repeats: inf),
+			\dur, Prand(
+				[8, 9, 10, 11, 12, 13, 15, 16, 17, 18, 19, 20].collect {
+					| waitBeats |
+					Pfuncn({
+						| ev |
+						(ev[\buf].duration * TempoClock.default.tempo).round(2) + waitBeats
+					}, inf)
+				}),
+			\legato, 1,
+			\instrument, Pif(Ptime() < duration, \play),
+			\hardPan, Pwhite(0.0, 2.0, inf),
+            \lpfRq, 2,
+			\gateRelease, 60,
+            \ampBus, rootsAmpBus,
+            \ampOutBus, rootsAmpOutBus
+		),
+		Pbind(
+			\dur, Pseq([duration]),
+			\legato, 1,
+			\instrument, \ampControl,
+			\atk, 0,
+			\sus, (duration -  16) / TempoClock.default.tempo,
+			\rel, 16 / TempoClock.default.tempo,
+			\controlBus, rootsAmpBus
 		),
 	]);
 };
@@ -830,12 +878,14 @@ var bolTibetainAmpOutBus = Bus.control(s, 1);
 ~ritualPart4 = {
 	| fourthPhaseDuration |
 	var bolTibetainIn = (fourthPhaseDuration / 6).round(4);
-	var hibouxIn = (2 * fourthPhaseDuration / 6).round(4);
+	var rootsIn = (2 * fourthPhaseDuration / 6).round(4);
+	var hibouxIn = (3 * fourthPhaseDuration / 6).round(4);
 	Ppar([
 		~murmures.value(fourthPhaseDuration, tribalOverlay: true),
 		~feuillesNappe.value(fourthPhaseDuration + 16, tribal8: true),
 		~clochettes.value(fourthPhaseDuration + 32, rarement: true),
 		Pseq([Event.silent(bolTibetainIn), ~bolTibetain.value(fourthPhaseDuration - bolTibetainIn)]),
+		Pseq([Event.silent(rootsIn), ~roots.value(fourthPhaseDuration - rootsIn)]),
 		Pseq([Event.silent(hibouxIn), ~hiboux.value(fourthPhaseDuration - hibouxIn)]),
 		~singleActionPattern.value(~removeKickParticles),
 		~singleActionPattern.value(~launchSnakeLoop),

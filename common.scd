@@ -122,7 +122,7 @@ loadedBuffers = 0;
 ~waitForBuffers = {
 	| action |
 	Routine({
-		while({ loadedBuffers < 76 }, {
+		while({ loadedBuffers < 79 }, {
 			("Loaded" + loadedBuffers + "buffers").postln;
 			1.wait;
 		});
@@ -138,7 +138,7 @@ loadedBuffers = 0;
 };
 
 // Everything under here is unused for now, mostly OSC stuff.
-~resolume = NetAddr.new("192.168.1.13", 7000);
+~resolume = NetAddr.new("10.14.8.80", 7000);
 
 Event.addEventType(\action, {});
 

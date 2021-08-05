@@ -54,6 +54,16 @@ var uduAmpBus = Bus.control(s, 1);
 var uduLowPassBus = Bus.control(s, 1);
 var uduAmpOutBus = Bus.control(s, 1);
 
+var sonarPanBus = Bus.control(s, 1);
+var sonarAmpBus = Bus.control(s, 1);
+var sonarLowPassBus = Bus.control(s, 1);
+var sonarAmpOutBus = Bus.control(s, 1);
+
+var rhythmChkChkPanBus = Bus.control(s, 1);
+var rhythmChkChkAmpBus = Bus.control(s, 1);
+var rhythmChkChkLowPassBus = Bus.control(s, 1);
+var rhythmChkChkAmpOutBus = Bus.control(s, 1);
+
 ~loadBiosphereBuffers = {
 	~birds1Buffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Birds1.aif", action: ~loaded);
 	~birds2Buffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Birds2.aif", action: ~loaded);
@@ -70,8 +80,10 @@ var uduAmpOutBus = Bus.control(s, 1);
 	] ++ ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/owls");
 	~waterBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Water.aif", action: ~loaded);
 	~uduBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/udu");
+	~rhythmChkChkBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/rythmchkchk.wav", action: ~loaded);
 
 	~sirensBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/sirens");
+	~sonarBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/sonar");
 };
 
 // Plays birds1 and birds2, birds2 starts 4 bars after birds1 and they have separate pan and amp controls.
@@ -285,8 +297,8 @@ var uduAmpOutBus = Bus.control(s, 1);
 			\hardPan, Pwhite(0.0, 2.0, inf),
             \lpfRq, 2,
 			\gateRelease, 60,
-            \ampBus, owlsAmpBus,
-            \ampOutBus, owlsAmpOutBus
+            \ampBus, sirensAmpBus,
+            \ampOutBus, sirensAmpOutBus
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -295,7 +307,40 @@ var uduAmpOutBus = Bus.control(s, 1);
 			\atk, 0,
 			\sus, (duration -  16) / TempoClock.default.tempo,
 			\rel, 16 / TempoClock.default.tempo,
-			\controlBus, owlsAmpBus
+			\controlBus, sirensAmpBus
+		),
+	]);
+};
+
+~sonar = {
+	| duration |
+	Ppar([
+		Pbind(
+			\buf, Pxrand(~sonarBuffers, repeats: inf),
+			\dur, Prand(
+				[8, 9, 10, 11, 12, 13, 15, 16, 17, 18, 19, 20].collect {
+					| waitBeats |
+					Pfuncn({
+						| ev |
+						(ev[\buf].duration * TempoClock.default.tempo).round(2) + waitBeats
+					}, inf)
+				}),
+			\legato, 1,
+			\instrument, Pif(Ptime() < duration, \play),
+			\hardPan, Pwhite(0.0, 2.0, inf),
+            \lpfRq, 2,
+			\gateRelease, 60,
+            \ampBus, sonarAmpBus,
+            \ampOutBus, sonarAmpOutBus
+		),
+		Pbind(
+			\dur, Pseq([duration]),
+			\legato, 1,
+			\instrument, \ampControl,
+			\atk, 0,
+			\sus, (duration -  16) / TempoClock.default.tempo,
+			\rel, 16 / TempoClock.default.tempo,
+			\controlBus, sonarAmpBus
 		),
 	]);
 };
@@ -472,11 +517,48 @@ var uduAmpOutBus = Bus.control(s, 1);
 	]);
 };
 
+~rhythmChkChk = {
+	| duration |
+	Ppar([
+		Pbind(
+			\dur, Pseq([duration]),
+			\legato, 1,
+			\instrument, \play,
+			\buf, ~rhythmChkChkBuffer,
+			\loop, 1,
+			\panBus, rhythmChkChkPanBus,
+			\ampBus, rhythmChkChkAmpBus,
+            \ampOutBus, rhythmChkChkAmpOutBus,
+			\loopAtk, 4,
+			\loopSus, 24,
+			\loopRel, 4
+		),
+		Pbind(
+			\dur, Pseq([32], inf),
+			\instrument, Pif(Ptime() < duration, \panControl),
+			\legato, 1,
+			\iphase, 0,
+			\freq, TempoClock.default.tempo / 12,
+			\controlBus, rhythmChkChkPanBus,
+			\direction, Prand([1, -1], inf),
+		),
+		Pbind(
+			\dur, Pseq([duration]),
+			\legato, 1,
+			\instrument, \ampControl,
+			\atk, 16 / TempoClock.default.tempo,
+			\sus, duration - 32,
+			\rel, 16 / TempoClock.default.tempo,
+			\controlBus, rhythmChkChkAmpBus
+		)
+	]);
+};
+
 ~biospherePart1 = {
 	| firstPhaseDuration, secondPhaseDuration |
-	var sireneIn = (firstPhaseDuration / 6).round(4);
-	var gouttesIn = (2 * firstPhaseDuration / 6).round(4);
-	var owlsIn = (3 * firstPhaseDuration / 6).round(4);
+	var sireneIn = (firstPhaseDuration / 8).round(4);
+	var gouttesIn = 3 * (firstPhaseDuration / 8).round(4);
+	var owlsIn = (3 * firstPhaseDuration / 8).round(4);
 	Ppar([
 		Pseq([Event.silent(0), ~nappeBaleine.value(firstPhaseDuration + 16)]),
 		Pseq([Event.silent(sireneIn), ~sirens.value(firstPhaseDuration - sireneIn)]),
@@ -494,13 +576,15 @@ var uduAmpOutBus = Bus.control(s, 1);
 
 ~biospherePart3 = {
 	| thirdPhaseDuration |
-	var birdsIn = (thirdPhaseDuration / 9).round(4);
-	var frogsIn = (2 * thirdPhaseDuration / 9).round(4);
-	var uduIn = (3 * thirdPhaseDuration / 9).round(4);
+	var birdsIn = (thirdPhaseDuration / 8).round(4);
+	var frogsIn = (2 * thirdPhaseDuration / 8).round(4);
+	var rhythmChkChckIn = (3 * thirdPhaseDuration / 8).round(4);
+	var uduIn = (4 * thirdPhaseDuration / 8).round(4);
 	Ppar([
 		Pseq([Event.silent(0), ~water.value(thirdPhaseDuration)]),
 		Pseq([Event.silent(birdsIn), ~birds.value(thirdPhaseDuration - birdsIn)]),
 		Pseq([Event.silent(frogsIn), ~frog.value(thirdPhaseDuration - frogsIn)]),
+		Pseq([Event.silent(rhythmChkChckIn), ~rhythmChkChk.value(thirdPhaseDuration - rhythmChkChckIn)]),
 		Pseq([Event.silent(uduIn), ~udu.value(thirdPhaseDuration - uduIn)])
 	]);
 };

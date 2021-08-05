@@ -31,7 +31,6 @@ s.waitForBoot({
 });
 )
 
-
 // Use this code block to test stuff out!
 (
 ~volume = 1.0;
@@ -41,7 +40,7 @@ TempoClock.default.tempo = 90/60;
 "./osc.scd".load;
 "./biosphere.scd".load;
 "./ritual.scd".load;
-~ritualPart3.value(64).play;
+~biospherePart3.value(64).play;
 )
 
 Array.fill(

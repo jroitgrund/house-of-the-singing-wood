@@ -1,6 +1,6 @@
 ~sendMsg = {
     | msg, value |
-    ~resolume.sendMsg(msg, value);
+    // ~resolume.sendMsg(msg, value);
     1
 };
 
@@ -69,17 +69,17 @@
 
 ~setGrillonsTopRightOpacity = {
     | amp |
-    ~sendMsg.value("/composition/layers/1/clips/2/opacity", amp);
+    ~sendMsg.value("/composition/layers/1/video/opaciity", amp);
 };
 
 ~setGrillonsBottomRightOpacity = {
     | amp |
-    ~sendMsg.value("/composition/layers/1/clips/3/opacity", amp);
+    ~sendMsg.value("/composition/layers/1/video/opaciity", amp);
 };
 
 ~setGrillonsBottomLeftOpacity = {
     | amp |
-    ~sendMsg.value("/composition/layers/1/clips/4/opacity", amp);
+    ~sendMsg.value("/composition/layers/1/video/opaciity", amp);
 };
 
 ~clearGrillonsClips = {

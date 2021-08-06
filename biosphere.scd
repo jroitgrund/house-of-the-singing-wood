@@ -64,6 +64,11 @@ var rhythmChkChkAmpBus = Bus.control(s, 1);
 var rhythmChkChkLowPassBus = Bus.control(s, 1);
 var rhythmChkChkAmpOutBus = Bus.control(s, 1);
 
+var mosquitoPanBus = Bus.control(s, 1);
+var mosquitoAmpBus = Bus.control(s, 1);
+var mosquitoLowPassBus = Bus.control(s, 1);
+var mosquitoAmpOutBus = Bus.control(s, 1);
+
 ~loadBiosphereBuffers = {
 	~birds1Buffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Birds1.aif", action: ~loaded);
 	~birds2Buffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Birds2.aif", action: ~loaded);
@@ -81,6 +86,8 @@ var rhythmChkChkAmpOutBus = Bus.control(s, 1);
 	~waterBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Water.aif", action: ~loaded);
 	~uduBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/udu");
 	~rhythmChkChkBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/rythmchkchk.wav", action: ~loaded);
+	~mosquitoBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/final.wav", action: ~loaded);
+	~slapBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/touch.wav", action: ~loaded);
 
 	~sirensBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/sirens");
 	~sonarBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/sonar");
@@ -529,9 +536,9 @@ var rhythmChkChkAmpOutBus = Bus.control(s, 1);
 			\panBus, rhythmChkChkPanBus,
 			\ampBus, rhythmChkChkAmpBus,
             \ampOutBus, rhythmChkChkAmpOutBus,
-			\loopAtk, 4,
-			\loopSus, 24,
-			\loopRel, 4
+			\loopAtk, 4 / TempoClock.default.tempo,
+			\loopSus, 24 / TempoClock.default.tempo,
+			\loopRel, 4 / TempoClock.default.tempo
 		),
 		Pbind(
 			\dur, Pseq([32], inf),
@@ -554,10 +561,52 @@ var rhythmChkChkAmpOutBus = Bus.control(s, 1);
 	]);
 };
 
+~finalTouch = {
+	var mosquitoDurationBeats = (~mosquitoBuffer.duration / TempoClock.default.tempo) + 1;
+	Ppar([
+		Pseq([
+			Pbind(
+				\dur, Pseq([mosquitoDurationBeats]),
+				\legato, 1,
+				\instrument, \play,
+				\buf, ~mosquitoBuffer,
+				\panBus, mosquitoPanBus,
+				\ampBus, mosquitoAmpBus,
+				\amp, 0.05
+			),
+			Pbind(
+				\dur, Pseq([1]),
+				\legato, 1,
+				\instrument, \play,
+				\buf, ~slapBuffer,
+				\amp, 1
+			)
+		]),
+		Pbind(
+			\dur, Pseq([mosquitoDurationBeats]),
+			\instrument, \panControl,
+			\legato, 1,
+			\iphase, 0,
+			\freq, TempoClock.default.tempo,
+			\controlBus, mosquitoPanBus,
+			\direction, Prand([1, -1], inf),
+		),
+		Pbind(
+			\dur, Pseq([mosquitoDurationBeats]),
+			\legato, 1,
+			\instrument, \ampControl,
+			\atk, ~mosquitoBuffer.duration,
+			\sus, 0,
+			\rel, 0,
+			\controlBus, mosquitoAmpBus
+		)
+	]);
+};
+
 ~biospherePart1 = {
 	| firstPhaseDuration, secondPhaseDuration |
 	var sireneIn = (firstPhaseDuration / 8).round(4);
-	var gouttesIn = 3 * (firstPhaseDuration / 8).round(4);
+	var gouttesIn = (2 * firstPhaseDuration / 8).round(4);
 	var owlsIn = (3 * firstPhaseDuration / 8).round(4);
 	Ppar([
 		Pseq([Event.silent(0), ~nappeBaleine.value(firstPhaseDuration + 16)]),
@@ -580,12 +629,14 @@ var rhythmChkChkAmpOutBus = Bus.control(s, 1);
 	var frogsIn = (2 * thirdPhaseDuration / 8).round(4);
 	var rhythmChkChckIn = (3 * thirdPhaseDuration / 8).round(4);
 	var uduIn = (4 * thirdPhaseDuration / 8).round(4);
+	var mosquitoDurationBeats = (~mosquitoBuffer.duration / TempoClock.default.tempo) + 1;
 	Ppar([
 		Pseq([Event.silent(0), ~water.value(thirdPhaseDuration)]),
 		Pseq([Event.silent(birdsIn), ~birds.value(thirdPhaseDuration - birdsIn)]),
 		Pseq([Event.silent(frogsIn), ~frog.value(thirdPhaseDuration - frogsIn)]),
 		Pseq([Event.silent(rhythmChkChckIn), ~rhythmChkChk.value(thirdPhaseDuration - rhythmChkChckIn)]),
-		Pseq([Event.silent(uduIn), ~udu.value(thirdPhaseDuration - uduIn)])
+		Pseq([Event.silent(uduIn), ~udu.value(thirdPhaseDuration - uduIn)]),
+		Pseq([Event.silent(thirdPhaseDuration), ~finalTouch.value])
 	]);
 };
 

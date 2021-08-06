@@ -43,12 +43,9 @@ TempoClock.default.tempo = 90/60;
 ~ritualPart4.value(64).play;
 )
 
-Array.fill(
-
 // Runs everything! Adjust durations and comment stuff out to run individual parts.
 (
-var getFullLoop, allLoops, minutesToDuration, multiplier;
-multiplier = 1;
+var getFullLoop, allLoops, minutesToDuration;
 ~volume = 1;
 TempoClock.default.tempo = 90/60;
 
@@ -59,7 +56,7 @@ TempoClock.default.tempo = 90/60;
 
 minutesToDuration = {
 	| min, max |
-	rrand(min * 96 * multiplier, max * 96 * multiplier).round(32);
+	rrand(min * 96 * 0.1, max * 96 * 0.1).round(32);
 };
 
 getFullLoop = {
@@ -72,7 +69,7 @@ getFullLoop = {
 		+ biosphereThirdPhaseDuration
 	);
 
-	var pause = 8;
+	var pause = 16;
 
 	var ritualFirstPhaseDuration = minutesToDuration.value(4, 7);
 	var ritualSecondPhaseDuration = minutesToDuration.value(4, 7);
@@ -112,7 +109,7 @@ allLoops = {
 		var result = getFullLoop.value;
 		var fullLoop = result[0];
 		var totalDuration = result[1];
-		s.record("C:/Users/jonathan/Desktop/scc/loop.aiff", 0, 4);
+		s.record("C:/Users/jonathan/Desktop/scc/loop.aiff", 0, 2);
 		TempoClock.default.sched(wait, { fullLoop.play });
 		TempoClock.default.sched(wait + totalDuration, { s.stopRecording });
 		wait = wait + totalDuration;

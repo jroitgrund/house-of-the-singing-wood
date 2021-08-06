@@ -106,6 +106,11 @@ var rootsAmpBus = Bus.control(s, 1);
 var rootsLowPassBus = Bus.control(s, 1);
 var rootsAmpOutBus = Bus.control(s, 1);
 
+var guimbardeStabPanBus = Bus.control(s, 1);
+var guimbardeStabAmpBus = Bus.control(s, 1);
+var guimbardeStabLowPassBus = Bus.control(s, 1);
+var guimbardeStabAmpOutBus = Bus.control(s, 1);
+
 ~loadRitualBuffers = {
 	~coilBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/DrumRackOneShot/coil.aif", action: ~loaded);
 	~cricket1Buffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/DrumRackOneShot/cricket1.aif", action: ~loaded);
@@ -127,6 +132,7 @@ var rootsAmpOutBus = Bus.control(s, 1);
 	~clochettesBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/ClochetteOneShot/ClochetteReverb");
 	~murmuresLoopsBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/Murmures");
 	~stabBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/stabs");
+	~guimbardeStabBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/guimbarde-stab");
 	~rootsBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/roots");
 };
 
@@ -806,6 +812,23 @@ var rootsAmpOutBus = Bus.control(s, 1);
 	);
 };
 
+~guimbardeStabs = {
+	| duration |
+	Pbind(
+		\dur, Pseq([
+			Rest(21/4),
+			Pxrand([33, 76, 22, 5, 17], inf)
+		]),
+		\legato, 1,
+		\instrument, Pif(Ptime() < duration, \play),
+		\buf, Pxrand(~guimbardeStabBuffers, inf),
+		\gateRelease, 1,
+		\hardPan, Pwhite(0.0, 2.0, inf),
+		\ampBus, drumRackAmpBus,
+		\amp, 0.2
+	);
+};
+
 ~drumRack = {
 	| duration |
 	Ppar([
@@ -848,6 +871,7 @@ var rootsAmpOutBus = Bus.control(s, 1);
 	var bassVoiceShamanIn = (1 * secondPhaseDuration / 6).round(4);
 	var hibouxIn = (2 * secondPhaseDuration / 6).round(4);
 	Ppar([
+		// TODO: make this murmure loop affect particle opacity
 		Pseq([Event.silent(0), ~murmuresLoops.value(secondPhaseDuration)]),
 		Pseq([
 			Event.silent(hibouxIn),
@@ -868,6 +892,7 @@ var rootsAmpOutBus = Bus.control(s, 1);
 	Ppar([
 		~kick.value(thirdPhaseDuration + 1),
 		~murmuresLoops.value(thirdPhaseDuration, fougeresRondes: true),
+		// TODO: maybe audioreact baton pluie
 		Pseq([Event.silent(batonPluieIn), ~batonPluie.value(thirdPhaseDuration - batonPluieIn)]),
 		~singleActionPattern.value(~removeRedBackgroundAtEndOfRitualPart2),
 		~singleActionPattern.value(~launchRabbit),
@@ -895,8 +920,10 @@ var rootsAmpOutBus = Bus.control(s, 1);
 
 ~ritualPart5 = {
 	| fifthPhaseDuration |
-	var grillonsIn = (2 * fifthPhaseDuration / 6).round(4);
-	var stabsIn = (3 * fifthPhaseDuration / 6).round(4);
+	var drumRackIn = 32;
+	var grillonsIn = 32 + (2 * (fifthPhaseDuration - 32) / 6).round(4);
+	var stabsIn = 32 + (3 * (fifthPhaseDuration - 32) / 6).round(4);
+	// todo: map coil, hi-hat, and stabs to 3 video elements
 	Ppar([
 		~bassVoiceShaman.value(fifthPhaseDuration, withFifth: false),
 		Pseq([Event.silent(32), ~drumRack.value(fifthPhaseDuration - 32)]),

@@ -40,7 +40,7 @@ TempoClock.default.tempo = 90/60;
 "./osc.scd".load;
 "./biosphere.scd".load;
 "./ritual.scd".load;
-~ritualPart5.value(128).play;
+~ritualPart4.value(64).play;
 )
 
 Array.fill(

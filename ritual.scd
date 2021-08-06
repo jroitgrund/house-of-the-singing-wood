@@ -111,6 +111,11 @@ var guimbardeStabAmpBus = Bus.control(s, 1);
 var guimbardeStabLowPassBus = Bus.control(s, 1);
 var guimbardeStabAmpOutBus = Bus.control(s, 1);
 
+var windChimesPanBus = Bus.control(s, 1);
+var windChimesAmpBus = Bus.control(s, 1);
+var windChimesLowPassBus = Bus.control(s, 1);
+var windChimesAmpOutBus = Bus.control(s, 1);
+
 ~loadRitualBuffers = {
 	~coilBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/DrumRackOneShot/coil.aif", action: ~loaded);
 	~cricket1Buffer = Buffer.readChannel(s, ~basePath ++ "Chapitre3 - Rituel/DrumRackOneShot/cricket1.aif", action: ~loaded);
@@ -134,6 +139,7 @@ var guimbardeStabAmpOutBus = Bus.control(s, 1);
 	~stabBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/stabs");
 	~guimbardeStabBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/guimbarde-stab");
 	~rootsBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/roots");
+	~windChimesBuffers = ~rootsBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/chimes");
 };
 
 // Four different grillons loops, differing in their octave or in their pan direction.
@@ -621,6 +627,38 @@ var guimbardeStabAmpOutBus = Bus.control(s, 1);
 			\sus, (duration -  16) / TempoClock.default.tempo,
 			\rel, 16 / TempoClock.default.tempo,
 			\controlBus, rootsAmpBus
+		),
+	]);
+};
+
+~windChimes = {
+	| duration |
+	Ppar([
+		Pbind(
+			\buf, Pxrand(~windChimesBuffers, repeats: inf),
+			\dur, Prand(
+				[-1, -2, 0, 4, 8, 12].collect {
+					| waitBeats |
+					Pfuncn({
+						| ev |
+						(ev[\buf].duration * TempoClock.default.tempo).round(2) + waitBeats
+					}, inf)
+				}),
+			\legato, 1,
+			\instrument, Pif(Ptime() < duration, \play),
+			\hardPan, Pwhite(0.0, 2.0, inf),
+			\gateRelease, 30,
+            \ampBus, windChimesAmpBus,
+            \ampOutBus, windChimesAmpOutBus
+		),
+		Pbind(
+			\dur, Pseq([duration]),
+			\legato, 1,
+			\instrument, \ampControl,
+			\atk, 0,
+			\sus, (duration -  16) / TempoClock.default.tempo,
+			\rel, 16 / TempoClock.default.tempo,
+			\controlBus, windChimesAmpBus
 		),
 	]);
 };

@@ -56,7 +56,7 @@ TempoClock.default.tempo = 90/60;
 
 minutesToDuration = {
 	| min, max |
-	rrand(min * 96 * 0.1, max * 96 * 0.1).round(32);
+	rrand(min * 96 * 0.25, max * 96 * 0.25).round(32);
 };
 
 getFullLoop = {

@@ -126,7 +126,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
                     \instrument, \ampControl,
                     \atk, 16 / TempoClock.default.tempo,
                     \sus, (duration - 48) / TempoClock.default.tempo,
-                    \rel, 16 / TempoClock.default.tempo,
+                    \rel, 32 / TempoClock.default.tempo,
                     \controlBus, birds2AmpBus
                 )
             ])
@@ -157,8 +157,8 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\legato, 1,
 			\instrument, \ampControl,
 			\atk, 16 / TempoClock.default.tempo,
-			\sus, (duration -  32) / TempoClock.default.tempo,
-			\rel, 16 / TempoClock.default.tempo,
+			\sus, (duration -  48) / TempoClock.default.tempo,
+			\rel, 32 / TempoClock.default.tempo,
 			\controlBus, birds1AmpBus
 		),
 	]);
@@ -212,7 +212,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\buf, ~nappeBaleineBuffer,
 			\loop, 1,
 			\panBus, nappeBaleinePanBus,
-			\ampBus, nappeBaleineAmpBus
+			\ampBus, nappeBaleineAmpBus,
 		),
 		Pseq([Event.silent(6), Pbind(
 			\dur, Pseq([
@@ -241,8 +241,8 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\legato, 1,
 			\instrument, \ampControl,
 			\atk, 16 / TempoClock.default.tempo,
-			\sus, (duration -  32) / TempoClock.default.tempo,
-			\rel, 16 / TempoClock.default.tempo,
+			\sus, (duration -  48) / TempoClock.default.tempo,
+			\rel, 32 / TempoClock.default.tempo,
 			\controlBus, nappeBaleineAmpBus
 		),
 	]);
@@ -426,8 +426,8 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\legato, 1,
 			\instrument, \ampControl,
 			\atk, 0 / TempoClock.default.tempo,
-			\sus, (duration -  16) / TempoClock.default.tempo,
-			\rel, 16 / TempoClock.default.tempo,
+			\sus, (duration -  32) / TempoClock.default.tempo,
+			\rel, 32 / TempoClock.default.tempo,
 			\controlBus, frogAmpBus
 		),
 	]);
@@ -480,8 +480,8 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\legato, 1,
 			\instrument, \ampControl,
 			\atk, 16 / TempoClock.default.tempo,
-			\sus, (duration -  32) / TempoClock.default.tempo,
-			\rel, 16 / TempoClock.default.tempo,
+			\sus, (duration -  48) / TempoClock.default.tempo,
+			\rel, 32 / TempoClock.default.tempo,
 			\controlBus, uduAmpBus
 		)
 	]);
@@ -538,7 +538,8 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
             \ampOutBus, rhythmChkChkAmpOutBus,
 			\loopAtk, 4 / TempoClock.default.tempo,
 			\loopSus, 24 / TempoClock.default.tempo,
-			\loopRel, 4 / TempoClock.default.tempo
+			\loopRel, 4 / TempoClock.default.tempo,
+			\amp, 0.5
 		),
 		Pbind(
 			\dur, Pseq([32], inf),
@@ -554,8 +555,8 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\legato, 1,
 			\instrument, \ampControl,
 			\atk, 16 / TempoClock.default.tempo,
-			\sus, duration - 32,
-			\rel, 16 / TempoClock.default.tempo,
+			\sus, (duration - 48) / TempoClock.default.tempo,
+			\rel, 32 / TempoClock.default.tempo,
 			\controlBus, rhythmChkChkAmpBus
 		)
 	]);

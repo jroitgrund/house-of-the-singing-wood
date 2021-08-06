@@ -139,7 +139,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 	~stabBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/stabs");
 	~guimbardeStabBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/guimbarde-stab");
 	~rootsBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/roots");
-	~windChimesBuffers = ~rootsBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/chimes");
+	~windChimesBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre3 - Rituel/chimes");
 };
 
 // Four different grillons loops, differing in their octave or in their pan direction.
@@ -482,7 +482,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 					\dur, Pseq([Rest(16), 32], inf),
 					\legato, 1,
 					\instrument, Pif(Ptime() < duration, \ampControl),
-					\atk, 32 / TempoClock.default.tempo,
+					\atk, 16 / TempoClock.default.tempo,
 					\sus, 0,
 					\rel, 16 / TempoClock.default.tempo,
 					\controlBus, bassVoiceShaman2AmpBus
@@ -549,6 +549,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\loopSus, 24,
 			\loopRel, 4 / TempoClock.default.tempo,
 			\ampOutBus, bolTibetainAmpOutBus
+			\ampBus, bolTibetainAmpBus,
 		),
 		Pbind(
 			\dur, Pseq([32], inf),
@@ -564,8 +565,8 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\legato, 1,
 			\instrument, \ampControl,
 			\atk, 16 / TempoClock.default.tempo,
-			\sus, (duration -  32) / TempoClock.default.tempo,
-			\rel, 16 / TempoClock.default.tempo,
+			\sus, (duration -  48) / TempoClock.default.tempo,
+			\rel, 32 / TempoClock.default.tempo,
 			\controlBus, bolTibetainAmpBus
 		),
 	]);
@@ -688,7 +689,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\instrument, \ampControl,
 			\atk, 0,
 			\sus, (duration - 32) / TempoClock.default.tempo,
-			\rel, 32,
+			\rel, 32 / TempoClock.default.tempo,
 			\controlBus, kickAmpBus
 		)
 	]);
@@ -814,7 +815,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\instrument, \ampControl,
 			\atk, 16 / TempoClock.default.tempo,
 			\sus, (duration - 48) / TempoClock.default.tempo,
-			\rel, 32,
+			\rel, 32 / TempoClock.default.tempo,
 			\controlBus, snareTomAmpBus
 		),
 	]);
@@ -880,7 +881,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 		Pbind(
 			\dur, Pseq([duration]),
 			\legato, 1,
-			\instrument, \ampControl,
+			\instrument, \ampControl,x
 			\atk, 0,
 			\sus, (duration - 16) / TempoClock.default.tempo,
 			\rel, 16 / TempoClock.default.tempo,
@@ -982,11 +983,11 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			~ritualPart2.value(ritualSecondPhaseDuration)
 		]),
 		Pseq([
-			Event.silent(ritualFifthPhaseDuration + ritualSecondPhaseDuration),
+			Event.silent(ritualFirstPhaseDuration + ritualSecondPhaseDuration),
 			~ritualPart3.value(ritualThirdPhaseDuration)
 		]),
 		Pseq([
-			Event.silent(ritualFifthPhaseDuration + ritualSecondPhaseDuration + ritualThirdPhaseDuration),
+			Event.silent(ritualFirstPhaseDuration + ritualSecondPhaseDuration + ritualThirdPhaseDuration),
 			~ritualPart4.value(ritualFourthPhaseDuration)
 		]),
 		Pseq([

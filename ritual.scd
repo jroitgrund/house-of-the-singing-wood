@@ -548,7 +548,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\loopAtk, 4 / TempoClock.default.tempo,
 			\loopSus, 24,
 			\loopRel, 4 / TempoClock.default.tempo,
-			\ampOutBus, bolTibetainAmpOutBus
+			\ampOutBus, bolTibetainAmpOutBus,
 			\ampBus, bolTibetainAmpBus,
 		),
 		Pbind(
@@ -881,7 +881,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 		Pbind(
 			\dur, Pseq([duration]),
 			\legato, 1,
-			\instrument, \ampControl,x
+			\instrument, \ampControl,
 			\atk, 0,
 			\sus, (duration - 16) / TempoClock.default.tempo,
 			\rel, 16 / TempoClock.default.tempo,

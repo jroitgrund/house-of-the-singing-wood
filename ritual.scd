@@ -563,7 +563,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\dur, Pseq([duration]),
 			\legato, 1,
 			\instrument, \ampControl,
-			\atk, 16,
+			\atk, 16 / TempoClock.default.tempo,
 			\sus, (duration -  32) / TempoClock.default.tempo,
 			\rel, 16 / TempoClock.default.tempo,
 			\controlBus, bolTibetainAmpBus
@@ -812,7 +812,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\dur, Pseq([duration]),
 			\legato, 1,
 			\instrument, \ampControl,
-			\atk, 16,
+			\atk, 16 / TempoClock.default.tempo,
 			\sus, (duration - 48) / TempoClock.default.tempo,
 			\rel, 32,
 			\controlBus, snareTomAmpBus

@@ -47,7 +47,8 @@ Array.fill(
 
 // Runs everything! Adjust durations and comment stuff out to run individual parts.
 (
-var getFullLoop, allLoops, minutesToDuration;
+var getFullLoop, allLoops, minutesToDuration, multiplier;
+multiplier = 1;
 ~volume = 1;
 TempoClock.default.tempo = 90/60;
 
@@ -58,7 +59,7 @@ TempoClock.default.tempo = 90/60;
 
 minutesToDuration = {
 	| min, max |
-	rrand(min * 96, max * 96).round(32);
+	rrand(min * 96 * multiplier, max * 96 * multiplier).round(32);
 };
 
 getFullLoop = {

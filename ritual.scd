@@ -561,6 +561,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\loopRel, 4 / TempoClock.default.tempo,
 			\ampOutBus, bolTibetainAmpOutBus,
 			\ampBus, bolTibetainAmpBus,
+			\amp, 0.07
 		),
 		Pbind(
 			\dur, Pseq([32], inf),
@@ -887,7 +888,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 		~kick.value(duration),
 		~coil.value(duration),
 		~cricket.value(duration),
-		~hhdelay.value(duration),
+		// ~hhdelay.value(duration),
 		~kickdelay.value(duration),
 		~snareTom.value(duration),
 		~tom.value(duration),

@@ -428,17 +428,21 @@
 
 ~launchUduClip = {
     | ev |
-    var amp = ev[\amp];
-    var layer = (1 + ev[\iteration]);
-    var distance = rrand(0.75, 1);
-    var pan = ev[\hardPan];
-    var angle = ((pan * pi) + (3/4 * pi));
-    var x = 0.5 + (cos(angle) * 0.5 * (600 / 16384) * distance);
-    var y = 0.5 + (sin(angle) * 0.5 * (600 / 16384) * distance);
-    if (layer == 4, {layer = 10}, 1);
-    ~sendMsg.value("/composition/layers/" ++ layer ++ "/clips/23/connect", 1);
-    ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/positionx", x);
-    ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/positiony", y);
+    Routine {
+        var amp = ev[\amp];
+        var layer = (1 + ev[\iteration]);
+        var distance = rrand(0.75, 0.9);
+        var pan = ev[\hardPan];
+        var angle = ((pan * pi) + (3/4 * pi));
+        var x = 0.5 + (cos(angle) * 0.5 * (600 / 16384) * distance);
+        var y = 0.5 + (sin(angle) * 0.5 * (600 / 16384) * distance);
+        if (layer == 4, {layer = 10}, 1);
+        ~sendMsg.value("/composition/layers/" ++ layer ++ "/clips/23/connect", 1);
+        ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/positionx", x);
+        ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/positiony", y);
+        ((1/2) / TempoClock.default.tempo).wait;
+        ~sendMsg.value("/composition/layers/" ++ layer ++ "/clear", 1);
+    }.play;
 };
 
 ~clearBiospherePart3 = {

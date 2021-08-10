@@ -23,6 +23,11 @@ var melodieAmpBus = Bus.control(s, 1);
 var melodieLowPassBus = Bus.control(s, 1);
 var melodieAmpOutBus = Bus.control(s, 1);
 
+var melodiePaulPanBus = Bus.control(s, 1);
+var melodiePaulAmpBus = Bus.control(s, 1);
+var melodiePaulLowPassBus = Bus.control(s, 1);
+var melodiePaulAmpOutBus = Bus.control(s, 1);
+
 var owlNappePanBus = Bus.control(s, 1);
 var owlNappeAmpBus = Bus.control(s, 1);
 var owlNappeLowPassBus = Bus.control(s, 1);
@@ -74,6 +79,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 	~frogBuffers = [Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Frog_1shot_Wrapped.aif", action: ~loaded)] ++ ~readContentsAsBuffers.value(~basePath + "Chapitre1 - Biosphere/frogs");
 	~gouttesBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Gouttes.aif", action: ~loaded);
 	~melodieBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Melodie_Wrapped.aif", action: ~loaded);
+	// ~melodiePaulBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/melodie-paul.wav", action: ~loaded);
 	~owlNappeBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/OWL_1BAR.aif", action:~loaded);
 	// ~owlNappeBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/owlnappe");
 	// ~owlNappeEndBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/owlnappeend");
@@ -228,7 +234,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\pfunc, Pif(Ptime() < duration, Pfunc({
 				Routine {
 					var iteration = 0;
-					while({ iteration < 30 }, {
+					while({ iteration < 60 }, {
 						~setBaleineClipOpacity.value(iteration);
 						((1 / 10) / TempoClock.default.tempo).wait;
 						iteration = iteration +  1;
@@ -241,7 +247,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\instrument, \panControl,
 			\legato, 1,
 			\iphase, 0,
-			\freq, TempoClock.default.tempo / 32,
+			\freq, TempoClock.default.tempo / 64,
 			\controlBus, nappeBaleinePanBus,
 			\direction, Prand([1, -1], inf)
 		),
@@ -402,6 +408,40 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 		)
 	]);
 };
+
+// ~melodiePaul = {
+// 	| duration |
+// 	Ppar([
+// 		Pbind(
+// 			\dur, Pseq([duration]),
+// 			\legato, 1,
+// 			\instrument, \play,
+// 			\buf, ~melodiePaulBuffer,
+// 			\loop, 1,
+// 			\panBus, melodiePaulPanBus,
+// 			\ampBus, melodiePaulAmpBus,
+// 			\amp, 0.05
+// 		),
+// 		Pbind(
+// 			\dur, Pseq([48], inf),
+// 			\instrument, Pif(Ptime() < duration, \panControl),
+// 			\legato, 1,
+// 			\iphase, 0,
+// 			\freq, TempoClock.default.tempo / 24,
+// 			\controlBus, melodiePaulPanBus,
+// 			\direction, Prand([1, -1], inf)
+// 		),
+// 		Pbind(
+// 			\dur, Pseq([duration]),
+// 			\legato, 1,
+// 			\instrument, \ampControl,
+// 			\atk, 0.5 * duration / TempoClock.default.tempo,
+// 			\sus, 0,
+// 			\rel, 0.5 * duration / TempoClock.default.tempo,
+// 			\controlBus, melodiePaulAmpBus
+// 		)
+// 	]);
+// };
 
 
 // Short samples, hard panned to one speaker. These sound cool, appear at the end of biosphere
@@ -609,6 +649,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 	var sireneIn = (firstPhaseDuration / 8).round(4);
 	var gouttesIn = (2 * firstPhaseDuration / 8).round(4);
 	var owlsIn = (3 * firstPhaseDuration / 8).round(4);
+	var laterClip = (firstPhaseDuration / 3).round(4);
 	Ppar([
 		~singleActionPattern.value(~selectBiosphere),
 		~singleActionPattern.value(~launchBiospherePart1Clips),
@@ -617,6 +658,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 		Pseq([Event.silent(32), ~pollActionPattern.value({
 			nappeBaleinePanBus.get(~setBiospherePart1SecondClipRotation)
 		}, firstPhaseDuration)]),
+		Pseq([Event.silent(laterClip), ~singleActionPattern.value(~launchBiospherePart1LaterClip)]),
 		Pseq([Event.silent(sireneIn), ~sirens.value(firstPhaseDuration - sireneIn)]),
 		Pseq([Event.silent(gouttesIn), ~gouttes.value(firstPhaseDuration + secondPhaseDuration + 16 - gouttesIn)]),
 		Pseq([Event.silent(gouttesIn), ~singleActionPattern.value(~launchBiospherePart1Gouttes)]),

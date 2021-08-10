@@ -1,6 +1,6 @@
 ~sendMsg = {
     | msg, value |
-    // ~resolume.sendMsg(msg, value);
+    ~resolume.sendMsg(msg, value);
     1
 };
 
@@ -303,16 +303,19 @@
 };
 
 ~launchBiospherePart1Clips = {
-    ~sendMsg.value("/composition/layers/9/clips/1/connect", 1);
     ~sendMsg.value("/composition/layers/10/clips/1/connect", 1);
-    ~sendMsg.value("/composition/layers/10/video/opacity", 0);
+    ~sendMsg.value("/composition/layers/10/video/opacity", 0.75);
+};
+
+~launchBiospherePart1LaterClip = {
+    ~sendMsg.value("/composition/layers/7/clips/4/connect", 1);
 };
 
 ~setBaleineClipOpacity = {
     | iteration |
-        var progress = 2 * (iteration / 30);
+        var progress = 2 * (iteration / 60);
         var opacity = (1 - ((progress - 1).abs));
-        ~sendMsg.value("/composition/layers/10/video/opacity", opacity);
+        ~sendMsg.value("/composition/layers/10/video/opacity", 0.75 + (opacity / 4));
 };
 
 ~launchBiospherePart1SecondClip = {
@@ -341,7 +344,7 @@
 };
 
 ~launchBiospherePart1Gouttes = {
-    ~sendMsg.value("/composition/layers/7/clips/3/connect", 1);
+    ~sendMsg.value("/composition/layers/9/clips/5/connect", 1);
 };
 
 ~clearBiospherePart1 = {
@@ -352,12 +355,11 @@
     ~sendMsg.value("/composition/layers/9/clear", 1);
     ~sendMsg.value("/composition/layers/10/clear", 1);
 
+    ~sendMsg.value("/composition/layers/10/video/opacity", 1);
+
     ~sendMsg.value("/composition/layers/5/video/effects/transform/rotationz", 0.5);
-    ~sendMsg.value("/composition/layers/6/video/opacity", 1);
+    ~sendMsg.value("/composition/layers/6/video/effects/transform/rotationz", 0.5);
     ~sendMsg.value("/composition/layers/8/video/effects/transform/rotationz", 0.5);
-    ~sendMsg.value("/composition/layers/10/video/opacity", 1);
-    ~sendMsg.value("/composition/layers/8/video/effects/transform/rotationz", 0.5);
-    ~sendMsg.value("/composition/layers/10/video/opacity", 1);
 };
 
 ~launchBiospherePart2InitialClips = {
@@ -468,5 +470,6 @@
     ~sendMsg.value("/composition/layers/4/video/effects/transform/rotationz", 0.5);
     ~sendMsg.value("/composition/layers/5/video/effects/transform/rotationz", 0.5);
     ~sendMsg.value("/composition/layers/6/video/effects/transform/rotationz", 0.5);
+    ~sendMsg.value("/composition/layers/7/video/effects/transform/rotationz", 0.5);
     ~sendMsg.value("/composition/layers/8/video/effects/transform/rotationz", 0.5);
 }

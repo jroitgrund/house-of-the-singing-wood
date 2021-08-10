@@ -40,7 +40,10 @@ TempoClock.default.tempo = 90/60;
 "./osc.scd".load;
 "./biosphere.scd".load;
 "./ritual.scd".load;
-~nappeBaleine.value(100).play;
+//~clearBiospherePart1.value;
+//~clearBiospherePart2.value;
+//~clearBiospherePart3.value;
+~biospherePart3.value(128).play;
 )
 
 // Runs everything! Adjust durations and comment stuff out to run individual parts.

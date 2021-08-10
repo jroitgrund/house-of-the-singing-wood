@@ -1,6 +1,6 @@
 ~sendMsg = {
     | msg, value |
-    ~resolume.sendMsg(msg, value);
+    // ~resolume.sendMsg(msg, value);
     1
 };
 
@@ -431,7 +431,7 @@
     var distance = rrand(0.75, 1);
     var pan = ev[\hardPan];
     var angle = ((pan * pi) + (3/4 * pi));
-    var x = 0.5 + (cos(angle).postln * 0.5 * (600 / 16384) * distance);
+    var x = 0.5 + (cos(angle) * 0.5 * (600 / 16384) * distance);
     var y = 0.5 + (sin(angle) * 0.5 * (600 / 16384) * distance);
     if (layer == 4, {layer = 10}, 1);
     ~sendMsg.value("/composition/layers/" ++ layer ++ "/clips/23/connect", 1);

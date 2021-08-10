@@ -458,33 +458,14 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\dur, Pseq([
 				Prand(Array.fill(8, {
 					| i |
-					Pseq([
-						Prand([
-							Pwrand(
-								[1/4, Rest(1/4)],
-								[0.9, 0.1]
-							),
-							Pwrand(
-								[1/4, Rest(1/4)],
-								[0.7, 0.3]
-							)
-						]),
-						Prand([
-							Pwrand(
-								[1/4, Rest(1/4)],
-								[0.7, 0.3],
-							),
-							Pwrand(
-								[1/4, Rest(1/4)],
-								[0.9, 0.1],
-							)
-						])
-					], 2 * (8 + i))
+					Pwrand([
+						0.25, 0.5, 0.75, 1
+					], [10, 2, 2, 2].normalizeSum, 2 * (8 + i))
 				})),
 				Prand(Array.fill(6, { | i | Rest(i) }))
 			],
 			inf),
-			\legato, 2,
+			\legato, 1,
 			\instrument, Pif(Ptime() < duration, \play),
 			\gateRelease, 0.1,
 			\hardPan, Pwhite(0.0, 2.0),

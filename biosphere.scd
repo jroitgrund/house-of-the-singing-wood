@@ -639,7 +639,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 		Pseq([Event.silent(sireneIn), ~sirens.value(firstPhaseDuration - sireneIn)]),
 		Pseq([Event.silent(gouttesIn), ~gouttes.value(firstPhaseDuration + secondPhaseDuration + 16 - gouttesIn)]),
 		Pseq([Event.silent(gouttesIn), ~singleActionPattern.value(~launchBiospherePart1Gouttes)]),
-		Pseq([Event.silent(owlsIn), ~owls.value(firstPhaseDuration + owlsIn, part1: true)]),
+		Pseq([Event.silent(owlsIn), ~owls.value(firstPhaseDuration - owlsIn, part1: true)]),
 		Pseq([Event.silent(firstPhaseDuration), ~singleActionPattern.value(~clearBiospherePart1)])
 	]);
 };

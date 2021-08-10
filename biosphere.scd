@@ -218,16 +218,22 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 		),
 		Pseq([Event.silent(6), Pbind(
 			\dur, Pseq([
-				8,
-				7,
-				5,
-				44
+				8 -1,
+				7 -1,
+				5 -1,
+				44 -1
 			], inf),
 			\type, \action,
 			\pfunc, Pif(Ptime() < duration, Pfunc({
-				// Run code to be triggered on baleine noises here.
-				1
-			})),
+				Routine {
+					var iteration = 0;
+					while({ iteration < 20 }, {
+						~setBaleineClipOpacity.value(iteration);
+						((1 / 10) * TempoClock.default.tempo).wait;
+						iteration = iteration +  1;
+					});
+				}.play;
+			}), 1),
 		)]),
 		Pbind(
 			\dur, Pseq([32], inf),
@@ -270,11 +276,12 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 				[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].normalizeSum),
 			\legato, 1,
 			\instrument, Pif(Ptime() < duration, \play),
-			\hardPan, Pwhite(0.0, 2.0, inf),
+			\hardPan, Prand([0, 0.5, 1, 1.5], inf),
             \lpfRq, 2,
 			\gateRelease, 60,
             \ampBus, owlsAmpBus,
-            \ampOutBus, owlsAmpOutBus
+            \ampOutBus, owlsAmpOutBus,
+			\pfunc, Pfunc(~launchBiospherePart1HibouxClip)
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -303,11 +310,12 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 				}),
 			\legato, 1,
 			\instrument, Pif(Ptime() < duration, \play),
-			\hardPan, Pwhite(0.0, 2.0, inf),
+			\hardPan, Pxrand([0, 0.5, 1, 1.5], inf),
             \lpfRq, 2,
 			\gateRelease, 60,
             \ampBus, sirensAmpBus,
-            \ampOutBus, sirensAmpOutBus
+            \ampOutBus, sirensAmpOutBus,
+			\pfunc, Pfuncn(~launchBiospherePart1SireneClip, inf)
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -616,10 +624,17 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 	var gouttesIn = (2 * firstPhaseDuration / 8).round(4);
 	var owlsIn = (3 * firstPhaseDuration / 8).round(4);
 	Ppar([
+		~singleActionPattern.value(~selectBiosphere),
+		~singleActionPattern.value(~launchBiospherePart1Clips),
+		~pollActionPattern.value({
+			nappeBaleineAmpBus.get(~setBiospherePart1SecondClipRotation)
+		}, firstPhaseDuration),
 		Pseq([Event.silent(0), ~nappeBaleine.value(firstPhaseDuration + 16)]),
+		Pseq([Event.silent(32), ~singleActionPattern.value(~launchBiospherePart1SecondClip)]),
 		Pseq([Event.silent(sireneIn), ~sirens.value(firstPhaseDuration - sireneIn)]),
-		Pseq([Event.silent(gouttesIn), ~gouttes.value(firstPhaseDuration + secondPhaseDuration + 16 - gouttesIn)]),
-		Pseq([Event.silent(owlsIn), ~owls.value(firstPhaseDuration + secondPhaseDuration + 32 - owlsIn)])
+		Pseq([Event.silent(gouttesIn), ~gouttes.value(firstPhaseDuration + secondPhaseDuration + 16 - gouttesIn), ~singleActionPattern.value(~launchBiospherePart1Gouttes)]),
+		Pseq([Event.silent(owlsIn), ~owls.value(firstPhaseDuration + secondPhaseDuration + 32 - owlsIn)]),
+		Pseq([Event.silent(firstPhaseDuration), ~singleActionPattern.value(~clearBiospherePart1)])
 	]);
 };
 

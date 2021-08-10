@@ -986,6 +986,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 		Pseq([Event.silent(grillonsIn), ~cricket2.value(fifthPhaseDuration - grillonsIn), ~singleActionPattern.value(~launchRitualPart5GrillonClip)]),
 		Pseq([Event.silent(stabsIn), ~stabs.value(fifthPhaseDuration - stabsIn)]),
 		Pseq([Event.silent(fifthPhaseDuration), ~singleActionPattern.value(~resetBassVoicePart5Rotation)])
+		// TODO: CLEAR ALL CLIPS
 	]);
 };
 

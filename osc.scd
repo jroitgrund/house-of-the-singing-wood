@@ -302,3 +302,67 @@
 ~resetBassVoicePart5Rotation = {
     ~sendMsg.value("/composition/layers/8/video/effects/transform/rotationz", 0);
 };
+
+// BIOSPHERE
+
+~selectBiosphere = {
+    ~sendMsg.value("/composition/decks/select/2", 1);
+};
+
+~launchBiospherePart1Clips = {
+    ~sendMsg.value("/composition/layers/9/clips/1/connect", 1);
+    ~sendMsg.value("/composition/layers/10/clips/1/connect", 1);
+    ~sendMsg.value("/composition/layers/10/video/opacity", 0);
+};
+
+~setBaleineClipOpacity = {
+    | iteration |
+        var progress = 2 * (iteration / 20);
+        var opacity = (1 - ((progress - 1).abs)).postln;
+        ~sendMsg.value("/composition/layers/10/video/opacity", opacity);
+};
+
+~launchBiospherePart1SecondClip = {
+    ~sendMsg.value("/composition/layers/8/clips/1/connect", 1);
+};
+
+~setBiospherePart1SecondClipRotation = {
+    | pan |
+    ~sendMsg.value("/composition/layers/8/video/effects/transform/rotationz", ~panToRotate.value(pan));
+};
+
+~launchBiospherePart1SireneClip = {
+    | ev |
+    var hardPan = ev[\hardPan];
+    var clip = rrand(1, 2);
+    ~sendMsg.value("/composition/layers/6/clips/" ++ clip ++ "/connect", 1);
+    ~sendMsg.value("/composition/layers/6/video/effects/transform/rotationz", ~panToRotate.value(hardPan));
+};
+
+~launchBiospherePart1HibouxClip = {
+    | ev |
+    var hardPan = ev[\hardPan];
+    var clip = rrand(1, 2);
+    ~sendMsg.value("/composition/layers/5/clips/" ++ clip ++ "/connect", 1);
+    ~sendMsg.value("/composition/layers/5/video/effects/transform/rotationz", ~panToRotate.value(hardPan));
+};
+
+~launchBiospherePart1Gouttes = {
+    ~sendMsg.value("/composition/layers/7/clips/3/connect", 1);
+};
+
+~clearBiospherePart1 = {
+    ~sendMsg.value("/composition/layers/5/clear", 1);
+    ~sendMsg.value("/composition/layers/6/clear", 1);
+    ~sendMsg.value("/composition/layers/7/clear", 1);
+    ~sendMsg.value("/composition/layers/8/clear", 1);
+    ~sendMsg.value("/composition/layers/9/clear", 1);
+    ~sendMsg.value("/composition/layers/10/clear", 1);
+
+    ~sendMsg.value("/composition/layers/5/video/effects/transform/rotationz", 0);
+    ~sendMsg.value("/composition/layers/6/video/opacity", 1);
+    ~sendMsg.value("/composition/layers/8/video/effects/transform/rotationz", 0);
+    ~sendMsg.value("/composition/layers/10/video/opacity", 1);
+    ~sendMsg.value("/composition/layers/8/video/effects/transform/rotationz", 0);
+    ~sendMsg.value("/composition/layers/10/video/opacity", 1);
+};

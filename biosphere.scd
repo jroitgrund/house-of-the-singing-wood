@@ -631,11 +631,11 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 	Ppar([
 		~singleActionPattern.value(~selectBiosphere),
 		~singleActionPattern.value(~launchBiospherePart1Clips),
-		~pollActionPattern.value({
-			nappeBaleinePanBus.get(~setBiospherePart1SecondClipRotation)
-		}, firstPhaseDuration),
 		Pseq([Event.silent(0), ~nappeBaleine.value(firstPhaseDuration + 16)]),
 		Pseq([Event.silent(32), ~singleActionPattern.value(~launchBiospherePart1SecondClip)]),
+		Pseq([Event.silent(32), ~pollActionPattern.value({
+			nappeBaleinePanBus.get(~setBiospherePart1SecondClipRotation)
+		}, firstPhaseDuration)]),
 		Pseq([Event.silent(sireneIn), ~sirens.value(firstPhaseDuration - sireneIn)]),
 		Pseq([Event.silent(gouttesIn), ~gouttes.value(firstPhaseDuration + secondPhaseDuration + 16 - gouttesIn)]),
 		Pseq([Event.silent(gouttesIn), ~singleActionPattern.value(~launchBiospherePart1Gouttes)]),

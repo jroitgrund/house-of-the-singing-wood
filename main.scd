@@ -40,7 +40,7 @@ TempoClock.default.tempo = 90/60;
 "./osc.scd".load;
 "./biosphere.scd".load;
 "./ritual.scd".load;
-~biospherePart3.value(32).play;
+~ritualPart5.value(64).play;
 )
 
 // Runs everything! Adjust durations and comment stuff out to run individual parts.

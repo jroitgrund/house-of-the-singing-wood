@@ -236,18 +236,7 @@
     | ev |
     var iphase = ev[\iphase];
     ~sendMsg.value("/composition/layers/11/clips/20/connect", 1);
-    if (iphase == 0, {
-        ~sendMsg.value("/composition/layers/11/clips/20/transport/position", 0 * 3236.6);
-    }, 1);
-    if (iphase == 0.5, {
-        ~sendMsg.value("/composition/layers/11/clips/20/transport/position", 0.25 * 3236.6);
-    }, 1);
-    if (iphase == 1, {
-        ~sendMsg.value("/composition/layers/11/clips/20/transport/position", 0.5 * 3236.6);
-    }, 1);
-    if (iphase == 1.5, {
-        ~sendMsg.value("/composition/layers/11/clips/20/transport/position", 0.75 * 3236.6);
-    }, 1);
+    ~sendMsg.value("/composition/layers/11/clips/20/transport/position", (iphase / 2) * 3236.6);
 };
 
 ~clearFeuillesNappeTribal8 = {
@@ -303,6 +292,10 @@
     ~sendMsg.value("/composition/layers/8/video/effects/transform/rotationz", 0);
 };
 
+~clearAllClips = {
+    ~sendMsg.value("/composition/disconnectall", 1);
+};
+
 // BIOSPHERE
 
 ~selectBiosphere = {
@@ -318,7 +311,7 @@
 ~setBaleineClipOpacity = {
     | iteration |
         var progress = 2 * (iteration / 20);
-        var opacity = (1 - ((progress - 1).abs)).postln;
+        var opacity = (1 - ((progress - 1).abs));
         ~sendMsg.value("/composition/layers/10/video/opacity", opacity);
 };
 
@@ -384,13 +377,13 @@
 ~launchBiospherePart2HibouxClip = {
     | ev |
     Routine {
-    var hardPan = ev[\hardPan];
-    var layer = rrand(5, 6);
-    ~sendMsg.value("/composition/layers/" ++ layer ++ "/clips/13/connect", 1);
-    ~sendMsg.value("/composition/layers" ++ layer ++ "/video/effects/transform/rotationz", ~panToRotate.value(hardPan));
-    (2 / TempoClock.default.tempo).wait;
-    ~sendMsg.value("/composition/layers/" ++ (layer - 1) ++ "/clips/13/connect", 1);
-    ~sendMsg.value("/composition/layers" ++ (layer - 1) ++ "/video/effects/transform/rotationz", ~panToRotate.value(hardPan));
+        var hardPan = ev[\hardPan];
+        var layer = rrand(5, 6);
+        ~sendMsg.value("/composition/layers/" ++ layer ++ "/clips/13/connect", 1);
+        ~sendMsg.value("/composition/layers" ++ layer ++ "/video/effects/transform/rotationz", ~panToRotate.value(hardPan));
+        (2 / TempoClock.default.tempo).wait;
+        ~sendMsg.value("/composition/layers/" ++ (layer - 1) ++ "/clips/13/connect", 1);
+        ~sendMsg.value("/composition/layers" ++ (layer - 1) ++ "/video/effects/transform/rotationz", ~panToRotate.value(hardPan));
     }.play;
 };
 

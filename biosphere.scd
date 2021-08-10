@@ -85,6 +85,8 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 	] ++ ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/owls");
 	~waterBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Water.aif", action: ~loaded);
 	~uduBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/udu");
+	~uduMidBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/udumid");
+	~uduHighBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/uduhigh");
 	~rhythmChkChkBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/rythmchkchk.wav", action: ~loaded);
 	~mosquitoBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/final.wav", action: ~loaded);
 	~slapBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/touch.wav", action: ~loaded);
@@ -437,7 +439,11 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 	| duration |
 	Ppar([
 		Pbind(
-			\buf, Pxrand(~uduBuffers, inf),
+			\buf, Pwrand(
+				[Prand(~uduBuffers), Prand(~uduMidBuffers), Prand(~uduHighBuffers)],
+				[0.65, 0.25, 0.15].normalizeSum,
+				inf),
+			\rate, Pwrand([0.7, 0.8, 0.9], [0.5, 0.3, 0.2].normalizeSum, inf),
 			\dur, Pseq([
 				Prand(Array.fill(8, {
 					| i |
@@ -471,7 +477,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\instrument, Pif(Ptime() < duration, \play),
 			\gateRelease, 0.1,
 			\hardPan, Pwhite(0.0, 2.0),
-			\amp, Pwhite(0.05, 0.5, inf),
+			\amp, Pwhite(0.1, 1, inf),
 			\hpf, Pwrand([0, 500, 1000, 1500, 2000], [0.5, 0.2, 0.1,0.05, 0.05], inf),
 			\ampBus, uduAmpBus
 		),
@@ -635,7 +641,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 		Pseq([Event.silent(0), ~water.value(thirdPhaseDuration)]),
 		Pseq([Event.silent(birdsIn), ~birds.value(thirdPhaseDuration - birdsIn)]),
 		Pseq([Event.silent(frogsIn), ~frog.value(thirdPhaseDuration - frogsIn)]),
-		Pseq([Event.silent(rhythmChkChckIn), ~rhythmChkChk.value(thirdPhaseDuration - rhythmChkChckIn)]),
+		// Pseq([Event.silent(rhythmChkChckIn), ~rhythmChkChk.value(thirdPhaseDuration - rhythmChkChckIn)]),
 		Pseq([Event.silent(uduIn), ~udu.value(thirdPhaseDuration - uduIn)]),
 		Pseq([Event.silent(thirdPhaseDuration), ~finalTouch.value])
 	]);

@@ -27,59 +27,58 @@
     (0.5 + ((pan - 0.25) / 2)) % 1;
 };
 
-~launchMurmuresParticles = {
-   	~sendMsg.value("/composition/layers/1/clips/1/connect", 1); 
+~clearLayer = {
+    | i |
+    {
+        ~sendMsg.value("/composition/layers/" ++ i ++ "/clear", 1);
+    }
 };
 
-~removeMurmuresParticles = {
-   	~sendMsg.value("/composition/layers/1/clear", 1); 
+~selectRitual = {
+    ~sendMsg.value("/composition/decks/select/1", 1);
 };
 
-~launchRondRouge = {
+~launchRitualInitialParticules = {
+    ~sendMsg.value("/composition/layers/12/clips/1/connect", 1);
+};
+
+~launchClipWithClochettesInRitualPart1 = {
     ~sendMsg.value("/composition/layers/8/clips/1/connect", 1);
 };
 
-~launchDeuxiemeRondRouge = {
+~launchSecondClipWithClochettesInRitualPart1 = {
     ~sendMsg.value("/composition/layers/7/clips/1/connect", 1);
 };
 
-~launchParticules = {
-    ~sendMsg.value("/composition/layers/9/clips/1/connect", 1);
-};
-
-~clearParticules = {
-    ~sendMsg.value("/composition/layers/1/clear", 1);
-};
-
-~launchBassOndeRouge = {
-    ~sendMsg.value("/composition/layers/1/clips/1/connect", 1);
+~launchClipForLastThirdOfRitualpart1 = {
+    ~sendMsg.value("/composition/layers/6/clips/1/connect", 1);
 };
 
 ~launchGrillonsClips = {
-    ~sendMsg.value("/composition/layers/1/clips/1/connect", 1);
-    ~sendMsg.value("/composition/layers/2/clips/1/connect", 1);
     ~sendMsg.value("/composition/layers/3/clips/1/connect", 1);
     ~sendMsg.value("/composition/layers/4/clips/1/connect", 1);
+    ~sendMsg.value("/composition/layers/5/clips/1/connect", 1);
+    ~sendMsg.value("/composition/layers/11/clips/1/connect", 1);
 };
 
 ~setGrillonsTopLeftOpacity = {
     | amp |
-    ~sendMsg.value("/composition/layers/1/video/opacity", (amp * 1000));
+    ~sendMsg.value("/composition/layers/3/video/opacity", (amp * 1000));
 };
 
 ~setGrillonsTopRightOpacity = {
     | amp |
-    ~sendMsg.value("/composition/layers/1/video/opaciity", amp);
-};
-
-~setGrillonsBottomRightOpacity = {
-    | amp |
-    ~sendMsg.value("/composition/layers/1/video/opaciity", amp);
+    ~sendMsg.value("/composition/layers/4/video/opaciity", amp);
 };
 
 ~setGrillonsBottomLeftOpacity = {
     | amp |
-    ~sendMsg.value("/composition/layers/1/video/opaciity", amp);
+    ~sendMsg.value("/composition/layers/5/video/opaciity", amp);
+};
+
+~setGrillonsBottomRightOpacity = {
+    | amp |
+    ~sendMsg.value("/composition/layers/11/video/opaciity", amp);
 };
 
 ~clearGrillonsClips = {
@@ -96,102 +95,127 @@
     ~sendMsg.value("/composition/layers/1/video/opacity", 1);
 };
 
-~launchBouleClip = {
-    ~sendMsg.value("/composition/layers/1/clips/1/connect", 1);
+~launchBassOndeRouge = {
+    Routine {
+        ~sendMsg.value("/composition/layers/9/clips/1/connect", 1);
+        ((3/16) / TempoClock.default.tempo).wait;
+        ~sendMsg.value("/composition/layers/10/clips/1/connect", 1);
+    }.play;
 };
 
-~launchFondRougeRitualPart2Clip = {
-    ~sendMsg.value("/composition/layers/1/clips/1/connect", 1);
+~launchMurmuresRitualPart2Clip = {
+    ~sendMsg.value("/composition/layers/8/clips/2/connect", 1);
+};
+
+~setParticulesOpacity = {
+    | amp |
+    ~sendMsg.value("/composition/layers/12/video/opacity", amp);
+};
+
+~clearMurmuresParticles = {
+    ~sendMsg.value("/composition/layers/12/clear", 1);
+};
+
+~resetMurmuresParticlesOpacity = {
+    ~sendMsg.value("/composition/layers/12/video/opacity", 1);
 };
 
 ~launchTotemClip = {
-    ~sendMsg.value("/composition/layers/1/clips/1/connect", 1);
+    ~sendMsg.value("/composition/layers/8/clips/6/connect", 1);
 };
 
 ~setTotemLayerOpacity = {
     | amp |
-    ~sendMsg.value("/composition/layers/1/video/opacity", amp);
+    ~sendMsg.value("/composition/layers/8/video/opacity", amp);
 };
 
 ~clearTotemClip = {
-    ~sendMsg.value("/composition/layers/1/clear", 1);
+    ~sendMsg.value("/composition/layers/8/clear", 1);
 };
 
 ~resetTotemLayerOpacity = {
-    ~sendMsg.value("/composition/layers/1/video/opacity", 1);
+    ~sendMsg.value("/composition/layers/8/video/opacity", 1);
 };
 
 ~rotateTotemClip = {
     | pan |
-    ~sendMsg.value("/composition/layers/1/clips/1/video/effects/transform/rotationz", ~panToRotate.value(pan));
+    ~sendMsg.value("/composition/layers/8/video/effects/transform/rotationz", ~panToRotate.value(pan));
+};
+
+~resetTotemClipRotation = {
+    ~sendMsg.value("/composition/layers/8/video/effects/transform/rotationz", 0);
 };
 
 ~launchHibouxTribalClip = {
     | ev |
     var hardPan = ev[\hardPan];
-    if (hardPan == 0, { ~sendMsg.value("/composition/layers/1/clips/1/connect", 1) }, 1);
-    if (hardPan == 0.5, { ~sendMsg.value("/composition/layers/2/clips/1/connect", 1) }, 1);
-    if (hardPan == 1, { ~sendMsg.value("/composition/layers/3/clips/1/connect", 1) }, 1);
-    if (hardPan == 1.5, { ~sendMsg.value("/composition/layers/4/clips/1/connect", 1) }, 1);
+    if (hardPan == 0, { ~sendMsg.value("/composition/layers/3/clips/7/connect", 1) }, 1);
+    if (hardPan == 0.5, { ~sendMsg.value("/composition/layers/4/clips/7/connect", 1) }, 1);
+    if (hardPan == 1, { ~sendMsg.value("/composition/layers/5/clips/7/connect", 1) }, 1);
+    if (hardPan == 1.5, { ~sendMsg.value("/composition/layers/6/clips/7/connect", 1) }, 1);
 };
 
-~removeRedBackgroundAtEndOfRitualPart2 = {
-    ~sendMsg.value("/composition/layers/1/clear", 1);
+~launchHibouxRandomClip1 = {
+    ~sendMsg.value("/composition/layers/9/clips/6/connect", 1);
 };
 
-~launchRabbit = {
-    ~sendMsg.value("/composition/layers/1/clips/1/connect", 1);
+~launchHibouxRandomClip2 = {
+    ~sendMsg.value("/composition/layers/9/clips/7/connect", 1);
 };
 
-~launchKickParticles = {
-    ~sendMsg.value("/composition/layers/1/clips/1/connect", 1);
+~launchHibouxRandomClip3 = {
+    ~sendMsg.value("/composition/layers/9/clips/8/connect", 1);
 };
 
-~removeKickParticles = {
-    ~sendMsg.value("/composition/layers/1/clear", 1);
+~launchHibouxRandomClip4 = {
+    ~sendMsg.value("/composition/layers/9/clips/9/connect", 1);
+};
+
+~launchRitualPart3KickClip = {
+    ~sendMsg.value("/composition/layers/9/clips/15/connect", 1);
+};
+
+~launchBatonPluiePart3Clip = {
+    ~sendMsg.value("/composition/layers/8/clips/15/connect", 1);
 };
 
 ~launchFougeresRondes = {
-    ~sendMsg.value("/composition/layers/1/clips/1/connect", 1);
+    ~sendMsg.value("/composition/layers/10/clips/15/connect", 1);
 };
 
 ~removeFougeresRondes = {
-    ~sendMsg.value("/composition/layers/1/clear", 1);
+    ~sendMsg.value("/composition/layers/10/clear", 1);
 };
 
 ~setFougeresRondesOpacity = {
     | amp |
-    ~sendMsg.value("/composition/layers/1/video/opacity", amp * 1500);
+    ~sendMsg.value("/composition/layers/10/video/opacity", amp * 1500);
 };
 
 ~resetFougeresRondesLayerOpacity = {
     | amp |
-    ~sendMsg.value("/composition/layers/1/video/opacity", 1);
+    ~sendMsg.value("/composition/layers/10/video/opacity", 1);
 };
 
 ~launchSnakeLoop = {
-    ~sendMsg.value("/composition/layers/1/clips/1/connect", 1);
+    ~sendMsg.value("/composition/layers/8/clips/20/connect", 1);
 };
 
 ~setTribalOverlayOpacity = {
     | amp |
-    ~sendMsg.value("/composition/layers/1/video/opacity", amp * 2000);
+    ~sendMsg.value("/composition/layers/10/video/opacity", amp * 2000);
 };
 
 ~clearTribalOverlayLayerOpacity = {
-    ~sendMsg.value("/composition/layers/1/video/opacity", 1);
+    ~sendMsg.value("/composition/layers/10/video/opacity", 1);
 };
 
 ~launchTribalOverlay = {
-    ~sendMsg.value("/composition/layers/1/clips/1/connect", 1);
+    ~sendMsg.value("/composition/layers/10/clips/20/connect", 1);
 };
 
 ~removeTribalOverlay = {
-    ~sendMsg.value("/composition/layers/1/clear", 1);
-};
-
-~launchEndOfRitual4Circle = {
-    ~sendMsg.value("/composition/layers/1/clips/1/connect", 1);
+    ~sendMsg.value("/composition/layers/10/clear", 1);
 };
 
 ~launchHibouxPart4Clip = {
@@ -200,39 +224,81 @@
     ~sendMsg.value("/composition/layers/1/clips/1/video/effects/transform/rotationz", ~panToRotate.value(ev[\hardPan]));
 };
 
+~resetHibouxPart4ClipRotation = {
+    ~sendMsg.value("/composition/layers/1/clips/1/video/effects/transform/rotationz", 0);
+};
+
+~launchRootsClip = {
+    ~sendMsg.value("/composition/layers/9/clips/22/connect", 1);
+};
+
 ~launchFeuillesNappeTribal8 = {
     | ev |
-    // TODO: LAUNCH IN CORRECT DIRECTION
     var iphase = ev[\iphase];
-    var direction = ev[\direction];
-    ~sendMsg.value("/composition/layers/1/clear", 1);
+    ~sendMsg.value("/composition/layers/11/clips/20/connect", 1);
     if (iphase == 0, {
-        ~sendMsg.value("/composition/layers/1/clips/1/connect", 1);
-        ~sendMsg.value("/composition/layers/1/clips/1/transport/position", if (direction == 1, { 0 }, { 6005.0 }));
+        ~sendMsg.value("/composition/layers/11/clips/20/transport/position", 0 * 3236.6);
     }, 1);
     if (iphase == 0.5, {
-        ~sendMsg.value("/composition/layers/1/clips/2/connect", 1);
-        ~sendMsg.value("/composition/layers/1/clips/2/transport/position", if (direction == 1, { 0 }, { 6005.0 }));
+        ~sendMsg.value("/composition/layers/11/clips/20/transport/position", 0.25 * 3236.6);
     }, 1);
     if (iphase == 1, {
-        ~sendMsg.value("/composition/layers/1/clips/3/connect", 1);
-        ~sendMsg.value("/composition/layers/1/clips/3/transport/position", if (direction == 1, { 0 }, { 24023.0 }));
+        ~sendMsg.value("/composition/layers/11/clips/20/transport/position", 0.5 * 3236.6);
     }, 1);
     if (iphase == 1.5, {
-        ~sendMsg.value("/composition/layers/1/clips/4/connect", 1);
-        ~sendMsg.value("/composition/layers/1/clips/4/transport/position", if (direction == 1, { 0 }, { 6005.0 }));
+        ~sendMsg.value("/composition/layers/11/clips/20/transport/position", 0.75 * 3236.6);
     }, 1);
 };
 
 ~clearFeuillesNappeTribal8 = {
-    ~sendMsg.value("/composition/layers/1/clear", 1);
+    ~sendMsg.value("/composition/layers/11/clear", 1);
 };
 
 ~setFeuillesNappeTribal8Opacity = {
     | amp |
-    ~sendMsg.value("/composition/layers/1/video/opacity", amp * 1000);
+    ~sendMsg.value("/composition/layers/11/video/opacity", amp * 1000);
 };
 
 ~resetFeuillesNapeTribal8LayerOpacity = {
-    ~sendMsg.value("/composition/layers/1/video/opacity", 1);
-}
+    ~sendMsg.value("/composition/layers/11/video/opacity", 1);
+};
+
+~launchRitualPart5InitialClips = {
+    ~sendMsg.value("/composition/layers/8/clips/23/connect", 1);
+    ~sendMsg.value("/composition/layers/9/clips/24/connect", 1);
+};
+
+~setRitualPart5ClipOpacities = {
+    var iteration = 0;
+    {
+        var progress = iteration / (32 * 10);
+        iteration = iteration + 1;
+        ~sendMsg.value("/composition/layers/8/video/opacity", 1 - progress);
+        ~sendMsg.value("/composition/layers/9/video/opacity", progress);
+    }
+};
+
+~resetRitualPart5ClipOpacitiesAndClearLayers = {
+    ~sendMsg.value("/composition/layers/8/video/opacity", 1);
+    ~sendMsg.value("/composition/layers/9/video/opacity", 1);
+    ~sendMsg.value("/composition/layers/8/clear", 1);
+    ~sendMsg.value("/composition/layers/9/clear", 1);
+};
+
+~launchRitualPart5KickClips = {
+    ~sendMsg.value("/composition/layers/9/clips/25/connect", 1);
+    ~sendMsg.value("/composition/layers/10/clips/25/connect", 1);
+};
+
+~launchRitualPart5GrillonClip = {
+    ~sendMsg.value("/composition/layers/8/clips/25/connect", 1);
+};
+
+~setBassVoicePart5Rotation = {
+    | pan |
+    ~sendMsg.value("/composition/layers/8/video/effects/transform/rotationz", ~panToRotate.value(pan));
+};
+
+~resetBassVoicePart5Rotation = {
+    ~sendMsg.value("/composition/layers/8/video/effects/transform/rotationz", 0);
+};

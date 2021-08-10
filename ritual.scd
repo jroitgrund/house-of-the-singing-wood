@@ -166,10 +166,6 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			grillonOneShotAmp3OutBus.get(~setGrillonsBottomLeftOpacity);
 		}, duration), 1),
 		Pif(grillonsClips, ~singleActionPattern.value(~launchGrillonsClips), 1),
-		Pif(grillonsClips, Pseq([
-			Event.silent(duration),
-			Ppar([~singleActionPattern.value(~clearGrillonsClips), ~singleActionPattern.value(~resetGrillonsLayersOpacity)])
-		]), 1),
 		Ppar([
 				[1, grillonOneShotPanBus, grillonOneShotLowPassBus, 12, 0, -12.midiratio, false, 0.05],
 				[-1, grillonOneShotPanBus2,  grillonOneShotLowPassBus2, 16, pi, -12.midiratio, false, 0.05],
@@ -251,13 +247,13 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\ampOutBus, feuillesNappeAmpOutBus
 		),
 		Pbind(
-			\dur, Pseq([32], inf),
+			\dur, Pseq([16], inf),
 			\instrument, Pif(Ptime() < duration, \panControl),
 			\legato, 1,
 			\iphase, Pwhite(0.0, 2.0, inf),
-			\freq, TempoClock.default.tempo / 24,
+			\freq, TempoClock.default.tempo / 16,
 			\controlBus, feuillesNappePanBus,
-			\direction, Prand([1, -1], inf),
+			\direction, 1,
 			\pfunc, Pif(tribal8, Pfuncn(~launchFeuillesNappeTribal8, inf), 1),
 		),
 		Pif(tribal8, ~pollActionPattern.value({
@@ -286,6 +282,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\ampBus, murmuresAmpBus,
 			\gateRelease, 7,
 			\ampOutBus, murmuresAmpOutBus,
+			\amp, 0.15
 		),
 		Pif(tribalOverlay, ~singleActionPattern.value(~launchTribalOverlay), 1),
 		Pif(tribalOverlay, ~pollActionPattern.value({
@@ -320,8 +317,12 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 // We use pfunc to adapt the duration to the length of the loop we're playing.
 // Global fade in and out to help with transitions as this takes up a lot of space.
 ~murmuresLoops = {
-	| duration, fougeresRondes = false |
+	| duration, fougeresRondes = false, affectParticleOpacity = false |
 	Ppar([
+		Pif(affectParticleOpacity, ~pollActionPattern.value({
+			murmuresLoopsAmpOutBus.get(~setParticulesOpacity)
+		}, duration), 1),
+		Pif(affectParticleOpacity, Pseq([Event.silent(duration), ~singleActionPattern.value(~resetMurmuresParticlesOpacity), ~singleActionPattern.value(~clearMurmuresParticles)]), 1),
 		Pif(fougeresRondes, ~singleActionPattern.value(~launchFougeresRondes), 1),
 		Pif(fougeresRondes, ~pollActionPattern.value({
 			murmuresLoopsAmpOutBus.get(~setFougeresRondesOpacity);
@@ -436,7 +437,8 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			Pif(totem, Pseq([
 				Event.silent(duration),
 				~singleActionPattern.value(~clearTotemClip),
-				~singleActionPattern.value(~resetTotemLayerOpacity)
+				~singleActionPattern.value(~resetTotemLayerOpacity),
+				~singleActionPattern.value(~resetTotemClipRotation)
 			]), 1),
 			Pbind(
 				\dur, Pseq([64], repeats: inf),
@@ -506,7 +508,8 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\ampBus, hibouxAmpBus,
 			\hardPan, Pif(tribalClip, Prand([0, 0.5, 1, 1.5], inf), Pwhite(0.0, 2.0, inf)),
 			\pfunc, Pif(tribalClip, Pfuncn(~launchHibouxTribalClip, inf), 1),
-			\pfunc2, Pif(part4Clip, Pfuncn(~launchHibouxPart4Clip, inf), 1)
+			\pfunc2, Pif(part4Clip, Pfuncn(~launchHibouxPart4Clip, inf), 1),
+			\pfunc3, Pif(tribalClip, Pwrand([Prand([Pfunc(~launchHibouxRandomClip1), Pfunc(~launchHibouxRandomClip2), Pfunc(~launchHibouxRandomClip3), Pfunc(~launchHibouxRandomClip4)]), 1], [0.25, 0.75]), 1),
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -517,6 +520,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\rel, 16 / TempoClock.default.tempo,
 			\controlBus, hibouxAmpBus
 		),
+		Pif(part4Clip, Pseq([Event.silent(duration), ~singleActionPattern.value(~resetHibouxPart4ClipRotation)]), 1)
 	]);
 };
 
@@ -601,6 +605,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 
 ~roots = {
 	| duration |
+	var iter = 1;
 	Ppar([
 		Pbind(
 			\buf, Pxrand(~rootsBuffers, repeats: inf),
@@ -618,7 +623,11 @@ var windChimesAmpOutBus = Bus.control(s, 1);
             \lpfRq, 2,
 			\gateRelease, 60,
             \ampBus, rootsAmpBus,
-            \ampOutBus, rootsAmpOutBus
+            \ampOutBus, rootsAmpOutBus,
+			\pfunc, Pfunc({
+				if (iter == 1, ~launchRootsClip, { 1 });
+				iter = iter + 1;
+			}),
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -894,14 +903,25 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 	| firstPhaseDuration |
 	var clochettesIn = (2 * firstPhaseDuration / 6).round(4);
 	var bassIn = (3 * firstPhaseDuration / 6).round(4);
-	Ppar([
-		~singleActionPattern.value(~launchRondRouge),
-		Pseq([Event.silent(4), ~singleActionPattern.value(~launchDeuxiemeRondRouge)]),
-		~singleActionPattern.value(~launchParticules),
-		Pseq([Event.silent(0), ~grillons.value(firstPhaseDuration + 32, grillonsClips: true)]),
+	var finalClipIn = (2 * firstPhaseDuration / 3).round(4);
+	Pseq([
+		~singleActionPattern.value(~selectRitual),
+		Ppar([
+			~singleActionPattern.value(~launchRitualInitialParticules),
+			Pseq([Event.silent(0), ~grillons.value(firstPhaseDuration + 32, grillonsClips: true)]),
+			Pseq([Event.silent(bassIn), ~bass.value(firstPhaseDuration - bassIn, rarement: true, launchBassOndeRouge: true)]),
+			Pseq([Event.silent(clochettesIn), Ppar([
+				~clochettes.value(firstPhaseDuration - clochettesIn),
+				~singleActionPattern.value(~launchClipWithClochettesInRitualPart1),
+				Pseq([Event.silent(16), ~singleActionPattern.value(~launchSecondClipWithClochettesInRitualPart1)])
+			])]),
+			Pseq([Event.silent(finalClipIn), ~singleActionPattern.value(~launchClipForLastThirdOfRitualpart1)]),
 
-		Pseq([Event.silent(bassIn), ~bass.value(firstPhaseDuration - bassIn, rarement: true, launchBassOndeRouge: true)]),
-		Pseq([Event.silent(clochettesIn), ~clochettes.value(firstPhaseDuration - clochettesIn)]),
+			// clear layers
+			Pseq([Event.silent(firstPhaseDuration), ~singleActionPattern.value(~clearLayer.value(6)), ~singleActionPattern.value(~clearLayer.value(7)),
+			~singleActionPattern.value(~clearLayer.value(8))]),
+			Pseq([Event.silent(firstPhaseDuration + 32), ~singleActionPattern.value(~clearGrillonsClips), ~singleActionPattern.value(~resetGrillonsLayersOpacity)])
+		])
 	]);
 };
 
@@ -910,18 +930,15 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 	var bassVoiceShamanIn = (1 * secondPhaseDuration / 6).round(4);
 	var hibouxIn = (2 * secondPhaseDuration / 6).round(4);
 	Ppar([
-		// TODO: make this murmure loop affect particle opacity
-		Pseq([Event.silent(0), ~murmuresLoops.value(secondPhaseDuration)]),
+		Pseq([Event.silent(0), ~murmuresLoops.value(secondPhaseDuration, affectParticleOpacity: true), ~singleActionPattern.value(~launchMurmuresRitualPart2Clip)]),
+		Pseq([Event.silent(bassVoiceShamanIn), ~bassVoiceShaman.value(secondPhaseDuration + 4 - bassVoiceShamanIn, totem: true)]),
 		Pseq([
 			Event.silent(hibouxIn),
 			Ppar([
 				~hiboux.value(secondPhaseDuration - hibouxIn, tribalClip: true),
-				~singleActionPattern.value(~clearParticules),
-				~singleActionPattern.value(~launchBouleClip),
-				~singleActionPattern.value(~launchFondRougeRitualPart2Clip)
 			])
 		]),
-		Pseq([Event.silent(bassVoiceShamanIn), ~bassVoiceShaman.value(secondPhaseDuration + 4 - bassVoiceShamanIn, totem: true)]),
+		Pseq([Event.silent(secondPhaseDuration), ~singleActionPattern.value(~clearLayer.value(8))])
 	]);
 };
 
@@ -931,11 +948,9 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 	Ppar([
 		~kick.value(thirdPhaseDuration + 1),
 		~murmuresLoops.value(thirdPhaseDuration, fougeresRondes: true),
-		// TODO: maybe audioreact baton pluie
-		Pseq([Event.silent(batonPluieIn), ~batonPluie.value(thirdPhaseDuration - batonPluieIn)]),
-		~singleActionPattern.value(~removeRedBackgroundAtEndOfRitualPart2),
-		~singleActionPattern.value(~launchRabbit),
-		~singleActionPattern.value(~launchKickParticles),
+		~singleActionPattern.value(~launchRitualPart3KickClip),
+		Pseq([Event.silent(batonPluieIn), ~batonPluie.value(thirdPhaseDuration - batonPluieIn), ~singleActionPattern.value(~launchBatonPluiePart3Clip)]),
+		Pseq([Event.silent(thirdPhaseDuration), ~singleActionPattern.value(~clearLayer.value(8)), ~singleActionPattern.value(~clearLayer.value(9)), ~singleActionPattern.value(~clearLayer.value(10))])
 	]);
 };
 
@@ -945,15 +960,14 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 	var rootsIn = (2 * fourthPhaseDuration / 6).round(4);
 	var hibouxIn = (3 * fourthPhaseDuration / 6).round(4);
 	Ppar([
+		~singleActionPattern.value(~launchSnakeLoop),
 		~murmures.value(fourthPhaseDuration, tribalOverlay: true),
 		~feuillesNappe.value(fourthPhaseDuration + 16, tribal8: true),
 		~clochettes.value(fourthPhaseDuration + 32, rarement: true),
 		Pseq([Event.silent(bolTibetainIn), ~bolTibetain.value(fourthPhaseDuration - bolTibetainIn)]),
 		Pseq([Event.silent(rootsIn), ~roots.value(fourthPhaseDuration - rootsIn)]),
-		Pseq([Event.silent(hibouxIn), ~hiboux.value(fourthPhaseDuration - hibouxIn)]),
-		~singleActionPattern.value(~removeKickParticles),
-		~singleActionPattern.value(~launchSnakeLoop),
-		Pseq([Event.silent(fourthPhaseDuration - 16), ~singleActionPattern.value(~launchEndOfRitual4Circle)])
+		Pseq([Event.silent(hibouxIn), ~hiboux.value(fourthPhaseDuration - hibouxIn, part4Clip: true)]),
+		Pseq([Event.silent(fourthPhaseDuration), ~singleActionPattern.value(~clearLayer.value(8))])
 	]);
 };
 
@@ -962,12 +976,16 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 	var drumRackIn = 32;
 	var grillonsIn = 32 + (2 * (fifthPhaseDuration - 32) / 6).round(4);
 	var stabsIn = 32 + (3 * (fifthPhaseDuration - 32) / 6).round(4);
-	// todo: map coil, hi-hat, and stabs to 3 video elements
 	Ppar([
+		~singleActionPattern.value(~launchRitualPart5InitialClips),
+		~pollActionPattern.value(~setRitualPart5ClipOpacities.value, 32),
 		~bassVoiceShaman.value(fifthPhaseDuration, withFifth: false),
-		Pseq([Event.silent(32), ~drumRack.value(fifthPhaseDuration - 32)]),
-		Pseq([Event.silent(grillonsIn), ~cricket2.value(fifthPhaseDuration - grillonsIn)]),
+		Pseq([Event.silent(32), ~drumRack.value(fifthPhaseDuration - 32), ~singleActionPattern.value(~resetRitualPart5ClipOpacitiesAndClearLayers), ~singleActionPattern.value(~launchRitualPart5KickClips), ~pollActionPattern.value({
+			bassVoiceShamanPanBus.get(~setBassVoicePart5Rotation)
+		}, fifthPhaseDuration - 32)]),
+		Pseq([Event.silent(grillonsIn), ~cricket2.value(fifthPhaseDuration - grillonsIn), ~singleActionPattern.value(~launchRitualPart5GrillonClip)]),
 		Pseq([Event.silent(stabsIn), ~stabs.value(fifthPhaseDuration - stabsIn)]),
+		Pseq([Event.silent(fifthPhaseDuration), ~singleActionPattern.value(~resetBassVoicePart5Rotation)])
 	]);
 };
 

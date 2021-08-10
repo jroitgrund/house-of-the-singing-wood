@@ -488,7 +488,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\instrument, Pif(Ptime() < duration, \play),
 			\gateRelease, 0.1,
 			\hardPan, Pwhite(0.0, 2.0),
-			\amp, Pwhite(0.1, 1, inf),
+			\amp, Pwhite(0.1, 0.7, inf),
 			\hpf, Pwrand([0, 500, 1000, 1500, 2000], [0.5, 0.2, 0.1,0.05, 0.05], inf),
 			\ampBus, uduAmpBus,
 			\iteration, Pseq([0, 1, 2, 3], inf),
@@ -677,7 +677,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 		Pseq([Event.silent(frogsIn), ~frog.value(thirdPhaseDuration - frogsIn)]),
 		Pseq([Event.silent(uduIn), ~udu.value(thirdPhaseDuration - uduIn)]),
 		Pseq([Event.silent(thirdPhaseDuration), ~singleActionPattern.value(~clearBiospherePart3)]),
-		Pseq([Event.silent(thirdPhaseDuration), ~finalTouch.value])
+		Pseq([Event.silent(thirdPhaseDuration + 8), ~finalTouch.value])
 	]);
 };
 

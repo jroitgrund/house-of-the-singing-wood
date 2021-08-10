@@ -469,7 +469,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\instrument, Pif(Ptime() < duration, \play),
 			\gateRelease, 0.1,
 			\hardPan, Pwhite(0.0, 2.0),
-			\amp, Pwhite(0.1, 0.7, inf),
+			\amp, Pwhite(0.1, 0.4, inf),
 			\hpf, Pwrand([0, 500, 1000, 1500, 2000], [0.5, 0.2, 0.1,0.05, 0.05], inf),
 			\ampBus, uduAmpBus,
 			\iteration, Pseq([0, 1, 2, 3], inf),
@@ -480,7 +480,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\legato, 1,
 			\instrument, \ampControl,
 			\atk, 16 / TempoClock.default.tempo,
-			\sus, (duration -  48) / TempoClock.default.tempo,
+			\sus, (duration - 48) / TempoClock.default.tempo,
 			\rel, 32 / TempoClock.default.tempo,
 			\controlBus, uduAmpBus
 		)

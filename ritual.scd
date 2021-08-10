@@ -597,7 +597,8 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\loopAtk, 8 / TempoClock.default.tempo,
 			\loopSus, 48,
 			\loopRel, 8 / TempoClock.default.tempo,
-			\amp, 0.05
+			\amp, 0.05,
+			\ampBus, batonPluieAmpBus
 		),
 		Pbind(
 			\dur, Pseq([64], inf),
@@ -607,6 +608,15 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\freq, TempoClock.default.tempo / 24,
 			\controlBus, batonPluiePanBus,
 			\direction, Prand([1, -1], inf),
+		),
+		Pbind(
+			\dur, Pseq([duration]),
+			\legato, 1,
+			\instrument, \ampControl,
+			\atk, 16 / TempoClock.default.tempo,
+			\sus, (duration -  48) / TempoClock.default.tempo,
+			\rel, 32 / TempoClock.default.tempo,
+			\controlBus, batonPluieAmpBus
 		),
 	]);
 };
@@ -628,11 +638,23 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\legato, 1,
 			\instrument, Pif(Ptime() < duration, \play),
 			\hardPan, Pwhite(0.0, 2.0, inf),
-            \lpfRq, 2,
 			\gateRelease, 60,
             \ampBus, rootsAmpBus,
             \ampOutBus, rootsAmpOutBus,
-			\pfunc, Pseq([Pfunc(~launchRootsClip), 1, 1, 1], inf)
+			\pfunc, Pseq([Pfunc(~launchRootsClip), 1, 1, 1], inf),
+			\pfunc2, Pfuncn({
+				| ev |
+				var dur = ev[\dur];
+				Pbind(
+					\dur, Pseq([dur]),
+					\legato, 1,
+					\instrument, \ampControl,
+					\atk, 0.5 * dur / TempoClock.default.tempo,
+					\sus, 0,
+					\rel, 0.5 * dur / TempoClock.default.tempo,
+					\controlBus, rootsAmpBus
+				).play;
+			}, inf)
 		),
 		Pbind(
 			\dur, Pseq([duration]),

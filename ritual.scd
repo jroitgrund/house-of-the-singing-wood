@@ -711,7 +711,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 
 // No panning, single rhythmic pattern.
 ~kick = {
-	| duration |
+	| duration, fadeOut = true |
 	Ppar([
 		Pbind(
 			\dur, Pseq([1.5, 0.5, 2], repeats: inf),
@@ -719,7 +719,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\instrument, Pif(Ptime() < duration, \play),
 			\amp, 0.6,
 			\buf, ~kickBuffer,
-			\ampBus, kickAmpBus,
+			\ampBus, Pif(fadeOut, kickAmpBus, -1),
 			\gateRelease, 4
 		),
 		Pbind(
@@ -977,7 +977,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 	| thirdPhaseDuration |
 	var batonPluieIn = (1 * thirdPhaseDuration / 6).round(4);
 	Ppar([
-		~kick.value(thirdPhaseDuration + 1),
+		~kick.value(thirdPhaseDuration + 1, fadeOut: false),
 		~murmuresLoops.value(thirdPhaseDuration, fougeresRondes: true),
 		~singleActionPattern.value(~launchRitualPart3KickClip),
 		Pseq([Event.silent(batonPluieIn), ~batonPluie.value(thirdPhaseDuration - batonPluieIn)]),
@@ -996,7 +996,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 		~murmures.value(fourthPhaseDuration, tribalOverlay: true, rarement: true),
 		~feuillesNappe.value(fourthPhaseDuration + 16, tribal8: true),
 		~clochettes.value(16, rarement: true),
-		Pseq([Event.silent(bolTibetainIn), ~bolTibetain.value(fourthPhaseDuration - bolTibetainIn)]),
+		Pseq([Event.silent(bolTibetainIn), ~bolTibetain.value(fourthPhaseDuration + 8 - bolTibetainIn)]),
 		Pseq([Event.silent(rootsIn), ~roots.value(fourthPhaseDuration - rootsIn)]),
 		Pseq([Event.silent(hibouxIn), ~hiboux.value(fourthPhaseDuration - hibouxIn, part4Clip: true)]),
 		Pseq([Event.silent(fourthPhaseDuration), ~singleActionPattern.value(~clearLayer.value(8))])

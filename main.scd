@@ -40,7 +40,7 @@ TempoClock.default.tempo = 90/60;
 "./osc.scd".load;
 "./biosphere.scd".load;
 "./ritual.scd".load;
-~ritualPart5.value(64).play;
+~kick.value(32, fadeOut: false).play;
 )
 
 // Runs everything! Adjust durations and comment stuff out to run individual parts.
@@ -56,7 +56,7 @@ TempoClock.default.tempo = 90/60;
 
 minutesToDuration = {
 	| min, max |
-	rrand(min * 96, max * 96).round(32);
+	rrand(min * 96 * 0.25, max * 96 * 0.25).round(32);
 };
 
 getFullLoop = {

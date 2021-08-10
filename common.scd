@@ -122,7 +122,7 @@ loadedBuffers = 0;
 ~waitForBuffers = {
 	| action |
 	Routine({
-		while({ loadedBuffers < 92 }, {
+		while({ loadedBuffers < 67 }, {
 			("Loaded" + loadedBuffers + "buffers").postln;
 			1.wait;
 		});

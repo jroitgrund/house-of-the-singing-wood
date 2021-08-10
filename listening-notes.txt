@@ -1,0 +1,28 @@
+CHANGEMENTS AUDIO A FAIRE
+
+LOOP ENTIERE
+mix a faire ? certains sons trop forts ou pas assez. peut-etre attendre d'avoir les vraies enceintes pour ca.
+
+BP1 (commence au debut)
+la nappe baleine qui commence des le debut, on entend un peu trop la loop. elle dure ~1m30 et le debut est different de la fin (a la fin il y a des petits bruits saccades, et au debut il y a un cri de baleine, en plus elle baisse en volume avant la fin). du coup on sent qu'on revient au debut.
+
+BP2 (quand on change de nappe a 2min)
+la nappe a un loop tres court donc c'est repetitif, meme si le loop s'enchaine bien.
+
+BP3 (quand l'eau arrive a 2min50)
+le rhythme des udus est cool mais les sonorites sont bofs. est-ce qu'on peut travailler ces samples de udu? peut-etre qu'on n'aurait pas du les low pass, on a tj les originaux. a savoir que dans super collider on les joue ralentis pour qu'ils soient plus graves (de 0.7 a 0.9 par rapport a la vitesse d'origine).
+
+RP1 (grillons a 3min55)
+peut-etre que ca manque de qqchose parce qu'il n'y a que 3 sons, peut-etre que ca passe avec les visus.
+
+RP2 (quand les murmures commencent a 5min20)
+peut-etre que ca manque de qqchose parce qu'il n'y a que 3 sons, peut-etre que ca passe avec les visus.
+
+RP3 (quand les kicks commencent a 6min20)
+ras
+
+RP4 (quand la clochette sonne a 7min30)
+c'est un peu le dawa, est-ce que les sons vont vraiment ensemble?
+
+RP5 (quand la nappe shamanique commence a 8min30)
+ras c'est plutot la classe.

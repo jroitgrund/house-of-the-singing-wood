@@ -40,7 +40,7 @@ TempoClock.default.tempo = 90/60;
 "./osc.scd".load;
 "./biosphere.scd".load;
 "./ritual.scd".load;
-~kick.value(32, fadeOut: false).play;
+~nappeBaleine.value(100).play;
 )
 
 // Runs everything! Adjust durations and comment stuff out to run individual parts.

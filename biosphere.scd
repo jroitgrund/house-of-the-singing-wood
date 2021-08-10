@@ -75,8 +75,8 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 	~gouttesBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Gouttes.aif", action: ~loaded);
 	~melodieBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Melodie_Wrapped.aif", action: ~loaded);
 	~owlNappeBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/OWL_1BAR.aif", action:~loaded);
-	~owlNappeBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/owlnappe");
-	~owlNappeEndBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/owlnappeend");
+	// ~owlNappeBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/owlnappe");
+	// ~owlNappeEndBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/owlnappeend");
 	~nappeBaleineBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/nappe-baleines.wav", action:~loaded);
 	~owlsBuffers = [
 		Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/Owl-Sing1.aif", action: ~loaded),
@@ -86,12 +86,12 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 	~uduBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/udu");
 	~uduMidBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/udumid");
 	~uduHighBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/uduhigh");
-	~rhythmChkChkBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/rythmchkchk.wav", action: ~loaded);
+	// ~rhythmChkChkBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/rythmchkchk.wav", action: ~loaded);
 	~mosquitoBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/final.wav", action: ~loaded);
 	~slapBuffer = Buffer.readChannel(s, ~basePath ++ "Chapitre1 - Biosphere/touch.wav", action: ~loaded);
 
 	~sirensBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/sirens");
-	~sonarBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/sonar");
+	// ~sonarBuffers = ~readContentsAsBuffers.value(~basePath ++ "Chapitre1 - Biosphere/sonar");
 };
 
 // Plays birds1 and birds2, birds2 starts 4 bars after birds1 and they have separate pan and amp controls.
@@ -219,16 +219,16 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 		),
 		Pseq([Event.silent(6), Pbind(
 			\dur, Pseq([
-				8 -1,
-				7 -1,
-				5 -1,
-				44 -1
+				8,
+				7,
+				5,
+				44
 			], inf),
 			\type, \action,
 			\pfunc, Pif(Ptime() < duration, Pfunc({
 				Routine {
 					var iteration = 0;
-					while({ iteration < 20 }, {
+					while({ iteration < 30 }, {
 						~setBaleineClipOpacity.value(iteration);
 						((1 / 10) / TempoClock.default.tempo).wait;
 						iteration = iteration +  1;
@@ -331,38 +331,38 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 	]);
 };
 
-~sonar = {
-	| duration |
-	Ppar([
-		Pbind(
-			\buf, Pxrand(~sonarBuffers, repeats: inf),
-			\dur, Prand(
-				[8, 9, 10, 11, 12, 13, 15, 16, 17, 18, 19, 20].collect {
-					| waitBeats |
-					Pfuncn({
-						| ev |
-						(ev[\buf].duration * TempoClock.default.tempo).round(2) + waitBeats
-					}, inf)
-				}),
-			\legato, 1,
-			\instrument, Pif(Ptime() < duration, \play),
-			\hardPan, Pwhite(0.0, 2.0, inf),
-            \lpfRq, 2,
-			\gateRelease, 60,
-            \ampBus, sonarAmpBus,
-            \ampOutBus, sonarAmpOutBus
-		),
-		Pbind(
-			\dur, Pseq([duration]),
-			\legato, 1,
-			\instrument, \ampControl,
-			\atk, 0,
-			\sus, (duration -  16) / TempoClock.default.tempo,
-			\rel, 16 / TempoClock.default.tempo,
-			\controlBus, sonarAmpBus
-		),
-	]);
-};
+// ~sonar = {
+// 	| duration |
+// 	Ppar([
+// 		Pbind(
+// 			\buf, Pxrand(~sonarBuffers, repeats: inf),
+// 			\dur, Prand(
+// 				[8, 9, 10, 11, 12, 13, 15, 16, 17, 18, 19, 20].collect {
+// 					| waitBeats |
+// 					Pfuncn({
+// 						| ev |
+// 						(ev[\buf].duration * TempoClock.default.tempo).round(2) + waitBeats
+// 					}, inf)
+// 				}),
+// 			\legato, 1,
+// 			\instrument, Pif(Ptime() < duration, \play),
+// 			\hardPan, Pwhite(0.0, 2.0, inf),
+//             \lpfRq, 2,
+// 			\gateRelease, 60,
+//             \ampBus, sonarAmpBus,
+//             \ampOutBus, sonarAmpOutBus
+// 		),
+// 		Pbind(
+// 			\dur, Pseq([duration]),
+// 			\legato, 1,
+// 			\instrument, \ampControl,
+// 			\atk, 0,
+// 			\sus, (duration -  16) / TempoClock.default.tempo,
+// 			\rel, 16 / TempoClock.default.tempo,
+// 			\controlBus, sonarAmpBus
+// 		),
+// 	]);
+// };
 
 // Long sample fades in and out over the entire duration, not just the first and last 4 bars.
 // This is because it takes up a lot of space. This also uses "waver" in the panControl synth
@@ -524,43 +524,43 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 	]);
 };
 
-~rhythmChkChk = {
-	| duration |
-	Ppar([
-		Pbind(
-			\dur, Pseq([duration]),
-			\legato, 1,
-			\instrument, \play,
-			\buf, ~rhythmChkChkBuffer,
-			\loop, 1,
-			\panBus, rhythmChkChkPanBus,
-			\ampBus, rhythmChkChkAmpBus,
-            \ampOutBus, rhythmChkChkAmpOutBus,
-			\loopAtk, 4 / TempoClock.default.tempo,
-			\loopSus, 24 / TempoClock.default.tempo,
-			\loopRel, 4 / TempoClock.default.tempo,
-			\amp, 0.5
-		),
-		Pbind(
-			\dur, Pseq([32], inf),
-			\instrument, Pif(Ptime() < duration, \panControl),
-			\legato, 1,
-			\iphase, 0,
-			\freq, TempoClock.default.tempo / 12,
-			\controlBus, rhythmChkChkPanBus,
-			\direction, Prand([1, -1], inf),
-		),
-		Pbind(
-			\dur, Pseq([duration]),
-			\legato, 1,
-			\instrument, \ampControl,
-			\atk, 16 / TempoClock.default.tempo,
-			\sus, (duration - 48) / TempoClock.default.tempo,
-			\rel, 32 / TempoClock.default.tempo,
-			\controlBus, rhythmChkChkAmpBus
-		)
-	]);
-};
+// ~rhythmChkChk = {
+// 	| duration |
+// 	Ppar([
+// 		Pbind(
+// 			\dur, Pseq([duration]),
+// 			\legato, 1,
+// 			\instrument, \play,
+// 			\buf, ~rhythmChkChkBuffer,
+// 			\loop, 1,
+// 			\panBus, rhythmChkChkPanBus,
+// 			\ampBus, rhythmChkChkAmpBus,
+//             \ampOutBus, rhythmChkChkAmpOutBus,
+// 			\loopAtk, 4 / TempoClock.default.tempo,
+// 			\loopSus, 24 / TempoClock.default.tempo,
+// 			\loopRel, 4 / TempoClock.default.tempo,
+// 			\amp, 0.5
+// 		),
+// 		Pbind(
+// 			\dur, Pseq([32], inf),
+// 			\instrument, Pif(Ptime() < duration, \panControl),
+// 			\legato, 1,
+// 			\iphase, 0,
+// 			\freq, TempoClock.default.tempo / 12,
+// 			\controlBus, rhythmChkChkPanBus,
+// 			\direction, Prand([1, -1], inf),
+// 		),
+// 		Pbind(
+// 			\dur, Pseq([duration]),
+// 			\legato, 1,
+// 			\instrument, \ampControl,
+// 			\atk, 16 / TempoClock.default.tempo,
+// 			\sus, (duration - 48) / TempoClock.default.tempo,
+// 			\rel, 32 / TempoClock.default.tempo,
+// 			\controlBus, rhythmChkChkAmpBus
+// 		)
+// 	]);
+// };
 
 ~finalTouch = {
 	var mosquitoDurationBeats = (~mosquitoBuffer.duration / TempoClock.default.tempo) + 1;

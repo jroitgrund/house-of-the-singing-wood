@@ -310,7 +310,7 @@
 
 ~setBaleineClipOpacity = {
     | iteration |
-        var progress = 2 * (iteration / 20);
+        var progress = 2 * (iteration / 30);
         var opacity = (1 - ((progress - 1).abs));
         ~sendMsg.value("/composition/layers/10/video/opacity", opacity);
 };

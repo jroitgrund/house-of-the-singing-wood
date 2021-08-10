@@ -103,6 +103,7 @@ var bolTibetainAmpOutBus = Bus.control(s, 1);
 
 var rootsPanBus = Bus.control(s, 1);
 var rootsAmpBus = Bus.control(s, 1);
+var rootsAmpBus2 = Bus.control(s, 1);
 var rootsLowPassBus = Bus.control(s, 1);
 var rootsAmpOutBus = Bus.control(s, 1);
 
@@ -271,10 +272,10 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 // This has a global fade in and out to help with transitions
 // since this sound takes up a lot of space.
 ~murmures = {
-	| duration, tribalOverlay = false |
+	| duration, tribalOverlay = false, rarement = false |
 	Ppar([
 		Pbind(
-			\dur, Prand([24, 12], repeats: inf),
+			\dur, Pif(rarement, Prand([24, 32], repeats: inf), Prand([24, 12], repeats: inf)),
 			\legato, 1,
 			\instrument, Pif(Ptime() < duration, \play),
 			\buf, Pxrand(~murmuresBuffers, repeats: inf),
@@ -628,7 +629,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 		Pbind(
 			\buf, Pxrand(~rootsBuffers, repeats: inf),
 			\dur, Prand(
-				[8, 9, 10, 11, 12, 13, 15, 16, 17, 18, 19, 20].collect {
+				[8, 9, 10, 11, 12].collect {
 					| waitBeats |
 					Pfuncn({
 						| ev |
@@ -640,18 +641,20 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\hardPan, Pwhite(0.0, 2.0, inf),
 			\gateRelease, 60,
             \ampBus, rootsAmpBus,
+			\ampBus2, rootsAmpBus2,
             \ampOutBus, rootsAmpOutBus,
+			\amp, 0.3,
 			\pfunc, Pseq([Pfunc(~launchRootsClip), 1, 1, 1], inf),
 			\pfunc2, Pfuncn({
 				| ev |
-				var dur = ev[\dur];
+				var dur = ev[\buf].duration;
 				Pbind(
 					\dur, Pseq([dur]),
 					\legato, 1,
 					\instrument, \ampControl,
-					\atk, 0.5 * dur / TempoClock.default.tempo,
+					\atk, 0.5 * dur,
 					\sus, 0,
-					\rel, 0.5 * dur / TempoClock.default.tempo,
+					\rel, 0.5 * dur,
 					\controlBus, rootsAmpBus
 				).play;
 			}, inf)
@@ -660,12 +663,12 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\dur, Pseq([duration]),
 			\legato, 1,
 			\instrument, \ampControl,
-			\atk, 0,
-			\sus, (duration -  16) / TempoClock.default.tempo,
+			\atk, 16 / TempoClock.default.tempo,
+			\sus, (duration - 32) / TempoClock.default.tempo,
 			\rel, 16 / TempoClock.default.tempo,
-			\controlBus, rootsAmpBus
-		),
-	]);
+			\controlBus, rootsAmpBus2
+		)
+		]);
 };
 
 ~windChimes = {
@@ -990,9 +993,9 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 	var hibouxIn = (3 * fourthPhaseDuration / 6).round(4);
 	Ppar([
 		~singleActionPattern.value(~launchSnakeLoop),
-		~murmures.value(fourthPhaseDuration, tribalOverlay: true),
+		~murmures.value(fourthPhaseDuration, tribalOverlay: true, rarement: true),
 		~feuillesNappe.value(fourthPhaseDuration + 16, tribal8: true),
-		~clochettes.value(fourthPhaseDuration + 32, rarement: true),
+		~clochettes.value(16, rarement: true),
 		Pseq([Event.silent(bolTibetainIn), ~bolTibetain.value(fourthPhaseDuration - bolTibetainIn)]),
 		Pseq([Event.silent(rootsIn), ~roots.value(fourthPhaseDuration - rootsIn)]),
 		Pseq([Event.silent(hibouxIn), ~hiboux.value(fourthPhaseDuration - hibouxIn, part4Clip: true)]),

@@ -40,7 +40,7 @@ TempoClock.default.tempo = 90/60;
 "./osc.scd".load;
 "./biosphere.scd".load;
 "./ritual.scd".load;
-~biospherePart1.value(64, 64).play;
+~biospherePart3.value(32).play;
 )
 
 // Runs everything! Adjust durations and comment stuff out to run individual parts.
@@ -70,7 +70,6 @@ getFullLoop = {
 	);
 
 	var pause = 32;
-
 	var ritualFirstPhaseDuration = minutesToDuration.value(4, 7);
 	var ritualSecondPhaseDuration = minutesToDuration.value(4, 7);
 	var ritualThirdPhaseDuration = minutesToDuration.value(3, 5);

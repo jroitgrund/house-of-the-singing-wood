@@ -366,3 +366,105 @@
     ~sendMsg.value("/composition/layers/8/video/effects/transform/rotationz", 0);
     ~sendMsg.value("/composition/layers/10/video/opacity", 1);
 };
+
+~launchBiospherePart2InitialClips = {
+    ~sendMsg.value("/composition/layers/7/clips/13/connect", 1);
+    ~sendMsg.value("/composition/layers/8/clips/13/connect", 1);
+};
+
+~launchBiospherePart2HalfwayClips = {
+    ~sendMsg.value("/composition/layers/9/clips/15/connect", 1);
+};
+
+~setBiospherePart2MelodyClipOpacity = {
+    | amp |
+    ~sendMsg.value("/composition/layers/7/video/opacity", amp);
+};
+
+~launchBiospherePart2HibouxClip = {
+    | ev |
+    Routine {
+    var hardPan = ev[\hardPan];
+    var layer = rrand(5, 6);
+    ~sendMsg.value("/composition/layers/" ++ layer ++ "/clips/13/connect", 1);
+    ~sendMsg.value("/composition/layers" ++ layer ++ "/video/effects/transform/rotationz", ~panToRotate.value(hardPan));
+    (2 / TempoClock.default.tempo).wait;
+    ~sendMsg.value("/composition/layers/" ++ (layer - 1) ++ "/clips/13/connect", 1);
+    ~sendMsg.value("/composition/layers" ++ (layer - 1) ++ "/video/effects/transform/rotationz", ~panToRotate.value(hardPan));
+    }.play;
+};
+
+~clearBiospherePart2 = {
+    ~sendMsg.value("/composition/layers/3/clear", 1);
+    ~sendMsg.value("/composition/layers/4/clear", 1);
+    ~sendMsg.value("/composition/layers/5/clear", 1);
+    ~sendMsg.value("/composition/layers/6/clear", 1);
+    ~sendMsg.value("/composition/layers/7/clear", 1);
+    ~sendMsg.value("/composition/layers/8/clear", 1);
+    ~sendMsg.value("/composition/layers/9/clear", 1);
+
+    ~sendMsg.value("/composition/layers/3/video/effects/transform/rotationz", 0);
+    ~sendMsg.value("/composition/layers/4/video/effects/transform/rotationz", 0);
+    ~sendMsg.value("/composition/layers/5/video/effects/transform/rotationz", 0);
+    ~sendMsg.value("/composition/layers/6/video/effects/transform/rotationz", 0);
+    ~sendMsg.value("/composition/layers/7/video/opacity", 1);
+};
+
+~launchBiospherePart3InitialClips = {
+    ~sendMsg.value("/composition/layers/8/clips/19/connect", 1);
+};
+
+~launchBiospherePart3BirdClip = {
+    ~sendMsg.value("/composition/layers/9/clips/21/connect", 1);
+};
+
+~launchFrogClip = {
+    | ev |
+    var hardPan = ev[\hardPan];
+    if (hardPan == 0, { ~sendMsg.value("/composition/layers/5/clips/20/connect", 1) }, 1);
+    if (hardPan == 0.5, { ~sendMsg.value("/composition/layers/4/clips/20/connect", 1) }, 1);
+    if (hardPan == 1, { ~sendMsg.value("/composition/layers/7/clips/20/connect", 1) }, 1);
+    if (hardPan == 1.5, { ~sendMsg.value("/composition/layers/6/clips/20/connect", 1) }, 1);
+};
+
+~setBiospherePart3BirdClipOpacity = {
+    | amp |
+    ~sendMsg.value("/composition/layers/9/video/opacity", amp);
+};
+
+~launchUduClip = {
+    | ev |
+    var amp = ev[\amp];
+    var layer = 1 + ev[\iteration];
+    var distance = rrand(0.3, 0.6);
+    var pan = ev[\hardPan];
+    var angle = (pan + (3/4 * pi));
+    var x = cos(angle) * 16384 * distance;
+    var y = sin(angle) * 16384 * distance;
+    ~sendMsg.value("/composition/layers/" ++ layer ++ "/clips/23/connect", 1);
+    ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/positionx", x);
+    ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/positiony", y);
+};
+
+~clearBiospherePart3 = {
+    ~sendMsg.value("/composition/layers/4/clear", 1);
+    ~sendMsg.value("/composition/layers/5/clear", 1);
+    ~sendMsg.value("/composition/layers/6/clear", 1);
+    ~sendMsg.value("/composition/layers/7/clear", 1);
+    ~sendMsg.value("/composition/layers/8/clear", 1);
+    ~sendMsg.value("/composition/layers/9/clear", 1);
+
+    ~sendMsg.value("/composition/layers/1/video/effects/transform/positionx", 0);
+    ~sendMsg.value("/composition/layers/1/video/effects/transform/positiony", 0);
+
+    ~sendMsg.value("/composition/layers/2/video/effects/transform/positionx", 0);
+    ~sendMsg.value("/composition/layers/2/video/effects/transform/positiony", 0);
+
+    ~sendMsg.value("/composition/layers/3/video/effects/transform/positionx", 0);
+    ~sendMsg.value("/composition/layers/3/video/effects/transform/positiony", 0);
+
+    ~sendMsg.value("/composition/layers/4/video/effects/transform/positionx", 0);
+    ~sendMsg.value("/composition/layers/4/video/effects/transform/positiony", 0);
+
+    ~sendMsg.value("/composition/layers/9/video/opacity", 1);
+}

@@ -2,12 +2,11 @@
 var birds1PanBus = Bus.control(s, 1);
 var birds1AmpBus = Bus.control(s, 1);
 var birds1LowPassBus = Bus.control(s, 1);
-var birds1AmpOutBus = Bus.control(s, 1);
+var birdsAmpOutBus = Bus.control(s, 1);
 
 var birds2PanBus = Bus.control(s, 1);
 var birds2AmpBus = Bus.control(s, 1);
 var birds2LowPassBus = Bus.control(s, 1);
-var birds2AmpOutBus = Bus.control(s, 1);
 
 var frogPanBus = Bus.control(s, 1);
 var frogAmpBus = Bus.control(s, 1);
@@ -109,6 +108,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
                     \loop, 1,
                     \panBus, birds2PanBus,
                     \ampBus, birds2AmpBus,
+					\ampOutBus, birdsAmpOutBus,
 					\loopAtk, 4 / TempoClock.default.tempo,
 					\loopSus, 40 / TempoClock.default.tempo,
 					\loopRel, 4 / TempoClock.default.tempo
@@ -141,6 +141,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\loop, 1,
 			\panBus, birds1PanBus,
 			\ampBus, birds1AmpBus,
+			\ampOutBus, birdsAmpOutBus,
 			\loopAtk, 4 / TempoClock.default.tempo,
 			\loopSus, 24 / TempoClock.default.tempo,
 			\loopRel, 4 / TempoClock.default.tempo
@@ -261,7 +262,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 // Could be worth adding something to spice it up as the owl samples are just
 // identical source material pitched up or down (and same as in ritual).
 ~owls = {
-	| duration |
+	| duration, part1 = false, part2 = false |
 	Ppar([
 		Pbind(
 			\buf, Pxrand(~owlsBuffers, repeats: inf),
@@ -281,7 +282,8 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\gateRelease, 60,
             \ampBus, owlsAmpBus,
             \ampOutBus, owlsAmpOutBus,
-			\pfunc, Pfunc(~launchBiospherePart1HibouxClip)
+			\pfunc, Pif(part1, Pfunc(~launchBiospherePart1HibouxClip), 1),
+			\pfunc2, Pif(part2, Pfunc(~launchBiospherePart2HibouxClip), 1),
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -430,6 +432,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\ampBus, frogAmpBus,
             \delayTime, Prand([1.5 / TempoClock.default.tempo, 1 / TempoClock.default.tempo], inf),
             \delayRepeat, Pwhite(0.1, 1.0, inf),
+			\pfunc, Pfuncn(~launchFrogClip, inf)
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -487,7 +490,9 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\hardPan, Pwhite(0.0, 2.0),
 			\amp, Pwhite(0.1, 1, inf),
 			\hpf, Pwrand([0, 500, 1000, 1500, 2000], [0.5, 0.2, 0.1,0.05, 0.05], inf),
-			\ampBus, uduAmpBus
+			\ampBus, uduAmpBus,
+			\iteration, Pseq([0, 1, 2, 3], inf),
+			\pfunc, Pfuncn(~launchUduClip, inf)
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -633,15 +638,23 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 		Pseq([Event.silent(32), ~singleActionPattern.value(~launchBiospherePart1SecondClip)]),
 		Pseq([Event.silent(sireneIn), ~sirens.value(firstPhaseDuration - sireneIn)]),
 		Pseq([Event.silent(gouttesIn), ~gouttes.value(firstPhaseDuration + secondPhaseDuration + 16 - gouttesIn), ~singleActionPattern.value(~launchBiospherePart1Gouttes)]),
-		Pseq([Event.silent(owlsIn), ~owls.value(firstPhaseDuration + secondPhaseDuration + 32 - owlsIn)]),
+		Pseq([Event.silent(owlsIn), ~owls.value(firstPhaseDuration + owlsIn, part1: true)]),
 		Pseq([Event.silent(firstPhaseDuration), ~singleActionPattern.value(~clearBiospherePart1)])
 	]);
 };
 
 ~biospherePart2 = {
 	| secondPhaseDuration |
+	var halfwaymark = (secondPhaseDuration / 2).round(4);
 	Ppar([
+		~singleActionPattern.value(~launchBiospherePart2InitialClips),
+		~pollActionPattern.value({
+			melodieAmpBus.get(~setBiospherePart2MelodyClipOpacity)
+		}, secondPhaseDuration),
+		~owls.value(secondPhaseDuration + 32, part2: true),
 		Pseq([Event.silent(0), ~melodie.value(secondPhaseDuration + 16)]),
+		Pseq([Event.silent(0), ~singleActionPattern.value(~launchBiospherePart2HalfwayClips)]),
+		Pseq([Event.silent(secondPhaseDuration), ~singleActionPattern.value(~clearBiospherePart2)])
 	]);
 };
 
@@ -653,11 +666,16 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 	var uduIn = (4 * thirdPhaseDuration / 8).round(4);
 	var mosquitoDurationBeats = (~mosquitoBuffer.duration / TempoClock.default.tempo) + 1;
 	Ppar([
+		~singleActionPattern.value(~launchBiospherePart3InitialClips),
 		Pseq([Event.silent(0), ~water.value(thirdPhaseDuration)]),
 		Pseq([Event.silent(birdsIn), ~birds.value(thirdPhaseDuration - birdsIn)]),
+		Pseq([Event.silent(birdsIn), ~singleActionPattern.value(~launchBiospherePart3BirdClip)]),
+		Pseq([Event.silent(birdsIn), ~pollActionPattern.value({
+			birdsAmpOutBus.get(~setBiospherePart3BirdClipOpacity)
+		}, thirdPhaseDuration - birdsIn)]),
 		Pseq([Event.silent(frogsIn), ~frog.value(thirdPhaseDuration - frogsIn)]),
-		// Pseq([Event.silent(rhythmChkChckIn), ~rhythmChkChk.value(thirdPhaseDuration - rhythmChkChckIn)]),
 		Pseq([Event.silent(uduIn), ~udu.value(thirdPhaseDuration - uduIn)]),
+		Pseq([Event.silent(thirdPhaseDuration), ~singleActionPattern.value(~clearBiospherePart3)]),
 		Pseq([Event.silent(thirdPhaseDuration), ~finalTouch.value])
 	]);
 };

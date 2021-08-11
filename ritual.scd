@@ -242,9 +242,9 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\buf, ~feuillesNappeBuffer,
 			\loop, 1,
 			\panBus, feuillesNappePanBus,
-			\loopAtk, 16 / TempoClock.default.tempo,
+			\loopAtk, 8 / TempoClock.default.tempo,
 			\loopSus, 0,
-			\loopRel, 16 / TempoClock.default.tempo,
+			\loopRel, 8 / TempoClock.default.tempo,
 			\ampOutBus, feuillesNappeAmpOutBus
 		),
 		Pbind(
@@ -454,9 +454,9 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 				\dur, Pseq([duration]),
 				\legato, 1,
 				\instrument, \ampControl,
-				\atk, 32 / TempoClock.default.tempo,
-				\sus, (duration - 64) / TempoClock.default.tempo,
-				\rel, 32 / TempoClock.default.tempo,
+				\atk, 64 / TempoClock.default.tempo,
+				\sus, (duration - 128) / TempoClock.default.tempo,
+				\rel, 64 / TempoClock.default.tempo,
 				\controlBus, bassVoiceShamanAmpBus
 			)]),
 			Pif(withFifth, Ppar([
@@ -603,13 +603,13 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\ampOutBus, batonPluieAmpOutBus
 		),
 		Pbind(
-			\dur, Pseq([64], inf),
+			\dur, Pseq([32], inf),
 			\instrument, Pif(Ptime() < duration, \panControl),
 			\legato, 1,
-			\iphase, Pwhite(0.0, 2.0, inf),
-			\freq, TempoClock.default.tempo / 24,
+			\iphase, 0,
+			\freq, TempoClock.default.tempo / 32,
 			\controlBus, batonPluiePanBus,
-			\direction, Prand([1, -1], inf),
+			\direction, Pseq([1, -1], inf),
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -645,7 +645,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\ampBus2, rootsAmpBus2,
             \ampOutBus, rootsAmpOutBus,
 			\amp, 0.3,
-			\pfunc, Pseq([Pfunc(~launchRootsClip), 1, 1, 1], inf),
+			\pfunc, Pfuncn(~launchRootsClip, inf),
 			\pfunc2, Pfuncn({
 				| ev |
 				var dur = ev[\buf].duration;
@@ -989,6 +989,9 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 		Pseq([Event.silent(batonPluieIn), ~pollActionPattern.value({
 			batonPluieAmpOutBus.get(~setFougeresRondesOpacity)
 		}, thirdPhaseDuration - batonPluieIn)]),
+		Pseq([Event.silent(batonPluieIn), ~pollActionPattern.value({
+			batonPluiePanBus.get(~setFougeresRondesRotation)
+		}, thirdPhaseDuration - batonPluieIn)]),
 		Pseq([Event.silent(thirdPhaseDuration), ~singleActionPattern.value(~clearLayers)])
 	]);
 };
@@ -1019,12 +1022,12 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 		~singleActionPattern.value(~launchRitualPart5InitialClips),
 		~pollActionPattern.value(~setRitualPart5ClipOpacities.value, 32),
 		~bassVoiceShaman.value(fifthPhaseDuration, withFifth: false),
-		Pseq([Event.silent(32), ~drumRack.value(fifthPhaseDuration - 32)]),
-		Pseq([Event.silent(32), ~singleActionPattern.value(~resetRitualPart5ClipOpacitiesAndClearLayers)]), 
-		Pseq([Event.silent(32), ~singleActionPattern.value(~launchRitualPart5KickClips)]),
-		Pseq([Event.silent(32), ~pollActionPattern.value({
+		Pseq([Event.silent(64), ~drumRack.value(fifthPhaseDuration - 64)]),
+		Pseq([Event.silent(64), ~singleActionPattern.value(~resetRitualPart5ClipOpacitiesAndClearLayers)]), 
+		Pseq([Event.silent(64), ~singleActionPattern.value(~launchRitualPart5KickClips)]),
+		Pseq([Event.silent(64), ~pollActionPattern.value({
 			bassVoiceShamanPanBus.get(~setBassVoicePart5Rotation)
-		}, fifthPhaseDuration - 32)]),
+		}, fifthPhaseDuration - 64)]),
 		Pseq([Event.silent(grillonsIn), ~cricket2.value(fifthPhaseDuration - grillonsIn)]),
 		Pseq([Event.silent(grillonsIn), ~singleActionPattern.value(~launchRitualPart5GrillonClip)]),
 		Pseq([Event.silent(stabsIn), ~stabs.value(fifthPhaseDuration - stabsIn)]),

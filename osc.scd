@@ -198,6 +198,11 @@
     ~sendMsg.value("/composition/layers/10/video/opacity", 0.5 + (amp * 200));
 };
 
+~setFougeresRondesRotation = {
+    | pan |
+    ~sendMsg.value("/composition/layers/10/video/effects/transform/rotationz", ~panToRotate.value(pan));
+};
+
 ~resetFougeresRondesLayerOpacity = {
     | amp |
     ~sendMsg.value("/composition/layers/10/video/opacity", 1);
@@ -209,7 +214,7 @@
 
 ~setTribalOverlayOpacity = {
     | amp |
-    ~sendMsg.value("/composition/layers/10/video/opacity", amp * 2000);
+    ~sendMsg.value("/composition/layers/10/video/opacity", 0.2 + (amp * 300));
 };
 
 ~clearTribalOverlayLayerOpacity = {
@@ -226,16 +231,17 @@
 
 ~launchHibouxPart4Clip = {
     | ev |
-    ~sendMsg.value("/composition/layers/1/clips/1/connect", 1);
-    ~sendMsg.value("/composition/layers/1/clips/1/video/effects/transform/rotationz", ~panToRotate.value(ev[\hardPan]));
+    ~sendMsg.value("/composition/layers/7/clips/20/connect", 1);
+    ~sendMsg.value("/composition/layers/7/clips/20/video/effects/transform/rotationz", ~panToRotate.value(ev[\hardPan]));
 };
 
 ~resetHibouxPart4ClipRotation = {
-    ~sendMsg.value("/composition/layers/1/clips/1/video/effects/transform/rotationz", 0.5);
+    ~sendMsg.value("/composition/layers/7/clips/20/video/effects/transform/rotationz", 0.5);
 };
 
 ~launchRootsClip = {
-    ~sendMsg.value("/composition/layers/9/clips/22/connect", 1);
+    var clipOffset = rrand(0, 2);
+    ~sendMsg.value("/composition/layers/9/clips/" ++ (20 + clipOffset) ++ "/connect", 1);
 };
 
 ~launchFeuillesNappeTribal8 = {
@@ -251,7 +257,7 @@
 
 ~setFeuillesNappeTribal8Opacity = {
     | amp |
-    ~sendMsg.value("/composition/layers/11/video/opacity", amp * 1000);
+    ~sendMsg.value("/composition/layers/11/video/opacity", 0.5 + (amp * 200));
 };
 
 ~resetFeuillesNapeTribal8LayerOpacity = {
@@ -266,7 +272,7 @@
 ~setRitualPart5ClipOpacities = {
     var iteration = 0;
     {
-        var progress = iteration / (32 * 10);
+        var progress = iteration / (64 * 10);
         iteration = iteration + 1;
         ~sendMsg.value("/composition/layers/8/video/opacity", 1 - progress);
         ~sendMsg.value("/composition/layers/9/video/opacity", progress);

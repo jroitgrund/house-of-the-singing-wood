@@ -168,12 +168,21 @@
     ~sendMsg.value("/composition/layers/9/clips/9/connect", 1);
 };
 
+~launchRitualPart3InitialClip = {
+    ~sendMsg.value("/composition/layers/8/clips/14/connect", 1);
+};
+
 ~launchRitualPart3KickClip = {
     ~sendMsg.value("/composition/layers/9/clips/15/connect", 1);
 };
 
-~launchBatonPluiePart3Clip = {
-    ~sendMsg.value("/composition/layers/8/clips/15/connect", 1);
+~launchMurmuresPart3Clip = {
+    ~sendMsg.value("/composition/layers/11/clips/15/connect", 1);
+};
+
+~setMurmuresPart3ClipOpacity = {
+    | amp |
+    ~sendMsg.value("/composition/layers/11/video/opacity", 0.5 + (amp * 100));
 };
 
 ~launchFougeresRondes = {
@@ -186,7 +195,7 @@
 
 ~setFougeresRondesOpacity = {
     | amp |
-    ~sendMsg.value("/composition/layers/10/video/opacity", amp * 1500);
+    ~sendMsg.value("/composition/layers/10/video/opacity", 0.5 + (amp * 200));
 };
 
 ~resetFougeresRondesLayerOpacity = {

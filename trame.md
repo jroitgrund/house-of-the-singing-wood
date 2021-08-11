@@ -8,6 +8,9 @@ TODO RITUAL PART 1:
 OPACITE GRILLONS COIN NE MARCHE PAS TROP
 CHECKER RHYTHE BASS
 
+TODO RITUAL PART 2:
+
+
 BIOSPHERE PART 1
 /composition/decks/2/select 1 biosphere
 lancer layer 9 et 10 clip 1. layer 10 apparait seulement pendant les bruits de baleine.

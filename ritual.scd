@@ -599,7 +599,8 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\loopSus, 48,
 			\loopRel, 8 / TempoClock.default.tempo,
 			\amp, 0.05,
-			\ampBus, batonPluieAmpBus
+			\ampBus, batonPluieAmpBus,
+			\ampOutBus, batonPluieAmpOutBus
 		),
 		Pbind(
 			\dur, Pseq([64], inf),
@@ -947,8 +948,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			Pseq([Event.silent(finalClipIn), ~singleActionPattern.value(~launchClipForLastThirdOfRitualpart1)]),
 
 			// clear layers
-			Pseq([Event.silent(firstPhaseDuration), ~singleActionPattern.value(~clearLayer.value(6)), ~singleActionPattern.value(~clearLayer.value(7)),
-			~singleActionPattern.value(~clearLayer.value(8))]),
+			Pseq([Event.silent(firstPhaseDuration), ~singleActionPattern.value(~clearLayers.value([6, 7, 8, 9, 10]))]),
 			Pseq([Event.silent(firstPhaseDuration + 32), ~singleActionPattern.value(~clearGrillonsClips), ~singleActionPattern.value(~resetGrillonsLayersOpacity)])
 		])
 	]);
@@ -968,7 +968,8 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 				~hiboux.value(secondPhaseDuration - hibouxIn, tribalClip: true),
 			])
 		]),
-		Pseq([Event.silent(secondPhaseDuration), ~singleActionPattern.value(~clearLayer.value(8))])
+		Pseq([Event.silent(secondPhaseDuration - 16), ~singleActionPattern.value(~launchRitualPart3InitialClip)]),
+		Pseq([Event.silent(secondPhaseDuration), ~singleActionPattern.value(~clearLayers)])
 	]);
 };
 
@@ -977,11 +978,18 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 	var batonPluieIn = (1 * thirdPhaseDuration / 6).round(4);
 	Ppar([
 		~kick.value(thirdPhaseDuration + 1, fadeOut: false),
-		~murmuresLoops.value(thirdPhaseDuration, fougeresRondes: true),
+		~murmuresLoops.value(thirdPhaseDuration),
+		~singleActionPattern.value(~launchMurmuresPart3Clip),
+		~pollActionPattern.value({
+			murmuresLoopsAmpOutBus.get(~setMurmuresPart3ClipOpacity)
+		}, thirdPhaseDuration),
 		~singleActionPattern.value(~launchRitualPart3KickClip),
 		Pseq([Event.silent(batonPluieIn), ~batonPluie.value(thirdPhaseDuration - batonPluieIn)]),
-		Pseq([Event.silent(batonPluieIn), ~singleActionPattern.value(~launchBatonPluiePart3Clip)]),
-		Pseq([Event.silent(thirdPhaseDuration), ~singleActionPattern.value(~clearLayer.value(8)), ~singleActionPattern.value(~clearLayer.value(9)), ~singleActionPattern.value(~clearLayer.value(10))])
+		Pseq([Event.silent(batonPluieIn), ~singleActionPattern.value(~launchFougeresRondes)]),
+		Pseq([Event.silent(batonPluieIn), ~pollActionPattern.value({
+			batonPluieAmpOutBus.get(~setFougeresRondesOpacity)
+		}, thirdPhaseDuration - batonPluieIn)]),
+		Pseq([Event.silent(thirdPhaseDuration), ~singleActionPattern.value(~clearLayers)])
 	]);
 };
 
@@ -998,7 +1006,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 		Pseq([Event.silent(bolTibetainIn), ~bolTibetain.value(fourthPhaseDuration + 8 - bolTibetainIn)]),
 		Pseq([Event.silent(rootsIn), ~roots.value(fourthPhaseDuration - rootsIn)]),
 		Pseq([Event.silent(hibouxIn), ~hiboux.value(fourthPhaseDuration - hibouxIn, part4Clip: true)]),
-		Pseq([Event.silent(fourthPhaseDuration), ~singleActionPattern.value(~clearLayer.value(8))])
+		Pseq([Event.silent(fourthPhaseDuration), ~singleActionPattern.value(~clearLayers)])
 	]);
 };
 
@@ -1021,7 +1029,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 		Pseq([Event.silent(grillonsIn), ~singleActionPattern.value(~launchRitualPart5GrillonClip)]),
 		Pseq([Event.silent(stabsIn), ~stabs.value(fifthPhaseDuration - stabsIn)]),
 		Pseq([Event.silent(fifthPhaseDuration), ~singleActionPattern.value(~resetBassVoicePart5Rotation)]),
-		Pseq([Event.silent(fifthPhaseDuration), ~singleActionPattern.value(~clearAllClips)])
+		Pseq([Event.silent(fifthPhaseDuration), ~singleActionPattern.value(~clearLayers)])
 	]);
 };
 

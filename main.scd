@@ -40,10 +40,10 @@ TempoClock.default.tempo = 90/60;
 "./osc.scd".load;
 "./biosphere.scd".load;
 "./ritual.scd".load;
-Pseq[(
+Pseq([
 	~singleActionPattern.value(~clearAllLayers),
 	Rest(1),
-	~rituelPart1.value(128)
+	~ritualPart2.value(64)
 ]).play;
 )
 

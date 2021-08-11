@@ -516,8 +516,8 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 					Pfunc(~launchHibouxRandomClip2),
 					Pfunc(~launchHibouxRandomClip3),
 					Pfunc(~launchHibouxRandomClip4)]),
-				1],
-				[0.01, 0.99]), 1),
+				Pfunc({1})],
+				[1, 7].normalizeSum), 1),
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -937,7 +937,6 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 	Pseq([
 		~singleActionPattern.value(~selectRitual),
 		Ppar([
-			~singleActionPattern.value(~launchRitualInitialParticules),
 			Pseq([Event.silent(0), ~grillons.value(firstPhaseDuration + 32, grillonsClips: true)]),
 			Pseq([Event.silent(bassIn), ~bass.value(firstPhaseDuration - bassIn, rarement: true, launchBassOndeRouge: true)]),
 			Pseq([Event.silent(clochettesIn), Ppar([

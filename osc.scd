@@ -38,10 +38,6 @@
     ~sendMsg.value("/composition/decks/select/1", 1);
 };
 
-~launchRitualInitialParticules = {
-    ~sendMsg.value("/composition/layers/12/clips/1/connect", 1);
-};
-
 ~launchClipWithClochettesInRitualPart1 = {
     ~sendMsg.value("/composition/layers/8/clips/1/connect", 1);
 };
@@ -105,6 +101,7 @@
 
 ~launchMurmuresRitualPart2Clip = {
     ~sendMsg.value("/composition/layers/8/clips/2/connect", 1);
+    ~sendMsg.value("/composition/layers/12/clips/6/connect", 1);
 };
 
 ~setParticulesOpacity = {
@@ -149,11 +146,10 @@
 ~launchHibouxTribalClip = {
     | ev |
     var hardPan = ev[\hardPan];
-    hardPan.postln;
-    if (hardPan == 0, { ~sendMsg.value("/composition/layers/10/clips/7/connect", 1) }, 1);
-    if (hardPan == 0.5, { ~sendMsg.value("/composition/layers/7/clips/7/connect", 1) }, 1);
-    if (hardPan == 1, { ~sendMsg.value("/composition/layers/6/clips/7/connect", 1) }, 1);
-    if (hardPan == 1.5, { ~sendMsg.value("/composition/layers/5/clips/7/connect", 1) }, 1);
+    if (hardPan == 0, { ~sendMsg.value("/composition/layers/10/clips/9/connect", 1) }, 1);
+    if (hardPan == 0.5, { ~sendMsg.value("/composition/layers/7/clips/9/connect", 1) }, 1);
+    if (hardPan == 1, { ~sendMsg.value("/composition/layers/6/clips/9/connect", 1) }, 1);
+    if (hardPan == 1.5, { ~sendMsg.value("/composition/layers/5/clips/9/connect", 1) }, 1);
 };
 
 ~launchHibouxRandomClip1 = {
@@ -406,7 +402,7 @@
     Routine {
         var amp = ev[\amp];
         var layer = (1 + ev[\iteration]);
-        var distance = rrand(0.75, 0.9);
+        var distance = rrand(0.5, 0.7);
         var pan = ev[\hardPan];
         var angle = ((pan * pi) + (3/4 * pi));
         var x = 0.5 + (cos(angle) * 0.5 * (600 / 16384) * distance);
@@ -416,8 +412,8 @@
         ~sendMsg.value("/composition/layers/" ++ layer ++ "/clips/23/connect", 1);
         ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/positionx", x);
         ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/positiony", y);
-        while ({time < (1/2)}, {
-            ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/opacity", 0.6 + time);
+        while ({time < 1}, {
+            ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/opacity", time);
             ((1/10) / TempoClock.default.tempo).wait;
             time = time + (1/10);
         });

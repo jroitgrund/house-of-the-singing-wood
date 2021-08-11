@@ -517,7 +517,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 					Pfunc(~launchHibouxRandomClip3),
 					Pfunc(~launchHibouxRandomClip4)]),
 				1],
-				[0.25, 0.75]), 1),
+				[0.01, 0.99]), 1),
 		),
 		Pbind(
 			\dur, Pseq([duration]),

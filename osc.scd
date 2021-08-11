@@ -63,22 +63,22 @@
 
 ~setGrillonsTopLeftOpacity = {
     | amp |
-    ~sendMsg.value("/composition/layers/3/video/opacity", (amp * 1000));
+    ~sendMsg.value("/composition/layers/3/video/opacity", 0.5 + (amp * 100));
 };
 
 ~setGrillonsTopRightOpacity = {
     | amp |
-    ~sendMsg.value("/composition/layers/4/video/opaciity", amp);
+    ~sendMsg.value("/composition/layers/4/video/opacity", 0.5 + (amp * 100));
 };
 
 ~setGrillonsBottomLeftOpacity = {
     | amp |
-    ~sendMsg.value("/composition/layers/5/video/opaciity", amp);
+    ~sendMsg.value("/composition/layers/5/video/opacity", 0.5 + (amp * 100));
 };
 
 ~setGrillonsBottomRightOpacity = {
     | amp |
-    ~sendMsg.value("/composition/layers/11/video/opaciity", amp);
+    ~sendMsg.value("/composition/layers/11/video/opacity", 0.5 + (amp * 100));
 };
 
 ~clearGrillonsClips = {
@@ -98,7 +98,7 @@
 ~launchBassOndeRouge = {
     Routine {
         ~sendMsg.value("/composition/layers/9/clips/1/connect", 1);
-        ((3/16) / TempoClock.default.tempo).wait;
+        ((3/2) / TempoClock.default.tempo).wait;
         ~sendMsg.value("/composition/layers/10/clips/1/connect", 1);
     }.play;
 };
@@ -109,7 +109,7 @@
 
 ~setParticulesOpacity = {
     | amp |
-    ~sendMsg.value("/composition/layers/12/video/opacity", amp);
+    ~sendMsg.value("/composition/layers/12/video/opacity", 0.5 + (amp * 50));
 };
 
 ~clearMurmuresParticles = {
@@ -126,7 +126,7 @@
 
 ~setTotemLayerOpacity = {
     | amp |
-    ~sendMsg.value("/composition/layers/8/video/opacity", amp);
+    ~sendMsg.value("/composition/layers/8/video/opacity", 0.5 + (0.5 * amp));
 };
 
 ~clearTotemClip = {
@@ -149,10 +149,11 @@
 ~launchHibouxTribalClip = {
     | ev |
     var hardPan = ev[\hardPan];
-    if (hardPan == 0, { ~sendMsg.value("/composition/layers/3/clips/7/connect", 1) }, 1);
-    if (hardPan == 0.5, { ~sendMsg.value("/composition/layers/4/clips/7/connect", 1) }, 1);
-    if (hardPan == 1, { ~sendMsg.value("/composition/layers/5/clips/7/connect", 1) }, 1);
-    if (hardPan == 1.5, { ~sendMsg.value("/composition/layers/6/clips/7/connect", 1) }, 1);
+    hardPan.postln;
+    if (hardPan == 0, { ~sendMsg.value("/composition/layers/10/clips/7/connect", 1) }, 1);
+    if (hardPan == 0.5, { ~sendMsg.value("/composition/layers/7/clips/7/connect", 1) }, 1);
+    if (hardPan == 1, { ~sendMsg.value("/composition/layers/6/clips/7/connect", 1) }, 1);
+    if (hardPan == 1.5, { ~sendMsg.value("/composition/layers/5/clips/7/connect", 1) }, 1);
 };
 
 ~launchHibouxRandomClip1 = {
@@ -347,19 +348,9 @@
     ~sendMsg.value("/composition/layers/9/clips/5/connect", 1);
 };
 
-~clearBiospherePart1 = {
-    ~sendMsg.value("/composition/layers/5/clear", 1);
-    ~sendMsg.value("/composition/layers/6/clear", 1);
-    ~sendMsg.value("/composition/layers/7/clear", 1);
-    ~sendMsg.value("/composition/layers/8/clear", 1);
-    ~sendMsg.value("/composition/layers/9/clear", 1);
-    ~sendMsg.value("/composition/layers/10/clear", 1);
-
-    ~sendMsg.value("/composition/layers/10/video/opacity", 1);
-
-    ~sendMsg.value("/composition/layers/5/video/effects/transform/rotationz", 0.5);
-    ~sendMsg.value("/composition/layers/6/video/effects/transform/rotationz", 0.5);
-    ~sendMsg.value("/composition/layers/8/video/effects/transform/rotationz", 0.5);
+~setGouttesClipOpacity = {
+    | amp |
+    ~sendMsg.value("/composition/layers/9/video/opacity", 0.5 + (amp * 50));
 };
 
 ~launchBiospherePart2InitialClips = {
@@ -387,22 +378,6 @@
         ~sendMsg.value("/composition/layers/" ++ (layer + 1) ++ "/clips/13/connect", 1);
         ~sendMsg.value("/composition/layers" ++ (layer + 1) ++ "/video/effects/transform/rotationz", ~panToRotate.value(hardPan));
     }.play;
-};
-
-~clearBiospherePart2 = {
-    ~sendMsg.value("/composition/layers/3/clear", 1);
-    ~sendMsg.value("/composition/layers/4/clear", 1);
-    ~sendMsg.value("/composition/layers/5/clear", 1);
-    ~sendMsg.value("/composition/layers/6/clear", 1);
-    ~sendMsg.value("/composition/layers/7/clear", 1);
-    ~sendMsg.value("/composition/layers/8/clear", 1);
-    ~sendMsg.value("/composition/layers/9/clear", 1);
-
-    ~sendMsg.value("/composition/layers/3/video/effects/transform/rotationz", 0.5);
-    ~sendMsg.value("/composition/layers/4/video/effects/transform/rotationz", 0.5);
-    ~sendMsg.value("/composition/layers/5/video/effects/transform/rotationz", 0.5);
-    ~sendMsg.value("/composition/layers/6/video/effects/transform/rotationz", 0.5);
-    ~sendMsg.value("/composition/layers/7/video/opacity", 1);
 };
 
 ~launchBiospherePart3InitialClips = {
@@ -436,44 +411,31 @@
         var angle = ((pan * pi) + (3/4 * pi));
         var x = 0.5 + (cos(angle) * 0.5 * (600 / 16384) * distance);
         var y = 0.5 + (sin(angle) * 0.5 * (600 / 16384) * distance);
+        var time = 0;
         if (layer == 4, {layer = 10}, 1);
         ~sendMsg.value("/composition/layers/" ++ layer ++ "/clips/23/connect", 1);
         ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/positionx", x);
         ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/positiony", y);
-        ((1/2) / TempoClock.default.tempo).wait;
+        while ({time < (1/2)}, {
+            ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/opacity", 0.6 + time);
+            ((1/10) / TempoClock.default.tempo).wait;
+            time = time + (1/10);
+        });
         ~sendMsg.value("/composition/layers/" ++ layer ++ "/clear", 1);
     }.play;
 };
 
-~clearBiospherePart3 = {
-    ~sendMsg.value("/composition/layers/1/clear", 1);
-    ~sendMsg.value("/composition/layers/2/clear", 1);
-    ~sendMsg.value("/composition/layers/3/clear", 1);
-    ~sendMsg.value("/composition/layers/4/clear", 1);
-    ~sendMsg.value("/composition/layers/5/clear", 1);
-    ~sendMsg.value("/composition/layers/6/clear", 1);
-    ~sendMsg.value("/composition/layers/7/clear", 1);
-    ~sendMsg.value("/composition/layers/8/clear", 1);
-    ~sendMsg.value("/composition/layers/9/clear", 1);
-    ~sendMsg.value("/composition/layers/10/clear", 1);
+~clearAllLayers = {
+    ~clearLayers.value([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
+};
 
-    ~sendMsg.value("/composition/layers/1/video/effects/transform/positionx", 0.5);
-    ~sendMsg.value("/composition/layers/1/video/effects/transform/positiony", 0.5);
-
-    ~sendMsg.value("/composition/layers/2/video/effects/transform/positionx", 0.5);
-    ~sendMsg.value("/composition/layers/2/video/effects/transform/positiony", 0.5);
-
-    ~sendMsg.value("/composition/layers/3/video/effects/transform/positionx", 0.5);
-    ~sendMsg.value("/composition/layers/3/video/effects/transform/positiony", 0.5);
-
-    ~sendMsg.value("/composition/layers/10/video/effects/transform/positionx", 0.5);
-    ~sendMsg.value("/composition/layers/10/video/effects/transform/positiony", 0.5);
-
-    ~sendMsg.value("/composition/layers/9/video/opacity", 1);
-
-    ~sendMsg.value("/composition/layers/4/video/effects/transform/rotationz", 0.5);
-    ~sendMsg.value("/composition/layers/5/video/effects/transform/rotationz", 0.5);
-    ~sendMsg.value("/composition/layers/6/video/effects/transform/rotationz", 0.5);
-    ~sendMsg.value("/composition/layers/7/video/effects/transform/rotationz", 0.5);
-    ~sendMsg.value("/composition/layers/8/video/effects/transform/rotationz", 0.5);
-}
+~clearLayers = {
+    | layers |
+    layers.do { | layer |
+        ~sendMsg.value("/composition/layers/" ++ layer ++ "/clear", 1);
+        ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/positionx", 0.5);
+        ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/positiony", 0.5);
+        ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/rotationz", 0.5);
+        ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/opacity", 1);
+    };
+};

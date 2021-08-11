@@ -186,6 +186,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\loop, 1,
 			\panBus, gouttesPanBus,
 			\ampBus, gouttesAmpBus,
+			\ampOutBus, gouttesAmpOutBus,
 			\loopAtk, 16 / TempoClock.default.tempo,
 			\loopSus, 0,
 			\loopRel, 16 / TempoClock.default.tempo
@@ -661,9 +662,12 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 		Pseq([Event.silent(laterClip), ~singleActionPattern.value(~launchBiospherePart1LaterClip)]),
 		Pseq([Event.silent(sireneIn), ~sirens.value(firstPhaseDuration - sireneIn)]),
 		Pseq([Event.silent(gouttesIn), ~gouttes.value(firstPhaseDuration + secondPhaseDuration + 16 - gouttesIn)]),
+		Pseq([Event.silent(gouttesIn), ~pollActionPattern.value({
+			gouttesAmpOutBus.get(~setGouttesClipOpacity)
+		}, firstPhaseDuration - gouttesIn)]),
 		Pseq([Event.silent(gouttesIn), ~singleActionPattern.value(~launchBiospherePart1Gouttes)]),
 		Pseq([Event.silent(owlsIn), ~owls.value(firstPhaseDuration - owlsIn, part1: true)]),
-		Pseq([Event.silent(firstPhaseDuration), ~singleActionPattern.value(~clearBiospherePart1)])
+		Pseq([Event.silent(firstPhaseDuration), ~singleActionPattern.value(~clearAllLayers)])
 	]);
 };
 
@@ -678,7 +682,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 		~owls.value(secondPhaseDuration + 32, part2: true),
 		Pseq([Event.silent(0), ~melodie.value(secondPhaseDuration + 16)]),
 		Pseq([Event.silent(halfwaymark), ~singleActionPattern.value(~launchBiospherePart2HalfwayClips)]),
-		Pseq([Event.silent(secondPhaseDuration), ~singleActionPattern.value(~clearBiospherePart2)])
+		Pseq([Event.silent(secondPhaseDuration), ~singleActionPattern.value(~clearAllLayers)])
 	]);
 };
 
@@ -699,7 +703,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 		}, thirdPhaseDuration - birdsIn)]),
 		Pseq([Event.silent(frogsIn), ~frog.value(thirdPhaseDuration - frogsIn)]),
 		Pseq([Event.silent(uduIn), ~udu.value(thirdPhaseDuration - uduIn)]),
-		Pseq([Event.silent(thirdPhaseDuration), ~singleActionPattern.value(~clearBiospherePart3)]),
+		Pseq([Event.silent(thirdPhaseDuration), ~singleActionPattern.value(~clearAllLayers)]),
 		Pseq([Event.silent(thirdPhaseDuration + 8), ~finalTouch.value])
 	]);
 };

@@ -27,13 +27,6 @@
     (0.5 + ((pan - panAdjust) / 2)) % 1;
 };
 
-~clearLayer = {
-    | i |
-    {
-        ~sendMsg.value("/composition/layers/" ++ i ++ "/clear", 1);
-    }
-};
-
 ~selectRitual = {
     ~sendMsg.value("/composition/decks/1/select", 1);
 };
@@ -377,6 +370,7 @@
 };
 
 ~launchBiospherePart2InitialClips = {
+    "biosphere-part-2-initial".postln;
     ~sendMsg.value("/composition/layers/7/clips/13/connect", 1);
     ~sendMsg.value("/composition/layers/8/clips/13/connect", 1);
 };
@@ -472,6 +466,7 @@
 
 ~clearLayers = {
     | layers |
+    "clearing layers".postln;
     layers.do { | layer |
         ~sendMsg.value("/composition/layers/" ++ layer ++ "/clear", 1);
         ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/positionx", 0.5);

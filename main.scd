@@ -43,7 +43,7 @@ TempoClock.default.tempo = 90/60;
 Pseq([
 	~singleActionPattern.value(~clearAllLayers),
 	Rest(1),
-	~ritualPart4.value(128)
+	~ritualPart5.value(256)
 ]).play;
 )
 

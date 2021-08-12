@@ -266,24 +266,11 @@
 
 ~launchRitualPart5InitialClips = {
     ~sendMsg.value("/composition/layers/8/clips/23/connect", 1);
-    ~sendMsg.value("/composition/layers/9/clips/24/connect", 1);
 };
 
-~setRitualPart5ClipOpacities = {
-    var iteration = 0;
-    {
-        var progress = iteration / (64 * 10);
-        iteration = iteration + 1;
-        ~sendMsg.value("/composition/layers/8/video/opacity", 1 - progress);
-        ~sendMsg.value("/composition/layers/9/video/opacity", progress);
-    }
-};
-
-~resetRitualPart5ClipOpacitiesAndClearLayers = {
-    ~sendMsg.value("/composition/layers/8/video/opacity", 1);
-    ~sendMsg.value("/composition/layers/9/video/opacity", 1);
+~launchRitualPart5SecondClip = {
     ~sendMsg.value("/composition/layers/8/clear", 1);
-    ~sendMsg.value("/composition/layers/9/clear", 1);
+    ~sendMsg.value("/composition/layers/9/clips/24/connect", 1);
 };
 
 ~launchRitualPart5KickClips = {
@@ -291,17 +278,22 @@
     ~sendMsg.value("/composition/layers/10/clips/25/connect", 1);
 };
 
-~launchRitualPart5GrillonClip = {
+~launchRitualPart5StabsClip = {
     ~sendMsg.value("/composition/layers/8/clips/25/connect", 1);
+};
+
+~setRitualPart5Layer8Opacity = {
+    | amp |
+    ~sendMsg.value("/composition/layers/8/video/opacity", 0.5 + (amp * 400));
 };
 
 ~setBassVoicePart5Rotation = {
     | pan |
-    ~sendMsg.value("/composition/layers/8/video/effects/transform/rotationz", ~panToRotate.value(pan));
+    ~sendMsg.value("/composition/layers/9/video/effects/transform/rotationz", ~panToRotate.value(pan));
 };
 
 ~resetBassVoicePart5Rotation = {
-    ~sendMsg.value("/composition/layers/8/video/effects/transform/rotationz", 0.5);
+    ~sendMsg.value("/composition/layers/9/video/effects/transform/rotationz", 0.5);
 };
 
 ~clearAllClips = {

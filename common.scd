@@ -98,9 +98,9 @@ SynthDef.new(\ampControl, {
 // waver is used to add a glitchy back and forth LFO to the pan, this is used on the melody
 // in part 2 of biosphere.
 SynthDef.new(\panControl, {
-	| controlBus, freq, iphase, direction = 1, gate = 1, waver = 0 |
+	| controlBus, freq, iphase, direction = 1, gate = 1, waver = 0, directionChangeRate = -1 |
 	var linen = Linen.kr(gate, doneAction: 2);
-	Out.kr(controlBus, LFSaw.kr(freq, iphase, direction) + SinOsc.kr(freq * 20, mul: waver));
+	Out.kr(controlBus, Select.ar(directionChangeRate >= 0, [LFSaw.kr(freq, iphase, direction), LFSaw.kr(freq, iphase, SinOsc.kr(directionChangeRate)]) + SinOsc.kr(freq * 20, mul: waver));
 }).add;
 
 

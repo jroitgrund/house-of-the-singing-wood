@@ -1,5 +1,7 @@
 (
 var drumRackAmpBus = Bus.control(s, 1);
+
+var stabsAmpOutBus = Bus.control(s, 1);
 	
 var coilPanBus = Bus.control(s, 1);
 var coilAmpBus = Bus.control(s, 1);
@@ -446,6 +448,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 				\legato, 1,
 				\instrument, \panControl,
 				\freq, TempoClock.default.tempo / 64,
+				// \directionChangeRate, TempoClock.default.tempo / 32,
 				\iphase, 0,
 				\controlBus, bassVoiceShamanPanBus,
 				\direction, 1,
@@ -887,6 +890,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 		\gateRelease, 1,
 		\hardPan, Pwhite(0.0, 2.0, inf),
 		\ampBus, drumRackAmpBus,
+		\ampOutBus, stabsAmpOutBus,
 		\amp, 0.2
 	);
 };
@@ -1015,23 +1019,23 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 
 ~ritualPart5 = {
 	| fifthPhaseDuration |
-	var drumRackIn = 32;
-	var grillonsIn = 32 + (2 * (fifthPhaseDuration - 32) / 6).round(4);
-	var stabsIn = 32 + (3 * (fifthPhaseDuration - 32) / 6).round(4);
+	var stabsIn = 32 + (2 * (fifthPhaseDuration - 32) / 6).round(4);
+	var grillonsIn = 32 + (3 * (fifthPhaseDuration - 32) / 6).round(4);
 	Ppar([
 		~singleActionPattern.value(~launchRitualPart5InitialClips),
-		~pollActionPattern.value(~setRitualPart5ClipOpacities.value, 32),
 		~bassVoiceShaman.value(fifthPhaseDuration, withFifth: false),
+		Pseq([Event.silent(16), ~singleActionPattern.value(~launchRitualPart5SecondClip)]),
 		Pseq([Event.silent(64), ~drumRack.value(fifthPhaseDuration - 64)]),
-		Pseq([Event.silent(64), ~singleActionPattern.value(~resetRitualPart5ClipOpacitiesAndClearLayers)]), 
 		Pseq([Event.silent(64), ~singleActionPattern.value(~launchRitualPart5KickClips)]),
 		Pseq([Event.silent(64), ~pollActionPattern.value({
 			bassVoiceShamanPanBus.get(~setBassVoicePart5Rotation)
 		}, fifthPhaseDuration - 64)]),
-		Pseq([Event.silent(grillonsIn), ~cricket2.value(fifthPhaseDuration - grillonsIn)]),
-		Pseq([Event.silent(grillonsIn), ~singleActionPattern.value(~launchRitualPart5GrillonClip)]),
 		Pseq([Event.silent(stabsIn), ~stabs.value(fifthPhaseDuration - stabsIn)]),
-		Pseq([Event.silent(fifthPhaseDuration), ~singleActionPattern.value(~resetBassVoicePart5Rotation)]),
+		Pseq([Event.silent(stabsIn), ~singleActionPattern.value(~launchRitualPart5StabsClip)]),
+		Pseq([Event.silent(stabsIn), ~pollActionPattern.value({
+			stabsAmpOutBus.get(~setRitualPart5Layer8Opacity)
+		}, fifthPhaseDuration - stabsIn)]),
+		Pseq([Event.silent(grillonsIn), ~cricket2.value(fifthPhaseDuration - grillonsIn)]),
 		Pseq([Event.silent(fifthPhaseDuration), ~singleActionPattern.value(~clearLayers)])
 	]);
 };

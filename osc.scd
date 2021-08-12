@@ -35,7 +35,7 @@
 };
 
 ~selectRitual = {
-    ~sendMsg.value("/composition/decks/select/1", 1);
+    ~sendMsg.value("/composition/decks/1/select", 1);
 };
 
 ~launchClipWithClochettesInRitualPart1 = {
@@ -303,7 +303,7 @@
 // BIOSPHERE
 
 ~selectBiosphere = {
-    ~sendMsg.value("/composition/decks/select/2", 1);
+    ~sendMsg.value("/composition/decks/2/select", 1);
 };
 
 ~launchBiospherePart1Clips = {
@@ -312,7 +312,7 @@
 };
 
 ~launchBiospherePart1LaterClip = {
-    ~sendMsg.value("/composition/layers/7/clips/4/connect", 1);
+    ~sendMsg.value("/composition/layers/7/clips/1/connect", 1);
 };
 
 ~setBaleineClipOpacity = {
@@ -353,7 +353,7 @@
 
 ~setGouttesClipOpacity = {
     | amp |
-    ~sendMsg.value("/composition/layers/9/video/opacity", 0.5 + (amp * 50));
+    ~sendMsg.value("/composition/layers/9/video/opacity", 0.5 + (amp * 150));
 };
 
 ~launchBiospherePart2InitialClips = {

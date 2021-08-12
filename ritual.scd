@@ -1021,7 +1021,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 
 ~ritualPart5 = {
 	| fifthPhaseDuration |
-	var drumRackIn = 0;
+	var drumRackIn = 64;
 	var stabsIn = 32 + (2 * (fifthPhaseDuration - 32) / 6).round(4);
 	var grillonsIn = 32 + (3 * (fifthPhaseDuration - 32) / 6).round(4);
 	Ppar([

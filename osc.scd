@@ -473,21 +473,26 @@
     {
       "clearing layers".postln;
         layers.do { | layer |
+            ~setLayerTransitionsOn.value(layer, 2);
             ~sendMsg.value("/composition/layers/" ++ layer ++ "/clear", 1);
             ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/positionx", 0.5);
             ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/positiony", 0.5);
             ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/rotationz", 0.5);
             ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/opacity", 1);
+            Routine {
+                2.wait;
+                ~setLayerTransitionsOff.value(layer);
+            }.play;
         }
     };
 };
 
-~setLayerTransitionOn = {
+~setLayerTransitionsOn = {
     | layer, duration = 1 |
     ~sendMsg.value("/composition/layers/" ++ layer ++ "/transition/duration", duration / 10);
 };
 
-~setLayerTransitionOff = {
+~setLayerTransitionsOff = {
     | layer |
     ~sendMsg.value("/composition/layers/" ++ layer ++ "/transition/duration", 0);
 };

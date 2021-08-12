@@ -455,7 +455,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 				\legato, 1,
 				\instrument, \panControl,
 				\freq, TempoClock.default.tempo / 64,
-				// \directionChangeRate, TempoClock.default.tempo / 32,
+				\directionChangeRate, TempoClock.default.tempo / 32,
 				\iphase, 0,
 				\controlBus, bassVoiceShamanPanBus,
 				\direction, 1,
@@ -613,11 +613,12 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\ampOutBus, batonPluieAmpOutBus
 		),
 		Pbind(
-			\dur, Pseq([32], inf),
-			\instrument, Pif(Ptime() < duration, \panControl),
+			\dur, Pseq([duration]),
+			\instrument, \panControl,
 			\legato, 1,
 			\iphase, 0,
 			\freq, TempoClock.default.tempo / 32,
+			\directionChangeRate, TempoClock.default.tempo / 16,
 			\controlBus, batonPluiePanBus,
 			\direction, Pseq([1, -1], inf),
 		),

@@ -43,7 +43,7 @@ TempoClock.default.tempo = 90/60;
 Pseq([
 	~singleActionPattern.value(~clearAllLayers.value),
 	Rest(1),
-	// ~owls.value(256, part2: true)
+	// ~bassVoiceShaman.value(128, totem: true)
 ]).play;
 )
 
@@ -94,13 +94,13 @@ getFullLoop = {
 
 	[
 		Ppar([
-			/*Pseq([
+			Pseq([
 				~singleActionPattern.value(~selectBiosphere),
 			    ~biosphere.value(biosphereFirstPhaseDuration, biosphereSecondPhaseDuration, biosphereThirdPhaseDuration)
-			]),*/
+			]),
 			Pseq([
-				// Event.silent(biosphereTotalDuration),
-				// Event.silent(pause),
+				Event.silent(biosphereTotalDuration),
+				Event.silent(pause),
 				~singleActionPattern.value(~selectRitual),
 				~ritual.value(ritualFirstPhaseDuration, ritualSecondPhaseDuration, ritualThirdPhaseDuration, ritualFourthPhaseDuration, ritualFifthPhaseDuration)
 			])

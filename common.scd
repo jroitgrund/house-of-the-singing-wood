@@ -105,6 +105,31 @@ SynthDef.new(\panControl, {
 	Out.kr(controlBus, Select.kr(directionChangeRate >= 0, [LFSaw.kr(freq, iphase, direction), LFSaw.kr(freq, iphase, SinOsc.kr(directionChangeRate))]) + SinOsc.kr(freq * 20, mul: waver));
 }).add;
 
+// ~getPanEnv = {
+// 	| duration |
+// 	var time = 0;
+//     var points = List.newUsing([rrand(0.001, 2.0)]);
+// 	var durations = List.new;
+// 	var nextPoint = 0;
+// 	var nextTime = 0;
+//     while ({time < duration}, {
+// 		nextPoint = (nextPoint + 1 + rrand(0.0, 1.0)) % 2;
+// 		if (nextPoint == 0, {nextPoint = 0.001}, 1);
+// 	    nextTime = rrand((duration / 32) / TempoClock.default.tempo, (duration / 8) / TempoClock.default.tempo);
+// 		points.add(nextPoint.postln);
+// 	    durations.add(nextTime.postln);
+// 	    time = time + nextTime;
+// 	});
+
+//     Env(points, durations, curve: \exponential)
+// };
+
+// SynthDef.new(\panControlWeird, {
+// 	| controlBus, duration, gate = 1 |
+//     var linen = Linen.kr(gate, doneAction: 2);
+// 	Out.kr(controlBus, EnvGen.kr(~getPanEnv.value(duration)));
+// }).add;
+
 
 // This low pass is mostly useless except on the cave tom, because many of our sounds don't span
 // large frequency ranges.

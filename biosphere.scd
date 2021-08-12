@@ -251,7 +251,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\freq, TempoClock.default.tempo / 64,
 			\controlBus, nappeBaleinePanBus,
 			\direction, Prand([1, -1], inf),
-			\directionChangeRate, TempoClock.default.tempo / 24
+			\directionChangeRate, TempoClock.default.tempo / 32
 		),
 		Pbind(
 			\dur, Pseq([duration]),

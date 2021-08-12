@@ -731,6 +731,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\amp, 0.6,
 			\buf, ~kickBuffer,
 			\ampBus, Pif(fadeOut, kickAmpBus, -1),
+			\ampOutBus, kickAmpOutBus,
 			\gateRelease, 4
 		),
 		Pbind(
@@ -887,10 +888,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 ~stabs = {
 	| duration |
 	Pbind(
-		\dur, Pseq([
-			Rest(26/4),
-			Pxrand([33, 76, 22, 5, 17], inf)
-		]),
+		\dur, Pxrand([4, 12, 16, 8], inf),
 		\legato, 1,
 		\instrument, Pif(Ptime() < duration, \play),
 		\buf, Pxrand(~stabBuffers, inf),
@@ -898,7 +896,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 		\hardPan, Pwhite(0.0, 2.0, inf),
 		\ampBus, drumRackAmpBus,
 		\ampOutBus, stabsAmpOutBus,
-		\amp, 0.2
+		\amp, 0.2,
 	);
 };
 
@@ -1023,17 +1021,21 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 
 ~ritualPart5 = {
 	| fifthPhaseDuration |
+	var drumRackIn = 0;
 	var stabsIn = 32 + (2 * (fifthPhaseDuration - 32) / 6).round(4);
 	var grillonsIn = 32 + (3 * (fifthPhaseDuration - 32) / 6).round(4);
 	Ppar([
 		~singleActionPattern.value(~launchRitualPart5InitialClips),
 		~bassVoiceShaman.value(fifthPhaseDuration, withFifth: false),
 		Pseq([Event.silent(16), ~singleActionPattern.value(~launchRitualPart5SecondClip)]),
-		Pseq([Event.silent(64), ~drumRack.value(fifthPhaseDuration - 64)]),
-		Pseq([Event.silent(64), ~singleActionPattern.value(~launchRitualPart5KickClips)]),
-		Pseq([Event.silent(64), ~pollActionPattern.value({
+		Pseq([Event.silent(drumRackIn), ~drumRack.value(fifthPhaseDuration - drumRackIn)]),
+		Pseq([Event.silent(drumRackIn), ~singleActionPattern.value(~launchRitualPart5KickClips)]),
+		Pseq([Event.silent(drumRackIn), ~pollActionPattern.value({
 			bassVoiceShamanPanBus.get(~setBassVoicePart5Rotation)
-		}, fifthPhaseDuration - 64 - 2/10)]),
+		}, fifthPhaseDuration - drumRackIn - (4/10))]),
+		Pseq([Event.silent(drumRackIn), ~pollActionPattern.value({
+			kickAmpOutBus.get(~setRitualPart5Layer9Opacity)
+		}, fifthPhaseDuration - drumRackIn - (4/10))]),
 		Pseq([Event.silent(stabsIn), ~stabs.value(fifthPhaseDuration - stabsIn)]),
 		Pseq([Event.silent(stabsIn), ~singleActionPattern.value(~launchRitualPart5StabsClip)]),
 		Pseq([Event.silent(stabsIn), ~pollActionPattern.value({

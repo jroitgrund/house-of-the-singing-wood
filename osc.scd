@@ -283,7 +283,12 @@
 
 ~setRitualPart5Layer8Opacity = {
     | amp |
-    ~sendMsg.value("/composition/layers/8/video/opacity", 0.5 + (amp * 400));
+    ~sendMsg.value("/composition/layers/8/video/opacity", 0 + (amp * 500));
+};
+
+~setRitualPart5Layer9Opacity = {
+    | amp |
+    ~sendMsg.value("/composition/layers/9/video/opacity", 0.6 + (amp  * 2.5));
 };
 
 ~setBassVoicePart5Rotation = {

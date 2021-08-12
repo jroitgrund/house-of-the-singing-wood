@@ -154,6 +154,4 @@ Event.addEventType(\action, {});
 		curve: 'hold'
 	));
 };
-
-~basePath = "C:/Users/jonathan/Desktop/scc/sons/";
 )

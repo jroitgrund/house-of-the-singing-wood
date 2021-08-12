@@ -244,17 +244,15 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\buf, ~feuillesNappeBuffer,
 			\loop, 1,
 			\panBus, feuillesNappePanBus,
-			\loopAtk, 8 / TempoClock.default.tempo,
-			\loopSus, 0,
-			\loopRel, 8 / TempoClock.default.tempo,
-			\ampOutBus, feuillesNappeAmpOutBus
+			\ampOutBus, feuillesNappeAmpOutBus,
+			\ampBus, feuillesNappeAmpBus
 		),
 		Pbind(
-			\dur, Pseq([16], inf),
-			\instrument, Pif(Ptime() < duration, \panControl),
+			\dur, Pseq([duration]),
+			\instrument, \panControl,
 			\legato, 1,
-			\iphase, Pwhite(0.0, 2.0, inf),
-			\freq, TempoClock.default.tempo / 16,
+			\iphase, 0.5,
+			\freq, TempoClock.default.tempo / 8,
 			\controlBus, feuillesNappePanBus,
 			\direction, 1,
 			\pfunc, Pif(tribal8, Pfuncn(~launchFeuillesNappeTribal8, inf), 1),
@@ -266,7 +264,16 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			Event.silent(duration),
 			~singleActionPattern.value(~clearFeuillesNappeTribal8),
 			~singleActionPattern.value(~resetFeuillesNapeTribal8LayerOpacity)
-		]), 1)
+		]), 1),
+		Pbind(
+			\dur, Pseq([duration]),
+			\legato, 1,
+			\instrument, \ampControl,
+			\atk, 16 / TempoClock.default.tempo,
+			\sus, (duration -  32) / TempoClock.default.tempo,
+			\rel, 16 / TempoClock.default.tempo,
+			\controlBus, feuillesNappeAmpBus
+		)
 	]);
 };
 
@@ -520,7 +527,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 					Pfunc(~launchHibouxRandomClip3),
 					Pfunc(~launchHibouxRandomClip4)]),
 				Pfunc({1})],
-				[1, 7].normalizeSum), 1),
+				[1, 3].normalizeSum), 1),
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -970,7 +977,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			])
 		]),
 		Pseq([Event.silent(secondPhaseDuration - 16), ~singleActionPattern.value(~launchRitualPart3InitialClip)]),
-		Pseq([Event.silent(secondPhaseDuration - (2/10)), ~singleActionPattern.value(~clearAllLayers.value)])
+		Pseq([Event.silent(secondPhaseDuration - (2/10)), ~singleActionPattern.value(~clearLayers.value([1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12]))])
 	]);
 };
 

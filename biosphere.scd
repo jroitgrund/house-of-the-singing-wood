@@ -658,7 +658,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 		Pseq([Event.silent(32), ~singleActionPattern.value(~launchBiospherePart1SecondClip)]),
 		Pseq([Event.silent(32), ~pollActionPattern.value({
 			nappeBaleinePanBus.get(~setBiospherePart1SecondClipRotation)
-		}, firstPhaseDuration - (2/10))]),
+		}, firstPhaseDuration - 32 - (2/10))]),
 		Pseq([Event.silent(laterClip), ~singleActionPattern.value(~launchBiospherePart1LaterClip)]),
 		Pseq([Event.silent(sireneIn), ~sirens.value(firstPhaseDuration - sireneIn)]),
 		Pseq([Event.silent(gouttesIn), ~gouttes.value(firstPhaseDuration + secondPhaseDuration + 16 - gouttesIn)]),
@@ -685,7 +685,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 		Pseq([Event.silent(16), ~singleActionPattern.value(~clearLayers.value([9]))]),
 		
 		Pseq([Event.silent(halfwaymark), ~singleActionPattern.value(~launchBiospherePart2HalfwayClips)]),
-		Pseq([Event.silent(secondPhaseDuration - (1/10)), ~singleActionPattern.value(~clearAllLayers)])
+		Pseq([Event.silent(secondPhaseDuration - (1/10)), ~singleActionPattern.value(~clearAllLayers.value)])
 	]);
 };
 
@@ -703,10 +703,10 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 		Pseq([Event.silent(birdsIn), ~singleActionPattern.value(~launchBiospherePart3BirdClip)]),
 		Pseq([Event.silent(birdsIn), ~pollActionPattern.value({
 			birdsAmpOutBus.get(~setBiospherePart3BirdClipOpacity)
-		}, thirdPhaseDuration - birdsIn - (2/10)])),
+		}, thirdPhaseDuration - birdsIn - (2/10))]),
 		Pseq([Event.silent(frogsIn), ~frog.value(thirdPhaseDuration - frogsIn)]),
 		Pseq([Event.silent(uduIn), ~udu.value(thirdPhaseDuration - uduIn)]),
-		Pseq([Event.silent(thirdPhaseDuration - (1/10)), ~singleActionPattern.value(~clearAllLayers)]),
+		Pseq([Event.silent(thirdPhaseDuration - (1/10)), ~singleActionPattern.value(~clearAllLayers.value)]),
 		Pseq([Event.silent(thirdPhaseDuration + 8), ~finalTouch.value])
 	]);
 };

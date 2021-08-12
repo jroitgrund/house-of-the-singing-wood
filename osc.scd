@@ -370,7 +370,6 @@
 };
 
 ~launchBiospherePart2InitialClips = {
-    "biosphere-part-2-initial".postln;
     ~sendMsg.value("/composition/layers/7/clips/13/connect", 1);
     ~sendMsg.value("/composition/layers/8/clips/13/connect", 1);
 };
@@ -466,12 +465,14 @@
 
 ~clearLayers = {
     | layers |
-    "clearing layers".postln;
-    layers.do { | layer |
-        ~sendMsg.value("/composition/layers/" ++ layer ++ "/clear", 1);
-        ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/positionx", 0.5);
-        ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/positiony", 0.5);
-        ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/rotationz", 0.5);
-        ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/opacity", 1);
+    {
+      "clearing layers".postln;
+        layers.do { | layer |
+            ~sendMsg.value("/composition/layers/" ++ layer ++ "/clear", 1);
+            ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/positionx", 0.5);
+            ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/positiony", 0.5);
+            ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/rotationz", 0.5);
+            ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/opacity", 1);
+        }
     };
 };

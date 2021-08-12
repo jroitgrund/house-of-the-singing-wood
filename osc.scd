@@ -162,7 +162,7 @@
 };
 
 ~launchRitualPart3InitialClip = {
-    ~sendMsg.value("/composition/layers/8/clips/14/connect", 1);
+    ~sendMsg.value("/composition/layers/13/clips/14/connect", 1);
 };
 
 ~launchRitualPart3KickClip = {

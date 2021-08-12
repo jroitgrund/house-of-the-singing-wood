@@ -55,6 +55,8 @@ var makeSynthDef = {
 		left = sound[0];
 		right = sound[1];
 
+		sound = HPF.ar(sound, 80);
+
 		/**
 		 * Set middle and left channels.
 		 * Middle is two stereo channels split evenly across four speakers, and used when we don't pan.

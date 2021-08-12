@@ -18,7 +18,7 @@ s.waitForBoot({
 (
 s.options.device = "ASIO : Realtek ASIO";
 s.options.memSize = 1000000;
-s.options.numOutputBusChannels = 2;
+s.options.numOutputBusChannels = 4;
 s.waitForBoot({
 	~volume = 0.3;
 	"./common.scd".load;
@@ -41,9 +41,9 @@ TempoClock.default.tempo = 90/60;
 "./biosphere.scd".load;
 "./ritual.scd".load;
 Pseq([
-	~singleActionPattern.value(~clearAllLayers),
+	~singleActionPattern.value(~clearAllLayers.value),
 	Rest(1),
-	~owls.value(256, part2: true)
+	// ~owls.value(256, part2: true)
 ]).play;
 )
 
@@ -94,10 +94,14 @@ getFullLoop = {
 
 	[
 		Ppar([
-			~biosphere.value(biosphereFirstPhaseDuration, biosphereSecondPhaseDuration, biosphereThirdPhaseDuration),
+			/*Pseq([
+				~singleActionPattern.value(~selectBiosphere),
+			    ~biosphere.value(biosphereFirstPhaseDuration, biosphereSecondPhaseDuration, biosphereThirdPhaseDuration)
+			]),*/
 			Pseq([
-				Event.silent(biosphereTotalDuration),
-				Event.silent(pause),
+				// Event.silent(biosphereTotalDuration),
+				// Event.silent(pause),
+				~singleActionPattern.value(~selectRitual),
 				~ritual.value(ritualFirstPhaseDuration, ritualSecondPhaseDuration, ritualThirdPhaseDuration, ritualFourthPhaseDuration, ritualFifthPhaseDuration)
 			])
 		]),

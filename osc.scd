@@ -23,8 +23,8 @@
 };
 
 ~panToRotate = {
-    | pan |
-    (0.5 + ((pan - 0.25) / 2)) % 1;
+    | pan, panAdjust = 0.25 |
+    (0.5 + ((pan - panAdjust) / 2)) % 1;
 };
 
 ~clearLayer = {
@@ -231,8 +231,14 @@
 
 ~launchHibouxPart4Clip = {
     | ev |
+    var hardPan = ev[\hardPan];
+    var pan = 0;
+    if (hardPan == 0, { pan = 0.25 }, 1);
+    if (hardPan == 0.5, { pan = 0.5 }, 1);
+    if (hardPan == 1, { pan = 0.75 }, 1);
+    if (hardPan == 1.5, { pan = 1 }, 1);
     ~sendMsg.value("/composition/layers/7/clips/20/connect", 1);
-    ~sendMsg.value("/composition/layers/7/clips/20/video/effects/transform/rotationz", ~panToRotate.value(ev[\hardPan]));
+    ~sendMsg.value("/composition/layers/7/clips/20/video/effects/transform/rotationz", pan);
 };
 
 ~resetHibouxPart4ClipRotation = {
@@ -335,16 +341,26 @@
     | ev |
     var hardPan = ev[\hardPan];
     var clip = rrand(1, 2);
+    var pan = 0;
+    if (hardPan == 0, { pan = 0.25 }, 1);
+    if (hardPan == 0.5, { pan = 0.5 }, 1);
+    if (hardPan == 1, { pan = 0.75 }, 1);
+    if (hardPan == 1.5, { pan = 1 }, 1);
     ~sendMsg.value("/composition/layers/6/clips/" ++ clip ++ "/connect", 1);
-    ~sendMsg.value("/composition/layers/6/video/effects/transform/rotationz", ~panToRotate.value(hardPan));
+    ~sendMsg.value("/composition/layers/6/video/effects/transform/rotationz", pan);
 };
 
 ~launchBiospherePart1HibouxClip = {
     | ev |
     var hardPan = ev[\hardPan];
     var clip = rrand(1, 2);
+    var pan = 0;
+    if (hardPan == 0, { pan = 0.25 }, 1);
+    if (hardPan == 0.5, { pan = 0.5 }, 1);
+    if (hardPan == 1, { pan = 0.75 }, 1);
+    if (hardPan == 1.5, { pan = 1 }, 1);
     ~sendMsg.value("/composition/layers/5/clips/" ++ clip ++ "/connect", 1);
-    ~sendMsg.value("/composition/layers/5/video/effects/transform/rotationz", ~panToRotate.value(hardPan));
+    ~sendMsg.value("/composition/layers/5/video/effects/transform/rotationz", pan);
 };
 
 ~launchBiospherePart1Gouttes = {
@@ -354,6 +370,10 @@
 ~setGouttesClipOpacity = {
     | amp |
     ~sendMsg.value("/composition/layers/9/video/opacity", 0.5 + (amp * 150));
+};
+
+~selectBiospherePart1FinalClip = {
+    ~sendMsg.value("/composition/layers/9/clips/12/connect", 1);
 };
 
 ~launchBiospherePart2InitialClips = {
@@ -375,11 +395,24 @@
     Routine {
         var hardPan = ev[\hardPan];
         var layer = 3 + (rrand(0, 1) * 2);
+        var pan = 0;
+        if (layer == 3, {
+            if (hardPan == 0, { pan = 0.75 }, 1);
+            if (hardPan == 0.5, { pan = 1 }, 1);
+            if (hardPan == 1, { pan = 0.25 }, 1);
+            if (hardPan == 1.5, { pan = 0.5 }, 1);
+        }, 1);
+        if (layer == 5, {
+            if (hardPan == 0, { pan = 1 }, 1);
+            if (hardPan == 0.5, { pan = 0.25 }, 1);
+            if (hardPan == 1, { pan = 0.5 }, 1);
+            if (hardPan == 1.5, { pan = 0.75 }, 1);
+        }, 1);
         ~sendMsg.value("/composition/layers/" ++ layer ++ "/clips/13/connect", 1);
-        ~sendMsg.value("/composition/layers" ++ layer ++ "/video/effects/transform/rotationz", ~panToRotate.value(hardPan));
+        ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/rotationz", pan);
         (2 / TempoClock.default.tempo).wait;
         ~sendMsg.value("/composition/layers/" ++ (layer + 1) ++ "/clips/13/connect", 1);
-        ~sendMsg.value("/composition/layers" ++ (layer + 1) ++ "/video/effects/transform/rotationz", ~panToRotate.value(hardPan));
+        ~sendMsg.value("/composition/layers/" ++ (layer + 1) ++ "/video/effects/transform/rotationz", pan);
     }.play;
 };
 
@@ -395,8 +428,13 @@
     | ev |
     var hardPan = ev[\hardPan];
     var layer = 4 + rrand(0, 3);
+    var pan = 0;
+    if (hardPan == 0, { pan = 0 }, 1);
+    if (hardPan == 0.5, { pan = 0.25 }, 1);
+    if (hardPan == 1, { pan = 0.5 }, 1);
+    if (hardPan == 1.5, { pan = 0.75 }, 1);
     ~sendMsg.value("/composition/layers/" ++ layer ++ "/clips/20/connect", 1);
-    ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/rotationz", ~panToRotate.value(hardPan));
+    ~sendMsg.value("/composition/layers/" ++ layer ++ "/video/effects/transform/rotationz", pan);
 };
 
 ~setBiospherePart3BirdClipOpacity = {

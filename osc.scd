@@ -481,3 +481,13 @@
         }
     };
 };
+
+~setLayerTransitionOn = {
+    | layer, duration = 1 |
+    ~sendMsg.value("/composition/layers/" ++ layer ++ "/transition/duration", duration / 10);
+};
+
+~setLayerTransitionOff = {
+    | layer |
+    ~sendMsg.value("/composition/layers/" ++ layer ++ "/transition/duration", 0);
+};

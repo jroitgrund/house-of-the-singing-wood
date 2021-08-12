@@ -165,7 +165,7 @@ loadedBuffers = 0;
 };
 
 // Everything under here is unused for now, mostly OSC stuff.
-~resolume = NetAddr.new("192.168.74.153", 7000);
+~resolume = NetAddr.new("localhost", 7000);
 
 Event.addEventType(\action, {});
 
@@ -179,4 +179,6 @@ Event.addEventType(\action, {});
 		curve: 'hold'
 	));
 };
+
+~basePath = "/Users/lewismurray/house-of-the-singing-wood/sons/";
 )

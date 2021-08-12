@@ -161,6 +161,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\amp1OutBus, grillonOneShotAmp1OutBus,
 			\amp2OutBus, grillonOneShotAmp2OutBus,
 			\amp3OutBus, grillonOneShotAmp3OutBus,
+			\amp, 0.2
 		),
 		Pif(grillonsClips, ~pollActionPattern.value({
 			grillonOneShotAmp0OutBus.get(~setGrillonsTopLeftOpacity);
@@ -245,7 +246,8 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\loop, 1,
 			\panBus, feuillesNappePanBus,
 			\ampOutBus, feuillesNappeAmpOutBus,
-			\ampBus, feuillesNappeAmpBus
+			\ampBus, feuillesNappeAmpBus,
+			\amp, 0.2
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -292,7 +294,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\ampBus, murmuresAmpBus,
 			\gateRelease, 7,
 			\ampOutBus, murmuresAmpOutBus,
-			\amp, 0.15
+			\amp, 0.3
 		),
 		Pif(tribalOverlay, ~singleActionPattern.value(~launchTribalOverlay), 1),
 		Pif(tribalOverlay, ~pollActionPattern.value({
@@ -356,7 +358,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\panBus, murmuresLoopsPanBus,
 			\ampBus, murmuresLoopsAmpBus,
 			\ampOutBus, murmuresLoopsAmpOutBus,
-			\amp, 0.15,
+			\amp, 0.3,
 			\gateRelease, 7
 		),
 		Pbind(
@@ -406,7 +408,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\buf, Pxrand(~clochettesBuffers, repeats: inf),
 			\hardPan, Pwhite(0.0, 2.0, inf),
 			\lpfBus, clochettesLowPassBus,
-			\amp, Pwhite(0.5, 0.7, inf),
+			\amp, 1,
 			\gateRelease, 10,
 			\delayTime, Pif(rarement, Prand([TempoClock.default.tempo / 9, TempoClock.default.tempo / 10], inf), 0),
 			\delayRepeat, Pwhite(20, 40, inf)
@@ -437,7 +439,8 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 				\panBus, bassVoiceShamanPanBus,
 				\ampBus, bassVoiceShamanAmpBus,
 				\ampOutBus, bassVoiceShamanAmpOutBus,
-				\loop, 1
+				\loop, 1,
+				\amp, 0.2
 			),
 			Pif(totem, ~singleActionPattern.value(~launchTotemClip), 1),
 			Pif(totem, ~pollActionPattern.value({
@@ -515,7 +518,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\buf, Pwrand(~hibouxBuffers, [0.2, 0.2, 0.6], inf),
 			\rate, Pwrand([1, -8.midiratio, -6.midiratio], [0.5, 0.25, 0.25], inf),
 			\gateRelease, 13,
-			\amp, 0.275,
+			\amp, 0.525,
 			\ampBus, hibouxAmpBus,
 			\hardPan, Pif(tribalClip, Prand([0, 0.5, 1, 1.5], inf), Pwhite(0.0, 2.0, inf)),
 			\pfunc, Pif(tribalClip, Pfuncn(~launchHibouxTribalClip, inf), 1),
@@ -551,7 +554,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\legato, 1,
 			\instrument, Pif(Ptime() < duration, \play),
 			\buf, ~bassBuffer,
-			\amp, 0.3,
+			\amp, 0.6,
 			\pfunc, Pif(launchBassOndeRouge, Pfuncn(~launchBassOndeRouge, inf), 1)
 		),
 	]);
@@ -572,7 +575,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\loopRel, 4 / TempoClock.default.tempo,
 			\ampOutBus, bolTibetainAmpOutBus,
 			\ampBus, bolTibetainAmpBus,
-			\amp, 0.07
+			\amp, 0.14
 		),
 		Pbind(
 			\dur, Pseq([32], inf),
@@ -608,7 +611,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\loopAtk, 8 / TempoClock.default.tempo,
 			\loopSus, 48,
 			\loopRel, 8 / TempoClock.default.tempo,
-			\amp, 0.05,
+			\amp, 0.1,
 			\ampBus, batonPluieAmpBus,
 			\ampOutBus, batonPluieAmpOutBus
 		),
@@ -655,7 +658,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
             \ampBus, rootsAmpBus,
 			\ampBus2, rootsAmpBus2,
             \ampOutBus, rootsAmpOutBus,
-			\amp, 0.3,
+			\amp, 0.6,
 			\pfunc, Pfuncn(~launchRootsClip, inf),
 			\pfunc2, Pfuncn({
 				| ev |
@@ -729,7 +732,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\dur, Pseq([1.5, 0.5, 2], repeats: inf),
 			\legato, 1,
 			\instrument, Pif(Ptime() < duration, \play),
-			\amp, 0.6,
+			\amp, 1,
 			\buf, ~kickBuffer,
 			\ampBus, Pif(fadeOut, kickAmpBus, -1),
 			\ampOutBus, kickAmpOutBus,
@@ -759,7 +762,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 		\gateRelease, 8,
 		\hardPan, Pwhite(0.0, 2.0, inf),
 		\ampBus, drumRackAmpBus,
-		\amp, 0.3
+		\amp, 0.6
 	);
 };
 
@@ -773,6 +776,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 		\gateRelease, 2,
 		\hardPan, Pwhite(0.0, 2.0, inf),
 		\ampBus, drumRackAmpBus,
+		\amp, 0.2
 	);
 };
 
@@ -787,7 +791,8 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\panBus, cricket2PanBus,
 			\gateRelease, 1,
 			\ampBus, drumRackAmpBus,
-			\lpfBus, cricket2LowPassBus
+			\lpfBus, cricket2LowPassBus,
+			\amp, 0.2
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -820,7 +825,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 		\buf, ~hhdelayBuffer,
 		\hardPan, Pwhite(0.0, 2.0, inf),
 		\ampBus, drumRackAmpBus,
-		\amp, 0.3
+		\amp, 0.6
 	);
 };
 
@@ -833,7 +838,8 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 		\buf, ~kickDelayBuffer,
 		\gateRelease, 3,
 		\hardPan, Pwhite(0.0, 2.0, inf),
-		\ampBus, drumRackAmpBus
+		\ampBus, drumRackAmpBus,
+		\amp, 0.2
 	);
 };
 
@@ -846,7 +852,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\instrument, Pif(Ptime() < duration, \play),
 			\buf, ~snareTomBuffer,
 			\gateRelease, 3,
-			\amp, Pfunc( { | ev | 0.05 + (ev[\dur] / 20) } ),
+			\amp, Pfunc( { | ev | 0.1 + (ev[\dur] / 10) } ),
 			\hardPan, Pwhite(0.0, 2.0, inf),
 			\lpfBus, snareTomLowPassBus,
 			\lpfRq, 0.5,
@@ -882,7 +888,8 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 		\buf, ~tom1Buffer,
 		\gateRelease, 1,
 		\hardPan, Pwhite(0.0, 2.0, inf),
-		\ampBus, drumRackAmpBus
+		\ampBus, drumRackAmpBus,
+		\amp, 0.2
 	);
 };
 
@@ -897,7 +904,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 		\hardPan, Pwhite(0.0, 2.0, inf),
 		\ampBus, drumRackAmpBus,
 		\ampOutBus, stabsAmpOutBus,
-		\amp, 0.2,
+		\amp, 0.4,
 	);
 };
 
@@ -914,7 +921,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 		\gateRelease, 1,
 		\hardPan, Pwhite(0.0, 2.0, inf),
 		\ampBus, drumRackAmpBus,
-		\amp, 0.2
+		\amp, 0.4
 	);
 };
 

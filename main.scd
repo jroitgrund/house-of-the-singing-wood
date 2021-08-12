@@ -1,13 +1,13 @@
 // Actual device on PC, need to change for mac.
 (
-s.options.device = "ASIO : Focusrite USB ASIO";
+s.options.outDevice = "Scarlett 8i6 USB";
 s.options.numOutputBusChannels = 4;
 s.options.memSize = 1000000;
 s.waitForBoot({
 	~volume = 0.3;
-	"./common.scd".load;
-	"./ritual.scd".load;
-	"./biosphere.scd".load;
+	"/Users/lewismurray/house-of-the-singing-wood/common.scd".load;
+	"/Users/lewismurray/house-of-the-singing-wood/ritual.scd".load;
+	"/Users/lewismurray/house-of-the-singing-wood/biosphere.scd".load;
 
 	~loadBiosphereBuffers.value;
 	~loadRitualBuffers.value;
@@ -16,14 +16,14 @@ s.waitForBoot({
 )
 
 (
-s.options.device = "ASIO : Realtek ASIO";
+s.options.device = nil;
 s.options.memSize = 1000000;
 s.options.numOutputBusChannels = 4;
 s.waitForBoot({
 	~volume = 0.3;
-	"./common.scd".load;
-	"./ritual.scd".load;
-	"./biosphere.scd".load;
+	"/Users/lewismurray/house-of-the-singing-wood/common.scd".load;
+	"/Users/lewismurray/house-of-the-singing-wood/ritual.scd".load;
+	"/Users/lewismurray/house-of-the-singing-wood/biosphere.scd".load;
 
 	~loadBiosphereBuffers.value;
 	~loadRitualBuffers.value;
@@ -36,10 +36,10 @@ s.waitForBoot({
 ~volume = 1.0;
 TempoClock.default.tempo = 90/60;
 
-"./common.scd".load;
-"./osc.scd".load;
-"./biosphere.scd".load;
-"./ritual.scd".load;
+"/Users/lewismurray/house-of-the-singing-wood/common.scd".load;
+"/Users/lewismurray/house-of-the-singing-wood/osc.scd".load;
+"/Users/lewismurray/house-of-the-singing-wood/biosphere.scd".load;
+"/Users/lewismurray/house-of-the-singing-wood/ritual.scd".load;
 Pseq([
 	~singleActionPattern.value(~clearAllLayers.value),
 	Rest(1),
@@ -53,10 +53,10 @@ var getFullLoop, allLoops, minutesToDuration;
 ~volume = 1;
 TempoClock.default.tempo = 90/60;
 
-"./common.scd".load;
-"./osc.scd".load;
-"./biosphere.scd".load;
-"./ritual.scd".load;
+"/Users/lewismurray/house-of-the-singing-wood/common.scd".load;
+"/Users/lewismurray/house-of-the-singing-wood/osc.scd".load;
+"/Users/lewismurray/house-of-the-singing-wood/biosphere.scd".load;
+"/Users/lewismurray/house-of-the-singing-wood/ritual.scd".load;
 
 minutesToDuration = {
 	| min, max |
@@ -116,7 +116,7 @@ allLoops = {
 		var result = getFullLoop.value;
 		var fullLoop = result[0];
 		var totalDuration = result[1];
-		s.record("C:/Users/jonathan/Desktop/scc/loop.aiff", 0, 2);
+		s.record("/Users/lewismurray/house-of-the-singing-wood/loop.aiff", 0, 4);
 		TempoClock.default.sched(wait, { fullLoop.play });
 		TempoClock.default.sched(wait + totalDuration, { s.stopRecording });
 		wait = wait + totalDuration;

@@ -223,6 +223,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\loop, 1,
 			\panBus, nappeBaleinePanBus,
 			\ampBus, nappeBaleineAmpBus,
+			\amp, 0.2
 		),
 		Pseq([Event.silent(6), Pbind(
 			\dur, Pseq([
@@ -292,6 +293,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
             \ampOutBus, owlsAmpOutBus,
 			\pfunc, Pif(part1, Pfunc(~launchBiospherePart1HibouxClip), 1),
 			\pfunc2, Pif(part2, Pfunc(~launchBiospherePart2HibouxClip), 1),
+			\amp, 0.2
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -325,7 +327,8 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\gateRelease, 60,
             \ampBus, sirensAmpBus,
             \ampOutBus, sirensAmpOutBus,
-			\pfunc, Pfuncn(~launchBiospherePart1SireneClip, inf)
+			\pfunc, Pfuncn(~launchBiospherePart1SireneClip, inf),
+			\amp, 0.2
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -386,7 +389,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\loop, 1,
 			\panBus, melodiePanBus,
 			\ampBus, melodieAmpBus,
-            \amp, 0.05,
+            \amp, 0.1,
             \ampOutBus, melodieAmpOutBus
 		),
 		Pbind(
@@ -470,7 +473,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\hardPan, Pwhite(0.0, 2.0, inf),
             \lpfRq, 2,
 			\gateRelease, 20,
-            \amp, Pwhite(0.05, 0.015, inf),
+            \amp, Pwhite(0.1, 0.03, inf),
 			\ampBus, frogAmpBus,
             \delayTime, Prand([1.5 / TempoClock.default.tempo, 1 / TempoClock.default.tempo], inf),
             \delayRepeat, Pwhite(0.1, 1.0, inf),
@@ -511,7 +514,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\instrument, Pif(Ptime() < duration, \play),
 			\gateRelease, 0.1,
 			\hardPan, Pwhite(0.0, 2.0),
-			\amp, Pwhite(0.1, 0.4, inf),
+			\amp, Pwhite(0.2, 0.8, inf),
 			\hpf, Pwrand([0, 500, 1000, 1500, 2000], [0.5, 0.2, 0.1,0.05, 0.05], inf),
 			\ampBus, uduAmpBus,
 			\iteration, Pseq([0, 1, 2, 3], inf),
@@ -543,7 +546,8 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\ampBus, waterAmpBus,
 			\loopAtk, 16 / TempoClock.default.tempo,
 			\loopRel, 16 / TempoClock.default.tempo,
-			\loopSus, 0
+			\loopSus, 0,
+			\amp, 0.2
 		),
 		Pbind(
 			\dur, Pseq([32], inf),
@@ -615,7 +619,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 				\buf, ~mosquitoBuffer,
 				\panBus, mosquitoPanBus,
 				\ampBus, mosquitoAmpBus,
-				\amp, 0.05
+				\amp, 0.1
 			),
 			Pbind(
 				\dur, Pseq([1]),

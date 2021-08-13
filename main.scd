@@ -60,7 +60,7 @@ TempoClock.default.tempo = 90/60;
 
 minutesToDuration = {
 	| min, max |
-	rrand(min * 96 * 0.25, max * 96 * 0.25).round(32);
+	rrand(min * 96 * 1, max * 96 * 1).round(32);
 };
 
 getFullLoop = {
@@ -90,6 +90,7 @@ getFullLoop = {
 		+ ritualThirdPhaseDuration
 		+ ritualFourthPhaseDuration
 		+ ritualFifthPhaseDuration
+		+ pause
 	);
 
 	[
@@ -112,13 +113,14 @@ getFullLoop = {
 allLoops = {
 	var wait = 0;
 	// Adjust the number inside Array.series() to adjust the number of loops.
+	~record.value;
 	Array.series(1).do { | i |
 		var result = getFullLoop.value;
 		var fullLoop = result[0];
 		var totalDuration = result[1];
 		s.record("/Users/lewismurray/house-of-the-singing-wood/loop.aiff", 0, 4);
 		TempoClock.default.sched(wait, { fullLoop.play });
-		TempoClock.default.sched(wait + totalDuration, { s.stopRecording });
+		TempoClock.default.sched(wait + totalDuration, { s.stopRecording; ~stopRecording.value });
 		wait = wait + totalDuration;
 	};
 };

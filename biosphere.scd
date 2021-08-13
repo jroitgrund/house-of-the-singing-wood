@@ -550,11 +550,11 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 			\amp, 0.2
 		),
 		Pbind(
-			\dur, Pseq([32], inf),
+			\dur, Pseq([48], inf),
 			\instrument, Pif(Ptime() < duration, \panControl),
 			\legato, 1,
 			\iphase, Pwhite(0.0, 2.0, inf),
-			\freq, TempoClock.default.tempo / 12,
+			\freq, TempoClock.default.tempo / 32,
 			\controlBus, waterPanBus,
 			\direction, Prand([1, -1], inf),
 		),
@@ -626,7 +626,7 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 				\legato, 1,
 				\instrument, \play,
 				\buf, ~slapBuffer,
-				\amp, 1
+				\amp, 1.5
 			)
 		]),
 		Pbind(

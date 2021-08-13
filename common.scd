@@ -64,14 +64,14 @@ var makeSynthDef = {
 		 * We play either middle or both left and right.
 		 */
 		pan = Select.kr(hardPan >= 0, [In.kr(panBus), hardPan]);
-		middle = [sound[0] * 0.25, sound[0] * 0.25, sound[1] * 0.25, sound[1] * 0.25];
+		middle = ((sound[0] + sound[1])!4) / 4;
 		left = PanAz.ar(4, left, pan + 0.01, orientation: 0);
 		right = PanAz.ar(4, right, pan - 0.01, orientation: 0);
 
-		Out.ar(out, Splay.ar(Select.ar(
+		Out.ar(out, Select.ar(
 			panBus >= 0,
 			[Select.ar(hardPan >= 0, [middle, left + right]),
-			left + right])));
+			left + right]));
 
 		// Write to OSC buses.
 		Out.kr(loopEnvOutBus, loopEnvelope);

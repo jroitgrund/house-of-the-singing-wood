@@ -1,6 +1,6 @@
 ~sendMsg = {
     | msg, value |
-    ~resolume.sendMsg(msg, value);
+    // ~resolume.sendMsg(msg, value);
     1
 };
 
@@ -129,7 +129,7 @@
 
 ~rotateTotemClip = {
     | pan |
-    ~sendMsg.value("/composition/layers/8/video/effects/transform/rotationz", ~panToRotate.value(pan));
+    // ~sendMsg.value("/composition/layers/8/video/effects/transform/rotationz", ~panToRotate.value(pan));
 };
 
 ~resetTotemClipRotation = {
@@ -193,7 +193,7 @@
 
 ~setFougeresRondesRotation = {
     | pan |
-    ~sendMsg.value("/composition/layers/10/video/effects/transform/rotationz", ~panToRotate.value(pan));
+    // ~sendMsg.value("/composition/layers/10/video/effects/transform/rotationz", ~panToRotate.value(pan));
 };
 
 ~resetFougeresRondesLayerOpacity = {
@@ -293,7 +293,7 @@
 
 ~setBassVoicePart5Rotation = {
     | pan |
-    ~sendMsg.value("/composition/layers/9/video/effects/transform/rotationz", ~panToRotate.value(pan));
+    // ~sendMsg.value("/composition/layers/9/video/effects/transform/rotationz", ~panToRotate.value(pan));
 };
 
 ~resetBassVoicePart5Rotation = {
@@ -332,7 +332,7 @@
 
 ~setBiospherePart1SecondClipRotation = {
     | pan |
-    ~sendMsg.value("/composition/layers/8/video/effects/transform/rotationz", ~panToRotate.value(pan));
+    // ~sendMsg.value("/composition/layers/8/video/effects/transform/rotationz", ~panToRotate.value(pan));
 };
 
 ~launchBiospherePart1SireneClip = {
@@ -495,4 +495,12 @@
 ~setLayerTransitionsOff = {
     | layer |
     ~sendMsg.value("/composition/layers/" ++ layer ++ "/transition/duration", 0);
+};
+
+~record = {
+    ~sendMsg.value("/composition/recorder/record", 1);
+};
+
+~stopRecording = {
+    ~sendMsg.value("/composition/recorder/record", 0);
 };

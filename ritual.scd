@@ -2,6 +2,7 @@
 var drumRackAmpBus = Bus.control(s, 1);
 
 var stabsAmpOutBus = Bus.control(s, 1);
+var stabsPanBus = Bus.control(s, 1);
 	
 var coilPanBus = Bus.control(s, 1);
 var coilAmpBus = Bus.control(s, 1);
@@ -362,9 +363,9 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\gateRelease, 7
 		),
 		Pbind(
-			\dur, Pseq([12], repeats: inf),
+			\dur, Pseq([duration]),
 			\legato, 1,
-			\instrument, Pif(Ptime() < duration, \panControl),
+			\instrument, \panControl,
 			\freq, TempoClock.default.tempo / 24,
 			\iphase, Pwhite(0.0, 2.0, inf),
 			\controlBus, murmuresLoopsPanBus,
@@ -408,7 +409,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\buf, Pxrand(~clochettesBuffers, repeats: inf),
 			\hardPan, Pwhite(0.0, 2.0, inf),
 			\lpfBus, clochettesLowPassBus,
-			\amp, 1,
+			\amp, 0.5,
 			\gateRelease, 10,
 			\delayTime, Pif(rarement, Prand([TempoClock.default.tempo / 9, TempoClock.default.tempo / 10], inf), 0),
 			\delayRepeat, Pwhite(20, 40, inf)
@@ -518,7 +519,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\buf, Pwrand(~hibouxBuffers, [0.2, 0.2, 0.6], inf),
 			\rate, Pwrand([1, -8.midiratio, -6.midiratio], [0.5, 0.25, 0.25], inf),
 			\gateRelease, 13,
-			\amp, 0.525,
+			\amp, 0.25,
 			\ampBus, hibouxAmpBus,
 			\hardPan, Pif(tribalClip, Prand([0, 0.5, 1, 1.5], inf), Pwhite(0.0, 2.0, inf)),
 			\pfunc, Pif(tribalClip, Pfuncn(~launchHibouxTribalClip, inf), 1),
@@ -732,7 +733,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\dur, Pseq([1.5, 0.5, 2], repeats: inf),
 			\legato, 1,
 			\instrument, Pif(Ptime() < duration, \play),
-			\amp, 1,
+			\amp, 0.8,
 			\buf, ~kickBuffer,
 			\ampBus, Pif(fadeOut, kickAmpBus, -1),
 			\ampOutBus, kickAmpOutBus,
@@ -792,7 +793,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\gateRelease, 1,
 			\ampBus, drumRackAmpBus,
 			\lpfBus, cricket2LowPassBus,
-			\amp, 0.2
+			\amp, 0.4
 		),
 		Pbind(
 			\dur, Pseq([duration]),
@@ -895,17 +896,26 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 
 ~stabs = {
 	| duration |
-	Pbind(
-		\dur, Pxrand([4, 12, 16, 8], inf),
-		\legato, 1,
-		\instrument, Pif(Ptime() < duration, \play),
-		\buf, Pxrand(~stabBuffers, inf),
-		\gateRelease, 1,
-		\hardPan, Pwhite(0.0, 2.0, inf),
-		\ampBus, drumRackAmpBus,
-		\ampOutBus, stabsAmpOutBus,
-		\amp, 0.4,
-	);
+	Ppar([
+		Pbind(
+			\dur, Pxrand([4, 12, 16, 8], inf),
+			\legato, 1,
+			\instrument, Pif(Ptime() < duration, \play),
+			\buf, Pxrand(~stabBuffers, inf),
+			\gateRelease, 1,
+			// \ampBus, drumRackAmpBus,
+			\ampOutBus, stabsAmpOutBus,
+			\amp, 0.3,
+			\panBus, stabsPanBus
+		),
+		Pbind(
+			\dur, Pseq([duration]),
+			\legato, 1,
+			\instrument, \panControl,
+			\freq, TempoClock.default.tempo / 4,
+			\controlBus, stabsPanBus
+		)
+	]);
 };
 
 ~guimbardeStabs = {
@@ -926,10 +936,10 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 };
 
 ~drumRack = {
-	| duration |
+	| duration, coilDuration |
 	Ppar([
 		~kick.value(duration),
-		~coil.value(duration),
+		// ~coil.value(coilDuration),
 		~cricket.value(duration),
 		// ~hhdelay.value(duration),
 		~kickdelay.value(duration),
@@ -954,7 +964,7 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 	var finalClipIn = (2 * firstPhaseDuration / 3).round(4);
 	Ppar([
 		Pseq([Event.silent(0), ~grillons.value(firstPhaseDuration + 32, grillonsClips: true)]),
-		Pseq([Event.silent(bassIn), ~bass.value(firstPhaseDuration - bassIn, rarement: true, launchBassOndeRouge: true)]),
+		// Pseq([Event.silent(bassIn), ~bass.value(firstPhaseDuration - bassIn, rarement: true, launchBassOndeRouge: true)]),
 		Pseq([Event.silent(clochettesIn), Ppar([
 			// ~clochettes.value(firstPhaseDuration - clochettesIn),
 			~singleActionPattern.value(~launchClipWithClochettesInRitualPart1),
@@ -1030,13 +1040,13 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 ~ritualPart5 = {
 	| fifthPhaseDuration |
 	var drumRackIn = 64;
-	var stabsIn = 32 + (2 * (fifthPhaseDuration - 32) / 6).round(4);
-	var grillonsIn = 32 + (3 * (fifthPhaseDuration - 32) / 6).round(4);
+	var stabsIn = drumRackIn + (2 * (fifthPhaseDuration - drumRackIn) / 6).round(4);
+	var grillonsIn = drumRackIn + (3 * (fifthPhaseDuration - drumRackIn) / 6).round(4);
 	Ppar([
 		~singleActionPattern.value(~launchRitualPart5InitialClips),
 		~bassVoiceShaman.value(fifthPhaseDuration, withFifth: false),
 		Pseq([Event.silent(16), ~singleActionPattern.value(~launchRitualPart5SecondClip)]),
-		Pseq([Event.silent(drumRackIn), ~drumRack.value(fifthPhaseDuration - drumRackIn)]),
+		Pseq([Event.silent(drumRackIn), ~drumRack.value(fifthPhaseDuration - drumRackIn, stabsIn - drumRackIn)]),
 		Pseq([Event.silent(drumRackIn), ~singleActionPattern.value(~launchRitualPart5KickClips)]),
 		Pseq([Event.silent(drumRackIn), ~pollActionPattern.value({
 			bassVoiceShamanPanBus.get(~setBassVoicePart5Rotation)

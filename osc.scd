@@ -87,8 +87,6 @@
 ~launchBassOndeRouge = {
     Routine {
         ~sendMsg.value("/composition/layers/9/clips/1/connect", 1);
-        ((3/2) / TempoClock.default.tempo).wait;
-        ~sendMsg.value("/composition/layers/10/clips/1/connect", 1);
     }.play;
 };
 

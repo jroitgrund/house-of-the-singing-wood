@@ -51,11 +51,11 @@ var makeSynthDef = {
 		// Apply envelopes.
 		sound = sound * envelope * ampBusEnvelope * ampBusEnvelope2 * loopEnvelope * amp * linen * ~volume;
 
+		sound = HPF.ar(sound, 80);
+
 		// Split into two channels.
 		left = sound[0];
 		right = sound[1];
-
-		sound = HPF.ar(sound, 80);
 
 		/**
 		 * Set middle and left channels.
@@ -65,8 +65,8 @@ var makeSynthDef = {
 		 */
 		pan = Select.kr(hardPan >= 0, [In.kr(panBus), hardPan]);
 		middle = ((sound[0] + sound[1])!4) / 4;
-		left = PanAz.ar(4, left, pan + 0.01, orientation: 0);
-		right = PanAz.ar(4, right, pan - 0.01, orientation: 0);
+		left = PanAz.ar(4, left, pan, orientation: 0);
+		right = PanAz.ar(4, right, pan, orientation: 0);
 
 		Out.ar(out, Select.ar(
 			panBus >= 0,

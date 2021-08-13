@@ -33,7 +33,7 @@ s.waitForBoot({
 
 // Use this code block to test stuff out!
 (
-~volume = 1.0;
+~volume = 0.8;
 TempoClock.default.tempo = 90/60;
 
 "/Users/lewismurray/house-of-the-singing-wood/common.scd".load;
@@ -43,7 +43,7 @@ TempoClock.default.tempo = 90/60;
 Pseq([
 	~singleActionPattern.value(~clearAllLayers.value),
 	Rest(1),
-	// ~bassVoiceShaman.value(128, totem: true)
+	~bass.value(64)
 ]).play;
 )
 
@@ -64,9 +64,9 @@ minutesToDuration = {
 };
 
 getFullLoop = {
-	var biosphereFirstPhaseDuration = minutesToDuration.value(6, 8);
-	var biosphereSecondPhaseDuration = minutesToDuration.value(4, 6);
-	var biosphereThirdPhaseDuration = minutesToDuration.value(2, 5);
+	var biosphereFirstPhaseDuration = minutesToDuration.value(8, 10);
+	var biosphereSecondPhaseDuration = minutesToDuration.value(6, 8);
+	var biosphereThirdPhaseDuration = minutesToDuration.value(6, 8);
 	var biosphereTotalDuration = (
 		biosphereFirstPhaseDuration
 		+ biosphereSecondPhaseDuration
@@ -74,10 +74,10 @@ getFullLoop = {
 	);
 
 	var pause = 32;
-	var ritualFirstPhaseDuration = minutesToDuration.value(4, 7);
-	var ritualSecondPhaseDuration = minutesToDuration.value(4, 7);
-	var ritualThirdPhaseDuration = minutesToDuration.value(3, 5);
-	var ritualFourthPhaseDuration = minutesToDuration.value(3, 5);
+	var ritualFirstPhaseDuration = minutesToDuration.value(1, 2);
+	var ritualSecondPhaseDuration = minutesToDuration.value(6, 7);
+	var ritualThirdPhaseDuration = minutesToDuration.value(5, 7);
+	var ritualFourthPhaseDuration = minutesToDuration.value(6, 8);
 	var ritualFifthPhaseDuration = minutesToDuration.value(6, 8);
 
 	var totalDuration = (

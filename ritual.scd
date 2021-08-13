@@ -555,7 +555,8 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 			\legato, 1,
 			\instrument, Pif(Ptime() < duration, \play),
 			\buf, ~bassBuffer,
-			\amp, 0.6,
+			\amp, 0.3,
+			\hardPan, Pwhite(0.0, 2.0),
 			\pfunc, Pif(launchBassOndeRouge, Pfuncn(~launchBassOndeRouge, inf), 1)
 		),
 	]);
@@ -959,12 +960,13 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 
 ~ritualPart1 = {
 	| firstPhaseDuration |
+	var bassIn = (0 * firstPhaseDuration / 6).round(4);
+	var grillonsIn = (1 * firstPhaseDuration / 6).round(4);
 	var clochettesIn = (2 * firstPhaseDuration / 6).round(4);
-	var bassIn = (3 * firstPhaseDuration / 6).round(4);
 	var finalClipIn = (2 * firstPhaseDuration / 3).round(4);
 	Ppar([
-		Pseq([Event.silent(0), ~grillons.value(firstPhaseDuration + 32, grillonsClips: true)]),
-		// Pseq([Event.silent(bassIn), ~bass.value(firstPhaseDuration - bassIn, rarement: true, launchBassOndeRouge: true)]),
+		Pseq([Event.silent(grillonsIn), ~grillons.value(firstPhaseDuration + 32 - grillonsIn, grillonsClips: true)]),
+		Pseq([Event.silent(bassIn), ~bass.value(firstPhaseDuration - bassIn, rarement: true, launchBassOndeRouge: true)]),
 		Pseq([Event.silent(clochettesIn), Ppar([
 			// ~clochettes.value(firstPhaseDuration - clochettesIn),
 			~singleActionPattern.value(~launchClipWithClochettesInRitualPart1),

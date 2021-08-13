@@ -43,10 +43,9 @@ TempoClock.default.tempo = 90/60;
 Pseq([
 	~singleActionPattern.value(~clearAllLayers.value),
 	Rest(1),
+	~ritualPart2.value(64)
 ]).play;
 )
-
-{ PlayBuf.ar(2, ~bassBuffer) * 0.2 }.play
 
 // Runs everything! Adjust durations and comment stuff out to run individual parts.
 (

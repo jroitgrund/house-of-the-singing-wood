@@ -1,6 +1,6 @@
 ~sendMsg = {
     | msg, value |
-    // ~resolume.sendMsg(msg, value);
+    ~resolume.sendMsg(msg, value);
     1
 };
 
@@ -71,10 +71,10 @@
 };
 
 ~clearGrillonsClips = {
-    ~sendMsg.value("/composition/layers/1/clear", 1);
-    ~sendMsg.value("/composition/layers/2/clear", 1);
     ~sendMsg.value("/composition/layers/3/clear", 1);
     ~sendMsg.value("/composition/layers/4/clear", 1);
+    ~sendMsg.value("/composition/layers/5/clear", 1);
+    ~sendMsg.value("/composition/layers/11/clear", 1);
 };
 
 ~resetGrillonsLayersOpacity = {

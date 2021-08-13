@@ -619,14 +619,14 @@ var mosquitoAmpOutBus = Bus.control(s, 1);
 				\buf, ~mosquitoBuffer,
 				\panBus, mosquitoPanBus,
 				\ampBus, mosquitoAmpBus,
-				\amp, 0.1
+				\amp, 0.07
 			),
 			Pbind(
 				\dur, Pseq([1]),
 				\legato, 1,
 				\instrument, \play,
 				\buf, ~slapBuffer,
-				\amp, 1.5
+				\amp, 1
 			)
 		]),
 		Pbind(

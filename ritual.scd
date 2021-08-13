@@ -988,6 +988,9 @@ var windChimesAmpOutBus = Bus.control(s, 1);
 		~singleActionPattern.value(~launchMurmuresRitualPart2Clip),
 		Pseq([Event.silent(0), ~murmuresLoops.value(secondPhaseDuration, affectParticleOpacity: true)]),
 		Pseq([Event.silent(bassVoiceShamanIn), ~bassVoiceShaman.value(secondPhaseDuration + 4 - bassVoiceShamanIn, totem: true)]),
+		Pseq([Event.silent(bassVoiceShamanIn), ~singleActionPattern.value({
+			~setLayerTransitionsOn.value(8, 2);
+		})]),
 		Pseq([
 			Event.silent(hibouxIn),
 			Ppar([
